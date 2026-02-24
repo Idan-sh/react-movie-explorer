@@ -14,7 +14,8 @@
  * const response = await tmdbClient.get('/movie/popular');
  */
 
-import axios, { AxiosError, InternalAxiosRequestConfig } from 'axios';
+import axios from 'axios';
+import type { AxiosError, InternalAxiosRequestConfig } from 'axios';
 import { env } from '../config';
 
 // Create axios instance with TMDB base config

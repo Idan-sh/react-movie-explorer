@@ -5,22 +5,19 @@
  * Handles loading, empty, and error states via sub-components.
  */
 
-import type { TmdbMovie } from '../../types';
-import { useMovieGrid } from '../../hooks';
-import { MovieCard } from '../MovieCard';
-import { MovieGridSkeleton } from './MovieGridSkeleton';
-import { MovieGridEmpty } from './MovieGridEmpty';
-import { MovieGridError } from './MovieGridError';
+import type { TmdbMovie } from "../../types";
+import { useMovieGrid } from "../../hooks";
+import { MovieCard } from "../MovieCard";
+import { MovieGridSkeleton } from "./MovieGridSkeleton";
+import { MovieGridEmpty } from "./MovieGridEmpty";
+import { MovieGridError } from "./MovieGridError";
 
 export interface MovieGridProps {
   onSelectMovie?: (movie: TmdbMovie) => void;
   focusedIndex?: number;
 }
 
-export function MovieGrid({
-  onSelectMovie,
-  focusedIndex = -1,
-}: MovieGridProps): React.JSX.Element {
+export function MovieGrid({ onSelectMovie, focusedIndex = -1 }: MovieGridProps): React.JSX.Element {
   const { movies, isLoading, hasError, error, isEmpty } = useMovieGrid();
 
   // Render content based on state priority: loading > error > empty > movies

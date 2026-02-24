@@ -31,4 +31,4 @@ export {
 export type { TmdbMovie, MovieCategory } from "./types";
 
 // Constants: public constants for components
-export { MOVIE_CATEGORY, TMDB_IMAGE } from "./constants";
+export { MOVIE_CATEGORY, TMDB_IMAGE, PAGINATION } from "./constants";
