@@ -69,6 +69,9 @@ src/
 - **Types derived from constants**: Define in `types/` folder, not in constants file
   - Constants only export runtime values
   - Types folder imports constants and exports derived types
+- **Module public API**: Only export from module `index.ts` what's needed externally
+  - Internal utils, saga helpers, internal actions → NOT exported
+  - Public actions, selectors, types, components → exported
 
 ---
 
