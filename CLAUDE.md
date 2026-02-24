@@ -34,7 +34,10 @@ src/
 │   ├── utils/               # Helper functions
 │   ├── types/               # Shared TypeScript types
 │   ├── styles/              # Global styles
-│   └── constants.ts         # Shared constants (used by multiple modules)
+│   └── constants/           # Shared constants (organized by responsibility)
+│       ├── request.constants.ts  # Request status (idle, loading, etc.)
+│       ├── slices.constants.ts   # Redux slice names
+│       └── index.ts
 │
 └── pages/                   # Route-level components
     └── HomePage/
@@ -60,7 +63,21 @@ src/
 - **One component per file** (no multiple exports of components)
 - **Index files** for clean imports: each folder has `index.ts` re-exporting
 - **Co-location**: Keep related files together (component + its styles + its types)
-- **Constants**: Module-specific in `modules/*/constants.ts`, shared in `shared/constants.ts`
+- **Constants**: Module-specific in `modules/*/constants.ts`, shared in `shared/constants/`
+- **Types derived from constants**: Define in `types/` folder, not in constants file
+  - Constants only export runtime values
+  - Types folder imports constants and exports derived types
+
+---
+
+## Maintaining This Document
+
+**Keep CLAUDE.md up to date:**
+- Update when making design decisions (patterns, conventions, approaches)
+- Update project structure when adding new folders or main files
+- Document new patterns with examples when introducing them
+
+This file is the source of truth for project conventions.
 
 ---
 
@@ -70,6 +87,17 @@ src/
 - **Explicit return types** on functions
 - **Interface over Type** for object shapes (extendable)
 - **Props naming**: `ComponentNameProps` (e.g., `MovieCardProps`)
+- **Derived types**: Define in `types/` folder, importing constants
+
+Example of separating constants and types:
+```typescript
+// constants/request.constants.ts
+export const REQUEST_STATUS = { IDLE: 'idle', LOADING: 'loading' } as const;
+
+// types/request.types.ts
+import { REQUEST_STATUS } from '../constants';
+export type RequestStatus = (typeof REQUEST_STATUS)[keyof typeof REQUEST_STATUS];
+```
 
 ---
 
@@ -187,6 +215,7 @@ Two-tier approach:
 - Don't put business logic in components (use hooks/sagas)
 - Don't ignore TypeScript errors
 - Don't make API calls directly in components
+- Don't hardcode strings/numbers - use constants (unless it defeats the purpose)
 - Don't use inline styles (use Tailwind classes)
 - Don't skip error handling
 - Don't leave console.logs in production code
