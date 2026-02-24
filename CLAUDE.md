@@ -75,6 +75,79 @@ src/
 
 ---
 
+## Code Separation of Concerns
+
+Clear separation between components, hooks, and utils:
+
+### Components (Presentational Only)
+- **Only render JSX** - no business logic, no handlers
+- Receive all data AND handlers via props
+- No data transformations inside components
+- Break down into small, focused sub-components (single responsibility)
+
+### Component Composition
+- **Avoid heavy single components** - split into sub-components
+- Each sub-component handles ONE visual responsibility
+- Parent component composes children
+- Sub-components are co-located in the same folder
+
+Example structure:
+```
+MovieCard/
+├── MovieCard.tsx        # Main component (composition)
+├── MoviePoster.tsx      # Sub-component (poster image + placeholder)
+├── MovieRating.tsx      # Sub-component (rating badge)
+├── MovieInfo.tsx        # Sub-component (title + year)
+└── index.ts
+```
+
+### Hooks (Business Logic + Handlers)
+- State management (useState, useReducer)
+- Side effects (useEffect)
+- Redux integration (useSelector, useDispatch)
+- **Event handlers** (onClick, onKeyDown, etc.)
+- Orchestrating utils and combining data
+- Return processed data AND handlers ready for components
+
+### Utils (Pure Functions)
+- Data transformations (formatting, parsing)
+- Calculations and computations
+- No React dependencies (no hooks inside)
+- Easily testable in isolation
+- Reusable across hooks and other utils
+
+### Example Structure
+```typescript
+// utils/movieCard.utils.ts - Pure functions
+export function formatRating(vote: number): string { ... }
+export function getPosterUrl(path: string | null): string | null { ... }
+
+// hooks/useMovieCard.ts - Business logic + handlers
+export function useMovieCard(movie: TmdbMovie, onSelect?: (movie: TmdbMovie) => void) {
+  const rating = formatRating(movie.vote_average);
+  const posterUrl = getPosterUrl(movie.poster_path);
+
+  const handleClick = (): void => { onSelect?.(movie); };
+  const handleKeyDown = (e: React.KeyboardEvent): void => { ... };
+
+  return { rating, posterUrl, handleClick, handleKeyDown };
+}
+
+// components/MovieCard.tsx - Pure rendering (composition)
+export function MovieCard({ movie, onSelect }: MovieCardProps) {
+  const { posterUrl, rating, handleClick, handleKeyDown } = useMovieCard(movie, onSelect);
+  return (
+    <article onClick={handleClick} onKeyDown={handleKeyDown}>
+      <MoviePoster url={posterUrl} title={movie.title} />
+      <MovieRating rating={rating} />
+      <MovieInfo title={movie.title} year={releaseYear} />
+    </article>
+  );
+}
+```
+
+---
+
 ## Maintaining This Document
 
 **Keep CLAUDE.md up to date:**
@@ -118,10 +191,15 @@ export type RequestStatus = (typeof REQUEST_STATUS)[keyof typeof REQUEST_STATUS]
 
 ## Performance Rules
 
-- **Memoization**: Use `React.memo` for list items, `useMemo`/`useCallback` where needed
 - **Avoid unnecessary renders**: Don't create objects/arrays in render
 - **Selector optimization**: Select minimal state needed
 - **Lazy loading**: Route-level code splitting with `React.lazy`
+
+### Memoization Guidelines
+- **React.memo**: Use for list item components to prevent re-renders when props unchanged
+- **useMemo**: Only for expensive calculations (filtering large arrays, complex transformations)
+- **useCallback**: Only when passing callbacks to memoized children that depend on them
+- **Don't over-memoize**: Trivial calculations (string ops, simple math) don't need useMemo - the overhead isn't worth it
 
 ---
 
@@ -219,6 +297,7 @@ Two-tier approach:
 - Don't use `any` type
 - Don't mutate state directly
 - Don't put business logic in components (use hooks/sagas)
+- Don't put utility functions in hooks (use utils/)
 - Don't ignore TypeScript errors
 - Don't make API calls directly in components
 - Don't hardcode strings/numbers - use constants (unless it defeats the purpose)

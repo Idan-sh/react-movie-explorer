@@ -5,6 +5,10 @@
  * Internal utilities, saga helpers, and internal types stay private.
  */
 
+// Components: public components for pages
+export { MovieCard } from "./components";
+export type { MovieCardProps } from "./components";
+
 // Store: reducer and saga for root store
 export { moviesReducer, moviesSaga } from "./store";
 

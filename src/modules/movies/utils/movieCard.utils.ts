@@ -1,0 +1,52 @@
+/**
+ * MovieCard Utilities
+ *
+ * Pure functions for transforming TMDB movie data for display.
+ * No React dependencies - easily testable in isolation.
+ */
+
+import { TMDB_IMAGE } from '../constants';
+
+/**
+ * Constructs the full poster URL from TMDB path
+ * @param posterPath - TMDB poster path (e.g., "/abc123.jpg") or null
+ * @returns Full CDN URL or null if no path
+ */
+export function getPosterUrl(posterPath: string | null): string | null {
+  if (!posterPath) return null;
+  return `${TMDB_IMAGE.BASE_URL}/${TMDB_IMAGE.POSTER_SIZES.MEDIUM}${posterPath}`;
+}
+
+/**
+ * Extracts year from TMDB date string
+ * @param releaseDate - TMDB date format (YYYY-MM-DD)
+ * @returns Year string or 'N/A' if invalid
+ */
+export function getReleaseYear(releaseDate: string): string {
+  if (!releaseDate) return 'N/A';
+  return releaseDate.split('-')[0];
+}
+
+/**
+ * Formats vote average to one decimal place
+ * @param voteAverage - Raw vote average (0-10)
+ * @returns Formatted string (e.g., "7.5")
+ */
+export function formatRating(voteAverage: number): string {
+  return voteAverage.toFixed(1);
+}
+
+/**
+ * Builds accessible aria-label for movie card
+ * @param title - Movie title
+ * @param releaseYear - Formatted release year
+ * @param rating - Formatted rating
+ * @returns Aria-label string
+ */
+export function buildMovieAriaLabel(
+  title: string,
+  releaseYear: string,
+  rating: string
+): string {
+  return `${title}, ${releaseYear}, Rating: ${rating}`;
+}
