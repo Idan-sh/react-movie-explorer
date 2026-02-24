@@ -1,24 +1,24 @@
 /**
- * useHomePage Hook
+ * useMoviesInit Hook
  *
- * Handles HomePage business logic:
- * - Fetches movies on mount
- * - Provides navigation handler for movie selection
+ * Initializes movie data fetching and provides selection handler.
+ * Used by pages that display the movie grid.
  */
 
 import { useEffect, useCallback } from 'react';
 import { useAppDispatch } from '@/core/store';
-import { fetchMovies, MOVIE_CATEGORY, PAGINATION } from '@/modules/movies';
-import type { TmdbMovie } from '@/modules/movies';
+import { fetchMovies } from '../store';
+import { MOVIE_CATEGORY, PAGINATION } from '../constants';
+import type { TmdbMovie } from '../types';
 
-export interface UseHomePageReturn {
+export interface UseMoviesInitReturn {
   handleSelectMovie: (movie: TmdbMovie) => void;
 }
 
 /**
- * Hook that manages HomePage state and side effects.
+ * Hook that initializes movies fetch and provides selection handler.
  */
-export function useHomePage(): UseHomePageReturn {
+export function useMoviesInit(): UseMoviesInitReturn {
   const dispatch = useAppDispatch();
 
   // Fetch movies on mount with explicit defaults

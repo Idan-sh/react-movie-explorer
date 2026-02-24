@@ -2,14 +2,13 @@
  * HomePage Component
  *
  * Main landing page displaying movie grid.
- * Business logic handled by useHomePage hook.
+ * Business logic handled by movies module hook.
  */
 
-import { MovieGrid } from '@/modules/movies';
-import { useHomePage } from './useHomePage';
+import { MovieGrid, useMoviesInit } from '@/modules/movies';
 
 export function HomePage(): React.JSX.Element {
-  const { handleSelectMovie } = useHomePage();
+  const { handleSelectMovie } = useMoviesInit();
 
   return (
     <main className="min-h-screen bg-gray-100 dark:bg-gray-900">

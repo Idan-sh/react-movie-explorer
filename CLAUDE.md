@@ -41,7 +41,7 @@ src/
 │       ├── slices.constants.ts   # Redux slice names
 │       └── index.ts
 │
-└── pages/                   # Route-level components
+└── pages/                   # Route-level components (thin, no hooks)
     └── HomePage/
 ```
 
@@ -72,6 +72,9 @@ src/
 - **Module public API**: Only export from module `index.ts` what's needed externally
   - Internal utils, saga helpers, internal actions → NOT exported
   - Public actions, selectors, types, components → exported
+- **Pages are thin**: Route-level components only compose modules, no business logic
+  - No hooks in pages folder - hooks belong in modules
+  - Pages import and use module hooks (e.g., `useMoviesInit` from movies module)
 
 ---
 
