@@ -6,10 +6,10 @@
  */
 
 // Store: reducer and saga for root store
-export { moviesReducer, moviesSaga } from './store';
+export { moviesReducer, moviesSaga } from "./store";
 
 // Store: public actions for components
-export { fetchMovies, setCategory, resetMovies } from './store';
+export { fetchMovies, setCategory, resetMovies } from "./store";
 
 // Store: selectors for components
 export {
@@ -20,11 +20,11 @@ export {
   selectIsLoading,
   selectHasError,
   selectHasMorePages,
-  selectError,
-} from './store';
+  selectError
+} from "./store";
 
 // Types: public types for components
-export type { TmdbMovie, MovieCategory } from './types';
+export type { TmdbMovie, MovieCategory } from "./types";
 
 // Constants: public constants for components
-export { MOVIE_CATEGORY, TMDB_IMAGE } from './constants';
+export { MOVIE_CATEGORY, TMDB_IMAGE } from "./constants";
