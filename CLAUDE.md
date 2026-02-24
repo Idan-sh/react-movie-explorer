@@ -11,7 +11,9 @@
 ```
 src/
 ├── core/                    # App-wide infrastructure
-│   ├── api/                 # API client (axios instance, interceptors)
+│   ├── api/                 # API client and endpoints
+│   │   ├── tmdbClient.ts    # Axios instance with interceptors
+│   │   └── endpoints.ts     # All API endpoint paths (centralized)
 │   ├── config/              # Environment variables only (env.ts)
 │   └── store/               # Redux store setup, root saga
 │
@@ -107,6 +109,7 @@ export type RequestStatus = (typeof REQUEST_STATUS)[keyof typeof REQUEST_STATUS]
 - **Saga per feature**: Each module has its own saga file
 - **Action naming**: `domain/actionName` (e.g., `movies/fetchPopular`)
 - **Selectors**: Memoized with createSelector, co-located with slice
+- **Sagas only contain saga logic**: No constants, types, or helpers defined in saga files
 
 ---
 

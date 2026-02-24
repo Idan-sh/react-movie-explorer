@@ -14,20 +14,9 @@
  */
 
 import { combineReducers } from '@reduxjs/toolkit';
+import { SLICE_NAMES } from '@/shared/constants';
+import { moviesReducer } from '@/modules/movies/store';
 
-// Import reducers from modules as they are created
-// import { moviesReducer } from '@/modules/movies/store';
-// import { searchReducer } from '@/modules/search/store';
-// import { favoritesReducer } from '@/modules/favorites/store';
-
-// Combine all reducers
 export const rootReducer = combineReducers({
-  // Placeholder until we add real slices
-  // Remove this when adding first real reducer
-  _placeholder: (state: null = null) => state,
-
-  // Add reducers here as modules are created:
-  // movies: moviesReducer,
-  // search: searchReducer,
-  // favorites: favoritesReducer,
+  [SLICE_NAMES.MOVIES]: moviesReducer,
 });
