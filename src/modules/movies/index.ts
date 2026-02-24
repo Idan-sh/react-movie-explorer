@@ -6,8 +6,8 @@
  */
 
 // Components: public components for pages
-export { MovieCard } from "./components";
-export type { MovieCardProps } from "./components";
+export { MovieCard, MovieGrid } from "./components";
+export type { MovieCardProps, MovieGridProps } from "./components";
 
 // Store: reducer and saga for root store
 export { moviesReducer, moviesSaga } from "./store";

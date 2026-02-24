@@ -84,6 +84,23 @@ Clear separation between components, hooks, and utils:
 - Receive all data AND handlers via props
 - No data transformations inside components
 - Break down into small, focused sub-components (single responsibility)
+- **Mutually exclusive states**: Use early returns for loading/error/empty/data states - never render multiple states simultaneously
+
+```typescript
+// ✅ GOOD - Early returns, one state at a time
+const renderContent = (): React.JSX.Element => {
+  if (isLoading) return <Skeleton />;
+  if (hasError) return <Error />;
+  if (isEmpty) return <Empty />;
+  return <>{items.map(...)}</>;
+};
+
+// ❌ BAD - Multiple states could render
+{isLoading && <Skeleton />}
+{hasError && <Error />}
+{isEmpty && <Empty />}
+{items.map(...)}
+```
 
 ### Component Composition
 - **Avoid heavy single components** - split into sub-components
