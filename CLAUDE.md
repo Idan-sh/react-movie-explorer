@@ -266,6 +266,7 @@ Two-tier approach:
 - Types: `feat`, `fix`, `refactor`, `style`, `test`, `docs`, `chore`
 - Example: `feat: add movie search with debounce`
 - Keep messages concise and descriptive
+- **No co-authored-by signatures** - keep commits clean
 
 ---
 
