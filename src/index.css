@@ -1,5 +1,14 @@
 @import "tailwindcss";
 
+/* Full height layout */
+html,
+body,
+#root {
+  height: 100%;
+  margin: 0;
+  overflow: hidden;
+}
+
 @theme {
   /* Primary - Purple */
   --color-primary: #8b5cf6;
