@@ -12,21 +12,29 @@
 src/
 ├── core/                    # App-wide infrastructure
 │   ├── api/                 # API client (axios instance, interceptors)
-│   ├── config/              # Environment variables, constants
+│   ├── config/              # Environment variables only (env.ts)
 │   └── store/               # Redux store setup, root saga
 │
 ├── modules/                 # Feature modules (self-contained)
 │   ├── movies/              # Movie listing, details, pagination
-│   ├── search/              # Search with debounce, rate limiting
-│   ├── favorites/           # LocalStorage favorites management
-│   └── navigation/          # Keyboard navigation system
+│   │   ├── components/
+│   │   ├── store/
+│   │   ├── types/
+│   │   └── constants.ts     # Module-specific: TMDB image sizes
+│   ├── search/
+│   │   └── constants.ts     # Module-specific: debounce, rate limit
+│   ├── favorites/
+│   │   └── constants.ts     # Module-specific: localStorage keys
+│   └── navigation/
+│       └── constants.ts     # Module-specific: key codes
 │
 ├── shared/                  # Reusable across modules
 │   ├── components/          # Generic UI components (ErrorBoundary, Toast, etc.)
 │   ├── hooks/               # Generic hooks
 │   ├── utils/               # Helper functions
 │   ├── types/               # Shared TypeScript types
-│   └── styles/              # Global styles
+│   ├── styles/              # Global styles
+│   └── constants.ts         # Shared constants (used by multiple modules)
 │
 └── pages/                   # Route-level components
     └── HomePage/
@@ -52,6 +60,7 @@ src/
 - **One component per file** (no multiple exports of components)
 - **Index files** for clean imports: each folder has `index.ts` re-exporting
 - **Co-location**: Keep related files together (component + its styles + its types)
+- **Constants**: Module-specific in `modules/*/constants.ts`, shared in `shared/constants.ts`
 
 ---
 
