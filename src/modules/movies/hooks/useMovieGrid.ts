@@ -2,19 +2,15 @@
  * useMovieGrid Hook
  *
  * Provides data and state for MovieGrid component.
- * Keyboard navigation logic will be in navigation module.
+ * Accepts a list type to select the correct data from store.
  */
 
 import { useAppSelector } from '@/core/store';
-import {
-  selectMovies,
-  selectIsLoading,
-  selectHasError,
-  selectError,
-} from '../store';
+import type { MovieList, TmdbMovie } from '../types';
+import { getListSelectors } from '../store';
 
 export interface MovieGridState {
-  movies: ReturnType<typeof selectMovies>;
+  movies: TmdbMovie[];
   isLoading: boolean;
   hasError: boolean;
   error: string | null;
@@ -22,13 +18,15 @@ export interface MovieGridState {
 }
 
 /**
- * Hook that provides movie grid state from Redux store.
+ * Hook that provides movie grid state for a specific list type.
  */
-export function useMovieGrid(): MovieGridState {
-  const movies = useAppSelector(selectMovies);
-  const isLoading = useAppSelector(selectIsLoading);
-  const hasError = useAppSelector(selectHasError);
-  const error = useAppSelector(selectError);
+export function useMovieGrid(list: MovieList): MovieGridState {
+  const selectors = getListSelectors(list);
+
+  const movies = useAppSelector(selectors.selectMovies);
+  const isLoading = useAppSelector(selectors.selectIsLoading);
+  const hasError = useAppSelector(selectors.selectHasError);
+  const error = useAppSelector(selectors.selectError);
 
   const isEmpty = !isLoading && !hasError && movies.length === 0;
 

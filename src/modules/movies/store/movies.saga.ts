@@ -6,16 +6,16 @@
  * - Handles errors
  *
  * SAGA EFFECTS:
- * - takeLatest: Cancels previous fetch if new one starts (prevents race conditions)
+ * - takeEvery: Allows parallel fetches for different lists
  * - call: Calls async function and waits for result
  * - put: Dispatches Redux action
  */
 
-import { call, put, takeLatest } from 'redux-saga/effects';
+import { call, put, takeEvery } from 'redux-saga/effects';
 import type { PayloadAction } from '@reduxjs/toolkit';
 import { tmdbClient } from '@/core/api';
 import type { FetchMoviesPayload, TmdbMovieListResponse } from '../types';
-import { getCategoryEndpoint } from '../utils';
+import { getListEndpoint } from '../utils';
 import { fetchMovies, fetchMoviesSuccess, fetchMoviesFailure } from './movies.slice';
 
 /**
@@ -23,8 +23,8 @@ import { fetchMovies, fetchMoviesSuccess, fetchMoviesFailure } from './movies.sl
  */
 function* fetchMoviesSaga(action: PayloadAction<FetchMoviesPayload>): Generator {
   try {
-    const { category, page } = action.payload;
-    const endpoint = getCategoryEndpoint(category);
+    const { list, page } = action.payload;
+    const endpoint = getListEndpoint(list);
 
     const response = yield call(tmdbClient.get<TmdbMovieListResponse>, endpoint, {
       params: { page },
@@ -34,6 +34,7 @@ function* fetchMoviesSaga(action: PayloadAction<FetchMoviesPayload>): Generator 
 
     yield put(
       fetchMoviesSuccess({
+        list,
         movies: data.results,
         page: data.page,
         totalPages: data.total_pages,
@@ -41,7 +42,7 @@ function* fetchMoviesSaga(action: PayloadAction<FetchMoviesPayload>): Generator 
     );
   } catch (error) {
     const message = error instanceof Error ? error.message : 'Failed to fetch movies';
-    yield put(fetchMoviesFailure(message));
+    yield put(fetchMoviesFailure({ list: action.payload.list, error: message }));
   }
 }
 
@@ -49,5 +50,5 @@ function* fetchMoviesSaga(action: PayloadAction<FetchMoviesPayload>): Generator 
  * Root saga for movies module
  */
 export function* moviesSaga(): Generator {
-  yield takeLatest(fetchMovies.type, fetchMoviesSaga);
+  yield takeEvery(fetchMovies.type, fetchMoviesSaga);
 }

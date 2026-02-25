@@ -17,22 +17,13 @@ export type { UseMoviesInitReturn } from "./hooks";
 export { moviesReducer, moviesSaga } from "./store";
 
 // Store: public actions for components
-export { fetchMovies, setCategory, resetMovies } from "./store";
+export { fetchMovies, resetMovies } from "./store";
 
 // Store: selectors for components
-export {
-  selectMovies,
-  selectCategory,
-  selectPage,
-  selectTotalPages,
-  selectIsLoading,
-  selectHasError,
-  selectHasMorePages,
-  selectError
-} from "./store";
+export { getListSelectors } from "./store";
 
 // Types: public types for components
-export type { TmdbMovie, MovieCategory } from "./types";
+export type { TmdbMovie, MovieList } from "./types";
 
 // Constants: public constants for components
-export { MOVIE_CATEGORY, TMDB_IMAGE, PAGINATION } from "./constants";
+export { MOVIE_LIST, TMDB_IMAGE, PAGINATION } from "./constants";

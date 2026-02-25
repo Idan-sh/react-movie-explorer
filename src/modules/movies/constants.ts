@@ -3,12 +3,19 @@
  */
 
 /**
- * Movie category values
- * Used for filtering between Popular and Now Playing
+ * Movie list types - maps to TMDB API list endpoints
  */
-export const MOVIE_CATEGORY = {
+export const MOVIE_LIST = {
   POPULAR: 'popular',
   NOW_PLAYING: 'now_playing',
+} as const;
+
+/**
+ * Maps MOVIE_LIST values to their Redux state keys
+ */
+export const MOVIE_LIST_STATE_KEY = {
+  [MOVIE_LIST.POPULAR]: 'popular',
+  [MOVIE_LIST.NOW_PLAYING]: 'nowPlaying',
 } as const;
 
 /**

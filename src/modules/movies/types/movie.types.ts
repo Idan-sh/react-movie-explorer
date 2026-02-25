@@ -6,7 +6,7 @@
  * https://developer.themoviedb.org/reference/movie-now-playing-list
  */
 
-import { MOVIE_CATEGORY } from '../constants';
+import { MOVIE_LIST } from '../constants';
 
 /**
  * Movie object from TMDB API list endpoints (popular, now_playing)
@@ -47,6 +47,6 @@ export interface TmdbPaginatedResponse<T> {
 export type TmdbMovieListResponse = TmdbPaginatedResponse<TmdbMovie>;
 
 /**
- * Category filter type - derived from MOVIE_CATEGORY constant values
+ * Category filter type - derived from MOVIE_LIST constant values
  */
-export type MovieCategory = (typeof MOVIE_CATEGORY)[keyof typeof MOVIE_CATEGORY];
+export type MovieList = (typeof MOVIE_LIST)[keyof typeof MOVIE_LIST];

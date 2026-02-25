@@ -5,14 +5,14 @@
  * Purely presentational - receives state and handlers via props.
  */
 
-import type { AppView, AppViewTab } from '@/shared/types';
+import type { AppView } from '@/shared/types';
 import { APP_VIEW_TABS, APP_VIEW_LABELS } from '@/shared/constants';
 import { CategoryTab } from './CategoryTab';
 
 export interface CategoryTabsProps {
   activeView: AppView;
-  onTabClick: (view: AppViewTab) => void;
-  onTabFocus: (view: AppViewTab) => void;
+  onTabClick: (view: AppView) => void;
+  onTabFocus: (view: AppView) => void;
   onTabBlur: () => void;
 }
 

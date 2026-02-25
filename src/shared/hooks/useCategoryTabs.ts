@@ -7,19 +7,18 @@
  * - Click → switch view immediately
  * - Focus after 2 seconds → switch view (auto-fetch)
  * - Blur → cancel pending focus timer
- * - Clicking active tab → return to home view
  */
 
 import { useState, useCallback, useRef } from 'react';
 import { APP_VIEW } from '@/shared/constants';
-import type { AppView, AppViewTab } from '@/shared/types';
+import type { AppView } from '@/shared/types';
 
 const FOCUS_DELAY_MS = 2000;
 
 export interface UseCategoryTabsReturn {
   activeView: AppView;
-  handleTabClick: (view: AppViewTab) => void;
-  handleTabFocus: (view: AppViewTab) => void;
+  handleTabClick: (view: AppView) => void;
+  handleTabFocus: (view: AppView) => void;
   handleTabBlur: () => void;
 }
 
@@ -37,14 +36,15 @@ export function useCategoryTabs(): UseCategoryTabsReturn {
     }
   };
 
-  // Click → toggle view immediately (click again to return home)
-  const handleTabClick = useCallback((view: AppViewTab): void => {
+  // Click → switch view immediately
+  const handleTabClick = useCallback((view: AppView): void => {
     clearFocusTimer();
-    setActiveView((current) => (current === view ? APP_VIEW.HOME : view));
+    setActiveView(view);
   }, []);
 
-  // Focus → switch view after delay
-  const handleTabFocus = useCallback((view: AppViewTab): void => {
+  // Focus → switch view after delay (non-home tabs only)
+  const handleTabFocus = useCallback((view: AppView): void => {
+    if (view === APP_VIEW.HOME) return;
     clearFocusTimer();
     focusTimerRef.current = setTimeout(() => {
       setActiveView(view);

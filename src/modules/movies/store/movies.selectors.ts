@@ -2,20 +2,18 @@
  * Movies Selectors
  *
  * Functions to read movies state from the store.
- *
- * WHY SELECTORS:
- * - Encapsulate state shape (if state structure changes, only update here)
- * - Memoization prevents unnecessary re-renders
- * - Reusable across components
+ * Pre-built selectors for each list type to maintain memoization.
  *
  * USAGE:
- * const movies = useAppSelector(selectMovies);
- * const isLoading = useAppSelector(selectMoviesLoading);
+ * const popular = useAppSelector(selectMovieList.popular);
+ * const isLoading = useAppSelector(selectIsListLoading.popular);
  */
 
 import { createSelector } from '@reduxjs/toolkit';
 import type { RootState } from '@/core/store';
 import { REQUEST_STATUS, SLICE_NAMES } from '@/shared/constants';
+import { MOVIE_LIST, MOVIE_LIST_STATE_KEY } from '../constants';
+import type { MovieList, MovieListState } from '../types';
 
 /**
  * Base selector - gets the movies slice
@@ -23,73 +21,80 @@ import { REQUEST_STATUS, SLICE_NAMES } from '@/shared/constants';
 const selectMoviesState = (state: RootState) => state[SLICE_NAMES.MOVIES];
 
 /**
- * Select movies array
+ * Builds a stable set of selectors for a given list type.
+ * Called once per list type at module load (not per render).
  */
-export const selectMovies = createSelector(
-  [selectMoviesState],
-  (moviesState) => moviesState.movies
-);
+function buildListSelectors(list: MovieList) {
+  const key = MOVIE_LIST_STATE_KEY[list];
+
+  const selectState = createSelector(
+    [selectMoviesState],
+    (moviesState): MovieListState => moviesState[key]
+  );
+
+  const selectMovies = createSelector(
+    [selectState],
+    (listState) => listState.movies
+  );
+
+  const selectPage = createSelector(
+    [selectState],
+    (listState) => listState.page
+  );
+
+  const selectTotalPages = createSelector(
+    [selectState],
+    (listState) => listState.totalPages
+  );
+
+  const selectError = createSelector(
+    [selectState],
+    (listState) => listState.error
+  );
+
+  const selectIsLoading = createSelector(
+    [selectState],
+    (listState) => listState.status === REQUEST_STATUS.LOADING
+  );
+
+  const selectHasError = createSelector(
+    [selectState],
+    (listState) => listState.status === REQUEST_STATUS.ERROR
+  );
+
+  const selectHasMorePages = createSelector(
+    [selectState],
+    (listState) => listState.page < listState.totalPages
+  );
+
+  return {
+    selectState,
+    selectMovies,
+    selectPage,
+    selectTotalPages,
+    selectError,
+    selectIsLoading,
+    selectHasError,
+    selectHasMorePages,
+  };
+}
 
 /**
- * Select current category
+ * Pre-built selectors for each list type.
+ * Created once at module load - stable references for memoization.
  */
-export const selectCategory = createSelector(
-  [selectMoviesState],
-  (moviesState) => moviesState.category
-);
+const popularSelectors = buildListSelectors(MOVIE_LIST.POPULAR);
+const nowPlayingSelectors = buildListSelectors(MOVIE_LIST.NOW_PLAYING);
+
+const selectorsByList: Record<MovieList, ReturnType<typeof buildListSelectors>> = {
+  [MOVIE_LIST.POPULAR]: popularSelectors,
+  [MOVIE_LIST.NOW_PLAYING]: nowPlayingSelectors,
+};
 
 /**
- * Select current page
+ * Get all selectors for a given list type.
+ * Returns stable references - safe to use in useAppSelector.
  */
-export const selectPage = createSelector(
-  [selectMoviesState],
-  (moviesState) => moviesState.page
-);
-
-/**
- * Select total pages
- */
-export const selectTotalPages = createSelector(
-  [selectMoviesState],
-  (moviesState) => moviesState.totalPages
-);
-
-/**
- * Select request status
- */
-export const selectStatus = createSelector(
-  [selectMoviesState],
-  (moviesState) => moviesState.status
-);
-
-/**
- * Select error message
- */
-export const selectError = createSelector(
-  [selectMoviesState],
-  (moviesState) => moviesState.error
-);
-
-/**
- * Derived selector - is loading
- */
-export const selectIsLoading = createSelector(
-  [selectStatus],
-  (status) => status === REQUEST_STATUS.LOADING
-);
-
-/**
- * Derived selector - has error
- */
-export const selectHasError = createSelector(
-  [selectStatus],
-  (status) => status === REQUEST_STATUS.ERROR
-);
-
-/**
- * Derived selector - has more pages
- */
-export const selectHasMorePages = createSelector(
-  [selectPage, selectTotalPages],
-  (page, totalPages) => page < totalPages
-);
+export function getListSelectors(list: MovieList): ReturnType<typeof buildListSelectors> {
+  return selectorsByList[list];
+}

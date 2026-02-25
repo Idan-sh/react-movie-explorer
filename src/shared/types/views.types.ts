@@ -7,11 +7,6 @@
 import { APP_VIEW } from '../constants';
 
 /**
- * All possible app views (home + category tabs)
+ * All possible app views
  */
 export type AppView = (typeof APP_VIEW)[keyof typeof APP_VIEW];
-
-/**
- * Tab views only (excludes home)
- */
-export type AppViewTab = Exclude<AppView, typeof APP_VIEW.HOME>;

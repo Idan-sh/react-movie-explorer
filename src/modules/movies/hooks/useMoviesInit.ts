@@ -1,14 +1,14 @@
 /**
  * useMoviesInit Hook
  *
- * Initializes movie data fetching and provides selection handler.
- * Used by pages that display the movie grid.
+ * Initializes movie data fetching for both lists on mount.
+ * Provides selection handler for movie cards.
  */
 
 import { useEffect, useCallback } from 'react';
 import { useAppDispatch } from '@/core/store';
 import { fetchMovies } from '../store';
-import { MOVIE_CATEGORY, PAGINATION } from '../constants';
+import { MOVIE_LIST, PAGINATION } from '../constants';
 import type { TmdbMovie } from '../types';
 
 export interface UseMoviesInitReturn {
@@ -16,15 +16,19 @@ export interface UseMoviesInitReturn {
 }
 
 /**
- * Hook that initializes movies fetch and provides selection handler.
+ * Hook that fetches both movie lists on mount.
  */
 export function useMoviesInit(): UseMoviesInitReturn {
   const dispatch = useAppDispatch();
 
-  // Fetch movies on mount with explicit defaults
+  // Fetch both lists on mount for home preview
   useEffect(() => {
     dispatch(fetchMovies({
-      category: MOVIE_CATEGORY.POPULAR,
+      list: MOVIE_LIST.POPULAR,
+      page: PAGINATION.DEFAULT_PAGE,
+    }));
+    dispatch(fetchMovies({
+      list: MOVIE_LIST.NOW_PLAYING,
       page: PAGINATION.DEFAULT_PAGE,
     }));
   }, [dispatch]);
