@@ -5,6 +5,7 @@ export {
   getFirstRowTargetIndex,
   getLastRowTargetIndex,
   resolveNavigation,
+  resolveClickTarget,
   buildNavId,
   focusNavElement,
 } from './navigation.utils';

@@ -24,7 +24,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { NAV_KEY, NAV_ZONE, NAV_ID_PREFIX } from '../constants';
 import type { NavState, UseKeyboardNavOptions, UseKeyboardNavReturn } from '../types';
-import { isNavKey, resolveNavigation, buildNavId, focusNavElement } from '../utils';
+import { isNavKey, resolveNavigation, resolveClickTarget, buildNavId, focusNavElement } from '../utils';
 
 const INITIAL_STATE: NavState = {
   activeZone: NAV_ZONE.TABS,
@@ -98,8 +98,18 @@ export function useKeyboardNav({
       setState(newState);
     }
 
+    // Sync nav state when user clicks a navigable element
+    function handleClick(event: MouseEvent): void {
+      const newState = resolveClickTarget(event);
+      if (newState) setState(newState);
+    }
+
     document.addEventListener('keydown', handleKeyDown);
-    return () => document.removeEventListener('keydown', handleKeyDown);
+    document.addEventListener('click', handleClick);
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown);
+      document.removeEventListener('click', handleClick);
+    };
   }, [enabled]);
 
   // ── DOM focus sync ───────────────────────────────────────────

@@ -5,7 +5,7 @@
  * and managing DOM focus via data-nav-id attributes.
  */
 
-import { NAV_KEY, NAV_ZONE } from "../constants";
+import { NAV_KEY, NAV_ZONE, NAV_ID_PREFIX } from "../constants";
 import type { ContentSection, NavState, NavConfig } from "../types";
 
 /**
@@ -90,6 +90,39 @@ export function focusNavElement(navId: string): void {
     element.focus({ preventScroll: true });
     element.scrollIntoView({ block: "nearest", behavior: "smooth" });
   }
+}
+
+/**
+ * Resolves NavState from a clicked element's data-nav-id.
+ * Returns null if the click target has no nav ID.
+ *
+ * Uses closest() to walk up the DOM — handles clicks on child
+ * elements (e.g., clicking a poster image inside a MovieCard).
+ */
+export function resolveClickTarget(event: MouseEvent): NavState | null {
+  const target = (event.target as HTMLElement).closest("[data-nav-id]");
+  if (!target) return null;
+
+  const navId = target.getAttribute("data-nav-id");
+  if (!navId) return null;
+
+  // Parse "nav-tab-{index}"
+  if (navId.startsWith(NAV_ID_PREFIX.TAB + "-")) {
+    const tabIndex = parseInt(navId.slice(NAV_ID_PREFIX.TAB.length + 1), 10);
+    if (!isNaN(tabIndex)) {
+      return { activeZone: NAV_ZONE.TABS, tabIndex, sectionIndex: 0, itemIndex: 0 };
+    }
+  }
+
+  // Parse "nav-item-{sectionIndex}-{itemIndex}"
+  if (navId.startsWith(NAV_ID_PREFIX.ITEM + "-")) {
+    const parts = navId.slice(NAV_ID_PREFIX.ITEM.length + 1).split("-").map(Number);
+    if (parts.length === 2 && parts.every((n) => !isNaN(n))) {
+      return { activeZone: NAV_ZONE.CONTENT, tabIndex: 0, sectionIndex: parts[0], itemIndex: parts[1] };
+    }
+  }
+
+  return null;
 }
 
 // ── Section transition helpers ─────────────────────────────────
