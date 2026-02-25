@@ -57,6 +57,11 @@ function buildListSelectors(list: MovieList) {
     (listState) => listState.error
   );
 
+  const selectIsIdle = createSelector(
+    [selectState],
+    (listState) => listState.status === REQUEST_STATUS.IDLE
+  );
+
   const selectIsLoading = createSelector(
     [selectState],
     (listState) => listState.status === REQUEST_STATUS.LOADING
@@ -79,6 +84,7 @@ function buildListSelectors(list: MovieList) {
     selectNumberOfPages,
     selectHasNextPage,
     selectError,
+    selectIsIdle,
     selectIsLoading,
     selectHasError,
     selectHasMorePages,

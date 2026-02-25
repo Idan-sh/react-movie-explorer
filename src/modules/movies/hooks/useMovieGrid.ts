@@ -53,17 +53,24 @@ export function useMovieGrid(list: MovieList, sectionIndex: number): MovieGridSt
     loadMore();
   }, [movies.length, loadMore]);
 
-  // After new movies render, scroll the first new card into view
+  // After new movies render, scroll the first new card into view.
+  // Deferred by one frame so this runs AFTER useKeyboardNav's DOM focus
+  // sync effect (which also calls scrollIntoView with block:"nearest").
   useEffect(() => {
     if (scrollTargetRef.current === null) return;
     if (movies.length <= scrollTargetRef.current) return;
 
     const navId = buildNavId(NAV_ID_PREFIX.ITEM, sectionIndex, scrollTargetRef.current);
-    document.querySelector(`[data-nav-id="${navId}"]`)?.scrollIntoView({
-      block: "start",
-      behavior: "smooth"
-    });
     scrollTargetRef.current = null;
+
+    const frameId = requestAnimationFrame(() => {
+      document.querySelector(`[data-nav-id="${navId}"]`)?.scrollIntoView({
+        block: "start",
+        behavior: "smooth"
+      });
+    });
+
+    return () => cancelAnimationFrame(frameId);
   }, [movies.length, sectionIndex]);
 
   return {

@@ -3,8 +3,20 @@
  */
 
 import { TMDB_ENDPOINTS } from '@/core/api';
+import { APP_VIEW } from '@/shared/constants';
+import type { AppView } from '@/shared/types';
 import { MOVIE_LIST } from '../constants';
 import type { MovieList, TmdbMovieListResponse, MoviesPage } from '../types';
+
+/**
+ * Maps an app view to its movie list type.
+ * Returns null for views without a movie list (e.g., favorites).
+ */
+export function getViewList(view: AppView): MovieList | null {
+  if (view === APP_VIEW.POPULAR) return MOVIE_LIST.POPULAR;
+  if (view === APP_VIEW.NOW_PLAYING) return MOVIE_LIST.NOW_PLAYING;
+  return null;
+}
 
 /**
  * Maps movie list type to its API endpoint

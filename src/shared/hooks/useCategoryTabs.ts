@@ -10,7 +10,7 @@
  */
 
 import { useState, useCallback, useRef } from "react";
-import { APP_VIEW } from "@/shared/constants";
+import { APP_VIEW_DEFAULT } from "@/shared/constants";
 import type { AppView } from "@/shared/types";
 
 const FOCUS_DELAY_MS = 2000;
@@ -26,7 +26,7 @@ export interface UseCategoryTabsReturn {
  * Hook that manages category tab navigation.
  */
 export function useCategoryTabs(): UseCategoryTabsReturn {
-  const [activeView, setActiveView] = useState<AppView>(APP_VIEW.HOME);
+  const [activeView, setActiveView] = useState<AppView>(APP_VIEW_DEFAULT);
   const focusTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const clearFocusTimer = (): void => {
@@ -50,9 +50,8 @@ export function useCategoryTabs(): UseCategoryTabsReturn {
     [activeView]
   );
 
-  // Focus → switch view after delay (non-home tabs only)
+  // Focus → switch view after delay
   const handleTabFocus = useCallback((view: AppView): void => {
-    if (view === APP_VIEW.HOME) return;
     clearFocusTimer();
     focusTimerRef.current = setTimeout(() => {
       setActiveView(view);

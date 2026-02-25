@@ -1,37 +1,47 @@
 /**
  * useMoviesInit Hook
  *
- * Initializes movie data fetching for both lists on mount.
+ * Lazy-loads movie data for the active view tab.
+ * Only fetches when a tab is first opened (status is idle).
  * Provides selection handler for movie cards.
  */
 
 import { useEffect, useCallback } from 'react';
-import { useAppDispatch } from '@/core/store';
-import { fetchMovies } from '../store';
+import { useAppDispatch, useAppSelector } from '@/core/store';
+import { APP_VIEW } from '@/shared/constants';
+import type { AppView } from '@/shared/types';
+import { fetchMovies, getListSelectors } from '../store';
 import { MOVIE_LIST, PAGINATION } from '../constants';
-import type { TmdbMovie } from '../types';
+import type { TmdbMovie, MovieList } from '../types';
+import { getViewList } from '../utils';
 
 export interface UseMoviesInitReturn {
+  activeList: MovieList | null;
   handleSelectMovie: (movie: TmdbMovie) => void;
 }
 
 /**
- * Hook that fetches both movie lists on mount.
+ * Hook that fetches movie data for the active view when first opened.
  */
-export function useMoviesInit(): UseMoviesInitReturn {
+export function useMoviesInit(activeView: AppView): UseMoviesInitReturn {
   const dispatch = useAppDispatch();
 
-  // Fetch both lists on mount for home preview
+  const activeList = getViewList(activeView);
+
+  // Only read idle status for movie list views
+  const isIdle = useAppSelector(
+    activeList ? getListSelectors(activeList).selectIsIdle : () => false
+  );
+
+  // Fetch when tab becomes active and data hasn't been loaded yet
   useEffect(() => {
-    dispatch(fetchMovies({
-      list: MOVIE_LIST.POPULAR,
-      pageNumber: PAGINATION.DEFAULT_PAGE,
-    }));
-    dispatch(fetchMovies({
-      list: MOVIE_LIST.NOW_PLAYING,
-      pageNumber: PAGINATION.DEFAULT_PAGE,
-    }));
-  }, [dispatch]);
+    if (activeList && isIdle) {
+      dispatch(fetchMovies({
+        list: activeList,
+        pageNumber: PAGINATION.DEFAULT_PAGE,
+      }));
+    }
+  }, [dispatch, activeList, isIdle]);
 
   // Handle movie selection (will navigate to details page later)
   const handleSelectMovie = useCallback((movie: TmdbMovie): void => {
@@ -40,6 +50,7 @@ export function useMoviesInit(): UseMoviesInitReturn {
   }, []);
 
   return {
+    activeList,
     handleSelectMovie,
   };
 }
