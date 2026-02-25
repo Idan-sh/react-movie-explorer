@@ -9,9 +9,9 @@
  * - Blur → cancel pending focus timer
  */
 
-import { useState, useCallback, useRef } from 'react';
-import { APP_VIEW } from '@/shared/constants';
-import type { AppView } from '@/shared/types';
+import { useState, useCallback, useRef } from "react";
+import { APP_VIEW } from "@/shared/constants";
+import type { AppView } from "@/shared/types";
 
 const FOCUS_DELAY_MS = 2000;
 
@@ -36,11 +36,19 @@ export function useCategoryTabs(): UseCategoryTabsReturn {
     }
   };
 
-  // Click → switch view immediately
-  const handleTabClick = useCallback((view: AppView): void => {
-    clearFocusTimer();
-    setActiveView(view);
-  }, []);
+  // Click → switch view immediately + scroll content to top
+  // Same tab: smooth scroll back to top. Different tab: instant reset.
+  const handleTabClick = useCallback(
+    (view: AppView): void => {
+      clearFocusTimer();
+      const isSameView = view === activeView;
+      setActiveView(view);
+      document
+        .querySelector("main")
+        ?.scrollTo({ top: 0, behavior: isSameView ? "smooth" : "instant" });
+    },
+    [activeView]
+  );
 
   // Focus → switch view after delay (non-home tabs only)
   const handleTabFocus = useCallback((view: AppView): void => {
@@ -60,6 +68,6 @@ export function useCategoryTabs(): UseCategoryTabsReturn {
     activeView,
     handleTabClick,
     handleTabFocus,
-    handleTabBlur,
+    handleTabBlur
   };
 }
