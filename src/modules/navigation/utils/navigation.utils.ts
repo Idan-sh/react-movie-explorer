@@ -5,8 +5,8 @@
  * and managing DOM focus via data-nav-id attributes.
  */
 
-import { NAV_KEY, NAV_ZONE } from '../constants';
-import type { ContentSection, NavState, NavConfig } from '../types';
+import { NAV_KEY, NAV_ZONE } from "../constants";
+import type { ContentSection, NavState, NavConfig } from "../types";
 
 /**
  * Set of all navigation key values for fast lookup.
@@ -42,11 +42,7 @@ export function getNextTabIndex(current: number, key: string, total: number): nu
  * - -1: navigation should exit the section UPWARD
  * - Infinity: navigation should exit the section DOWNWARD
  */
-export function getNextGridIndex(
-  current: number,
-  key: string,
-  section: ContentSection,
-): number {
+export function getNextGridIndex(current: number, key: string, section: ContentSection): number {
   const { itemCount, columns } = section;
   const row = Math.floor(current / columns);
   const col = current % columns;
@@ -81,7 +77,7 @@ export function getNextGridIndex(
  * @example buildNavId('nav-item', 0, 3) → 'nav-item-0-3'
  */
 export function buildNavId(prefix: string, ...indices: number[]): string {
-  return `${prefix}-${indices.join('-')}`;
+  return `${prefix}-${indices.join("-")}`;
 }
 
 /**
@@ -92,7 +88,7 @@ export function focusNavElement(navId: string): void {
   const element = document.querySelector(`[data-nav-id="${navId}"]`);
   if (element instanceof HTMLElement) {
     element.focus({ preventScroll: true });
-    element.scrollIntoView({ block: 'nearest' });
+    element.scrollIntoView({ block: "nearest", behavior: "smooth" });
   }
 }
 
@@ -103,10 +99,7 @@ export function focusNavElement(navId: string): void {
  * land on the same column in the first row.
  * Clamps to last item if the section is shorter than the column.
  */
-export function getFirstRowTargetIndex(
-  currentCol: number,
-  targetSection: ContentSection,
-): number {
+export function getFirstRowTargetIndex(currentCol: number, targetSection: ContentSection): number {
   return Math.min(currentCol, targetSection.itemCount - 1);
 }
 
@@ -115,10 +108,7 @@ export function getFirstRowTargetIndex(
  * land on the same column in the last row.
  * Clamps to last item if the last row is shorter than the column.
  */
-export function getLastRowTargetIndex(
-  currentCol: number,
-  targetSection: ContentSection,
-): number {
+export function getLastRowTargetIndex(currentCol: number, targetSection: ContentSection): number {
   const { itemCount, columns } = targetSection;
   const lastRowStart = Math.floor((itemCount - 1) / columns) * columns;
   return Math.min(lastRowStart + currentCol, itemCount - 1);
@@ -130,11 +120,7 @@ export function getLastRowTargetIndex(
  * Resolves tabs-zone navigation.
  * Left/Right wraps between tabs. Down enters content zone.
  */
-function resolveTabsNavigation(
-  state: NavState,
-  key: string,
-  config: NavConfig,
-): NavState {
+function resolveTabsNavigation(state: NavState, key: string, config: NavConfig): NavState {
   if (key === NAV_KEY.ARROW_LEFT || key === NAV_KEY.ARROW_RIGHT) {
     return { ...state, tabIndex: getNextTabIndex(state.tabIndex, key, config.tabCount) };
   }
@@ -155,11 +141,7 @@ function resolveTabsNavigation(
  * Moves within the grid, transitions between sections,
  * or exits to tabs zone when navigating above the first section.
  */
-function resolveContentNavigation(
-  state: NavState,
-  key: string,
-  config: NavConfig,
-): NavState {
+function resolveContentNavigation(state: NavState, key: string, config: NavConfig): NavState {
   const section = config.sections[state.sectionIndex];
   if (!section) return state;
 
@@ -178,7 +160,7 @@ function resolveContentNavigation(
       return {
         ...state,
         sectionIndex: state.sectionIndex - 1,
-        itemIndex: getLastRowTargetIndex(col, prevSection),
+        itemIndex: getLastRowTargetIndex(col, prevSection)
       };
     }
     return { ...state, activeZone: NAV_ZONE.TABS };
@@ -190,7 +172,7 @@ function resolveContentNavigation(
     return {
       ...state,
       sectionIndex: state.sectionIndex + 1,
-      itemIndex: getFirstRowTargetIndex(col, nextSection),
+      itemIndex: getFirstRowTargetIndex(col, nextSection)
     };
   }
 
@@ -205,11 +187,7 @@ function resolveContentNavigation(
  * Handles: Escape (reset to tabs), arrow keys in both zones.
  * Does NOT handle: Enter (side effect), Tab (preventDefault only).
  */
-export function resolveNavigation(
-  state: NavState,
-  key: string,
-  config: NavConfig,
-): NavState {
+export function resolveNavigation(state: NavState, key: string, config: NavConfig): NavState {
   if (key === NAV_KEY.ESCAPE) {
     return { activeZone: NAV_ZONE.TABS, tabIndex: 0, sectionIndex: 0, itemIndex: 0 };
   }
