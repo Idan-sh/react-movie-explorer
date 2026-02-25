@@ -10,7 +10,7 @@ export { MovieCard, MovieGrid } from "./components";
 export type { MovieCardProps, MovieGridProps } from "./components";
 
 // Hooks: public hooks for pages
-export { useMoviesInit } from "./hooks";
+export { useMoviesInit, useLoadMore } from "./hooks";
 export type { UseMoviesInitReturn } from "./hooks";
 
 // Store: reducer and saga for root store

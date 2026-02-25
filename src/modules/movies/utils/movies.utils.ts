@@ -4,7 +4,7 @@
 
 import { TMDB_ENDPOINTS } from '@/core/api';
 import { MOVIE_LIST } from '../constants';
-import type { MovieList } from '../types';
+import type { MovieList, TmdbMovieListResponse, MoviesPage } from '../types';
 
 /**
  * Maps movie list type to its API endpoint
@@ -17,3 +17,14 @@ export const getListEndpoint = (list: MovieList): string => {
       return TMDB_ENDPOINTS.MOVIES.NOW_PLAYING;
   }
 };
+
+/**
+ * Maps a TMDB API response to a MoviesPage domain object
+ */
+export function toMoviesPage(response: TmdbMovieListResponse): MoviesPage {
+  return {
+    movies: response.results,
+    pageNumber: response.page,
+    numberOfPages: response.total_pages,
+  };
+}

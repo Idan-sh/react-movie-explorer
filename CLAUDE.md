@@ -2,7 +2,8 @@
 
 ## Project Overview
 - **App**: React Movie Explorer - TMDB API integration
-- **Tech Stack**: React 19 + TypeScript + Vite + Tailwind CSS 4 + Redux-Saga
+- **Tech Stack**: React 19 + TypeScript 5.9 + Vite 7 + Tailwind CSS 4 + Redux Toolkit + Redux-Saga
+- **Path alias**: `@/` maps to `src/` (configured in tsconfig + vite)
 
 ---
 
@@ -10,39 +11,51 @@
 
 ```
 src/
+├── App.tsx                  # Root app component
+├── main.tsx                 # React entry point (renders App into DOM)
+├── index.css                # Global styles + Tailwind @theme tokens
+│
 ├── core/                    # App-wide infrastructure
 │   ├── api/                 # API client and endpoints
-│   │   ├── tmdbClient.ts    # Axios instance with interceptors
+│   │   ├── tmdbClient.ts    # Axios instance with interceptors (10s timeout)
 │   │   └── endpoints.ts     # All API endpoint paths (centralized)
 │   ├── config/              # Environment variables only (env.ts)
-│   └── store/               # Redux store setup, root saga
+│   └── store/               # Redux store setup
+│       ├── store.ts         # configureStore with saga middleware
+│       ├── rootReducer.ts   # combineReducers (all feature slices)
+│       ├── rootSaga.ts      # Root saga (fork all feature sagas)
+│       └── hooks.ts         # Typed hooks: useAppDispatch, useAppSelector
 │
 ├── modules/                 # Feature modules (self-contained)
-│   ├── movies/              # Movie listing, details, pagination
-│   │   ├── components/
-│   │   ├── store/
-│   │   ├── types/
-│   │   └── constants.ts     # Module-specific: TMDB image sizes
-│   ├── search/
-│   │   └── constants.ts     # Module-specific: debounce, rate limit
-│   ├── favorites/
-│   │   └── constants.ts     # Module-specific: localStorage keys
-│   └── navigation/
-│       └── constants.ts     # Module-specific: key codes
+│   ├── movies/              # Movie listing, pagination (IMPLEMENTED)
+│   │   ├── components/      # MovieCard/, MovieGrid/ (with sub-components)
+│   │   ├── hooks/           # useMoviesInit, useMovieGrid, useMovieCard
+│   │   ├── store/           # movies.slice, movies.saga, movies.selectors
+│   │   ├── types/           # movie.types, movies.store.types
+│   │   ├── utils/           # movieCard.utils, movies.utils
+│   │   └── constants.ts     # MOVIE_LIST, TMDB_IMAGE, PAGINATION
+│   ├── navigation/          # Keyboard navigation system (IMPLEMENTED)
+│   │   ├── hooks/           # useKeyboardNav, usePageNavigation
+│   │   ├── types/           # navigation.types (NavState, NavZone, etc.)
+│   │   ├── utils/           # navigation.utils (resolveNavigation, grid math)
+│   │   └── constants.ts     # NAV_KEY, NAV_ZONE, GRID_COLUMNS, NAV_ID_PREFIX
+│   ├── search/              # (SCAFFOLDED - not yet implemented)
+│   └── favorites/           # (SCAFFOLDED - not yet implemented)
 │
 ├── shared/                  # Reusable across modules
-│   ├── components/          # Generic UI components (ErrorBoundary, Toast, etc.)
-│   ├── hooks/               # Generic hooks
-│   ├── utils/               # Helper functions
-│   ├── types/               # Shared TypeScript types
-│   ├── styles/              # Global styles
+│   ├── components/          # AppHeader/, CategoryTabs/ (CategoryTab sub-component)
+│   ├── hooks/               # useCategoryTabs (tab state + auto-fetch timer)
+│   ├── utils/               # (empty - placeholder for future)
+│   ├── types/               # request.types, views.types (derived from constants)
+│   ├── styles/              # (empty - styles in index.css)
 │   └── constants/           # Shared constants (organized by responsibility)
-│       ├── request.constants.ts  # Request status (idle, loading, etc.)
-│       ├── slices.constants.ts   # Redux slice names
+│       ├── request.constants.ts  # REQUEST_STATUS (idle, loading, success, error)
+│       ├── slices.constants.ts   # SLICE_NAMES (movies, search, favorites)
+│       ├── views.constants.ts    # APP_VIEW, APP_VIEW_LABELS, APP_VIEW_TABS
 │       └── index.ts
 │
 └── pages/                   # Route-level components (thin, no hooks)
-    └── HomePage/
+    └── HomePage/            # Composes modules, connects hooks
 ```
 
 ---
@@ -53,9 +66,9 @@ src/
 |------|------------|---------|
 | Components | PascalCase | `MovieCard.tsx` |
 | Hooks | camelCase with "use" prefix | `useKeyboardNav.ts` |
-| Utils | camelCase | `formatDate.ts` |
-| Types | camelCase with suffix | `movie.types.ts` |
-| Stores | camelCase with suffix | `movies.slice.ts`, `movies.saga.ts` |
+| Utils | camelCase with suffix | `movieCard.utils.ts`, `navigation.utils.ts` |
+| Types | camelCase with suffix | `movie.types.ts`, `navigation.types.ts` |
+| Stores | camelCase with suffix | `movies.slice.ts`, `movies.saga.ts`, `movies.selectors.ts` |
 | Constants | SCREAMING_SNAKE_CASE | `API_BASE_URL` |
 
 ---
@@ -203,9 +216,39 @@ export type RequestStatus = (typeof REQUEST_STATUS)[keyof typeof REQUEST_STATUS]
 
 - **Slice per feature**: Each module has its own slice
 - **Saga per feature**: Each module has its own saga file
-- **Action naming**: `domain/actionName` (e.g., `movies/fetchPopular`)
-- **Selectors**: Memoized with createSelector, co-located with slice
+- **Selectors per feature**: Separate `*.selectors.ts` file, co-located with slice
+- **Action naming**: `domain/actionName` (e.g., `movies/fetchMovies`)
 - **Sagas only contain saga logic**: No constants, types, or helpers defined in saga files
+- **Typed hooks**: Use `useAppDispatch` and `useAppSelector` from `core/store/hooks.ts` (pre-typed with `RootState`/`AppDispatch`)
+
+### List-Keyed State Pattern
+State is keyed by list type (e.g., `popular`, `nowPlaying`) to support multiple data sets simultaneously:
+```typescript
+// Each list has independent state: movies[], page, totalPages, status, error
+interface MoviesState {
+  popular: MovieListState;
+  nowPlaying: MovieListState;
+}
+```
+
+### Pre-Built Selectors Pattern
+Selectors are built once at module load time (not per render) for stable memoization:
+```typescript
+// Build at module load, not in component render
+const selectorsByList = {
+  [MOVIE_LIST.POPULAR]: buildListSelectors(MOVIE_LIST.POPULAR),
+  [MOVIE_LIST.NOW_PLAYING]: buildListSelectors(MOVIE_LIST.NOW_PLAYING),
+};
+
+// Export lookup function for stable references
+export function getListSelectors(list: MovieList) {
+  return selectorsByList[list];
+}
+
+// Usage in hooks - always gets same selector reference
+const selectors = getListSelectors(list);
+const movies = useAppSelector(selectors.selectMovies);
+```
 
 ---
 
@@ -225,27 +268,33 @@ export type RequestStatus = (typeof REQUEST_STATUS)[keyof typeof REQUEST_STATUS]
 
 ## API Integration
 
-- **Single axios instance** in `core/api/`
-- **Error handling**: Centralized in interceptors
+- **Single axios instance** in `core/api/tmdbClient.ts`
+- **Timeout**: 10 seconds on all requests
+- **Request interceptor**: Auto-appends API key to all requests, dev-only logging
+- **Response interceptor**: Translates errors to user-friendly messages (timeout, network, 401, 404, 429, 5xx)
 - **Loading states**: Managed in Redux (idle | loading | success | error)
 - **Request types**: Define request/response types for each endpoint
+- **Endpoints**: Centralized in `core/api/endpoints.ts` — `TMDB_ENDPOINTS.MOVIES.POPULAR`, etc.
 
 ---
 
 ## Error Handling Strategy
 
-Two-tier approach:
+Two-tier approach (planned, partially implemented):
 
-### 1. Error Boundaries (silent fallbacks)
-- Image loading failures → placeholder image
+### 1. Error Boundaries (silent fallbacks) — PLANNED
+- Image loading failures → placeholder image (implemented in MoviePoster)
 - Non-critical component crashes → fallback UI
-- Located in `shared/components/ErrorBoundary.tsx`
+- `shared/components/ErrorBoundary.tsx` — not yet created
 
-### 2. Custom Toast Notifications (user feedback)
+### 2. Custom Toast Notifications (user feedback) — PLANNED
 - Failed user actions (add to favorites, search errors)
 - API errors that block functionality
-- Located in `shared/components/Toast/`
-- Managed via Redux state or Context
+- `shared/components/Toast/` — not yet created
+
+### Currently Implemented
+- **API errors**: Caught in sagas, stored in Redux state, rendered by MovieGridError
+- **Image fallbacks**: MoviePoster handles broken images with placeholder
 
 ---
 
@@ -292,12 +341,12 @@ Two-tier approach:
 
 ## ESLint Rules (Key Enforcements)
 
-- `no-explicit-any`: error
+Uses ESLint 9 flat config format (`eslint.config.js`):
+- Extends: `js.configs.recommended`, `tseslint.configs.recommended`, `reactHooks.configs.flat.recommended`
 - `react-hooks/rules-of-hooks`: error
 - `react-hooks/exhaustive-deps`: warn
-- `@typescript-eslint/explicit-function-return-type`: warn
-- `no-console`: warn (except console.error)
-- `prefer-const`: error
+- TypeScript recommended rules (includes no-explicit-any)
+- React Refresh rules for Vite HMR
 
 ---
 
@@ -330,30 +379,53 @@ Two-tier approach:
 
 ## HomePage Architecture
 
-### Default View (no tab active)
+### Tabs
+Four tabs: **Home** | **Popular** | **Airing Now** | **My Favorites**
+- Defined in `shared/constants/views.constants.ts` as `APP_VIEW_TABS`
+- Labels mapped via `APP_VIEW_LABELS`
+
+### Default View (Home tab active)
 - Shows **preview rows** for each section: Popular, Airing Now, My Favorites
 - Each preview shows one row of movies (4 cards)
 - Gives users an overview of all content
 
-### Full View (tab active)
+### Full View (category tab active)
 - Clicking a tab switches to **full grid** of that category
 - Full pagination support
-- Tabs: Popular | Airing Now | My Favorites
 
-### Category Tab Behavior
-- **Click** → fetch immediately, switch to full view
-- **Focus after 2 seconds** → auto-fetch (keyboard navigation)
+### Category Tab Behavior (useCategoryTabs hook)
+- **Click** → switch view immediately, scroll to top
+- **Focus after 2 seconds** → auto-switch (keyboard navigation, non-Home tabs only)
+- **Blur** → cancel pending auto-switch timer
 - Popular & Airing Now → TMDB API
-- My Favorites → localStorage (separate data source)
+- My Favorites → localStorage (separate data source, not yet implemented)
 
 ---
 
 ## Keyboard Navigation Requirements
 
 - All navigation via Arrow keys, Enter, Escape
-- **Tab key DISABLED** (per requirements)
-- **Mouse scroll DISABLED** (CSS overflow: hidden)
+- **Tab key DISABLED** (per requirements - always prevented)
+- **Mouse scroll DISABLED** (CSS overflow: hidden on html/body)
 - Focus management is critical for UX
+
+### Navigation Zones (implemented)
+Two mutually exclusive zones — only one has focus at a time:
+- **TABS zone**: Arrow Left/Right to move between tabs, Enter to activate
+- **CONTENT zone**: Arrow keys to navigate grid (4 columns), Enter to activate item
+- Arrow Down from tabs → enter content; Escape from content → return to tabs
+
+### Focus Management via `data-nav-id`
+- DOM elements tagged with `data-nav-id` attribute for programmatic focus
+- Tabs: `nav-tab-{index}` (e.g., `nav-tab-0`)
+- Grid items: `nav-item-{sectionIndex}-{itemIndex}` (e.g., `nav-item-0-3`)
+- Pure `resolveNavigation()` util handles all state transitions (testable, no side effects)
+- DOM focus synced via useEffect after state changes
+
+### Hook Layering
+- `useKeyboardNav` — core keyboard logic (global keydown listener, state + DOM sync)
+- `usePageNavigation` — generic wrapper that derives sections from item arrays
+- Refs used to keep event listener stable (registered once, reads latest state via refs)
 
 ---
 

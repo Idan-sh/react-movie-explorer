@@ -5,8 +5,8 @@
  * Pre-built selectors for each list type to maintain memoization.
  *
  * USAGE:
- * const popular = useAppSelector(selectMovieList.popular);
- * const isLoading = useAppSelector(selectIsListLoading.popular);
+ * const selectors = getListSelectors(MOVIE_LIST.POPULAR);
+ * const movies = useAppSelector(selectors.selectMovies);
  */
 
 import { createSelector } from '@reduxjs/toolkit';
@@ -34,17 +34,22 @@ function buildListSelectors(list: MovieList) {
 
   const selectMovies = createSelector(
     [selectState],
-    (listState) => listState.movies
+    (listState) => listState.page.movies
   );
 
-  const selectPage = createSelector(
+  const selectPageNumber = createSelector(
     [selectState],
-    (listState) => listState.page
+    (listState) => listState.page.pageNumber
   );
 
-  const selectTotalPages = createSelector(
+  const selectNumberOfPages = createSelector(
     [selectState],
-    (listState) => listState.totalPages
+    (listState) => listState.page.numberOfPages
+  );
+
+  const selectHasNextPage = createSelector(
+    [selectState],
+    (listState) => listState.nextPage !== null
   );
 
   const selectError = createSelector(
@@ -64,14 +69,15 @@ function buildListSelectors(list: MovieList) {
 
   const selectHasMorePages = createSelector(
     [selectState],
-    (listState) => listState.page < listState.totalPages
+    (listState) => listState.page.pageNumber < listState.page.numberOfPages
   );
 
   return {
     selectState,
     selectMovies,
-    selectPage,
-    selectTotalPages,
+    selectPageNumber,
+    selectNumberOfPages,
+    selectHasNextPage,
     selectError,
     selectIsLoading,
     selectHasError,

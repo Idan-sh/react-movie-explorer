@@ -18,6 +18,8 @@ export type NavZone = (typeof NAV_ZONE)[keyof typeof NAV_ZONE];
 export interface ContentSection {
   itemCount: number;
   columns: number;
+  /** Whether a footer element (e.g., Load More button) exists below the grid */
+  hasFooter?: boolean;
 }
 
 /**
@@ -36,6 +38,8 @@ export interface UseKeyboardNavOptions {
   onItemActivate: (sectionIndex: number, itemIndex: number) => void;
   /** Called when Escape is pressed */
   onEscape: () => void;
+  /** Called when Enter is pressed on a section footer (e.g., Load More button) */
+  onFooterActivate?: (sectionIndex: number) => void;
   /** Whether keyboard navigation is enabled (default: true) */
   enabled?: boolean;
 }

@@ -4,7 +4,11 @@
  * Displays loading skeleton cards while movies are being fetched.
  */
 
-const SKELETON_COUNT = 8;
+const DEFAULT_SKELETON_COUNT = 8;
+
+export interface MovieGridSkeletonProps {
+  count?: number;
+}
 
 function SkeletonCard(): React.JSX.Element {
   return (
@@ -21,10 +25,10 @@ function SkeletonCard(): React.JSX.Element {
   );
 }
 
-export function MovieGridSkeleton(): React.JSX.Element {
+export function MovieGridSkeleton({ count = DEFAULT_SKELETON_COUNT }: MovieGridSkeletonProps): React.JSX.Element {
   return (
     <>
-      {Array.from({ length: SKELETON_COUNT }).map((_, index) => (
+      {Array.from({ length: count }).map((_, index) => (
         <SkeletonCard key={index} />
       ))}
     </>

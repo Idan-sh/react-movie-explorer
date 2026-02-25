@@ -9,12 +9,20 @@ import type { RequestStatus } from '@/shared/types';
 import type { TmdbMovie, MovieList } from './movie.types';
 
 /**
+ * A single page of movie results
+ */
+export interface MoviesPage {
+  movies: TmdbMovie[];
+  pageNumber: number;
+  numberOfPages: number;
+}
+
+/**
  * State for a single movie list (popular or now playing)
  */
 export interface MovieListState {
-  movies: TmdbMovie[];
-  page: number;
-  totalPages: number;
+  page: MoviesPage;
+  nextPage: MoviesPage | null;
   status: RequestStatus;
   error: string | null;
 }
@@ -32,7 +40,7 @@ export interface MoviesState {
  */
 export interface FetchMoviesPayload {
   list: MovieList;
-  page: number;
+  pageNumber: number;
 }
 
 /**
@@ -40,9 +48,7 @@ export interface FetchMoviesPayload {
  */
 export interface FetchMoviesSuccessPayload {
   list: MovieList;
-  movies: TmdbMovie[];
-  page: number;
-  totalPages: number;
+  page: MoviesPage;
 }
 
 /**
@@ -51,4 +57,19 @@ export interface FetchMoviesSuccessPayload {
 export interface FetchMoviesFailurePayload {
   list: MovieList;
   error: string;
+}
+
+/**
+ * Payload for prefetchSuccess action — stores next page in buffer
+ */
+export interface PrefetchSuccessPayload {
+  list: MovieList;
+  page: MoviesPage;
+}
+
+/**
+ * Payload for showNextPage action — applies buffer to visible movies
+ */
+export interface ShowNextPagePayload {
+  list: MovieList;
 }

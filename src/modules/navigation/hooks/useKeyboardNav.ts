@@ -40,6 +40,7 @@ export function useKeyboardNav({
   onTabActivate,
   onItemActivate,
   onEscape,
+  onFooterActivate,
   enabled = true,
 }: UseKeyboardNavOptions): UseKeyboardNavReturn {
   const [state, setState] = useState<NavState>(INITIAL_STATE);
@@ -52,8 +53,8 @@ export function useKeyboardNav({
   const configRef = useRef({ tabCount, sections });
   configRef.current = { tabCount, sections };
 
-  const callbacksRef = useRef({ onTabActivate, onItemActivate, onEscape });
-  callbacksRef.current = { onTabActivate, onItemActivate, onEscape };
+  const callbacksRef = useRef({ onTabActivate, onItemActivate, onEscape, onFooterActivate });
+  callbacksRef.current = { onTabActivate, onItemActivate, onEscape, onFooterActivate };
 
   // Reset content focus when the view changes
   useEffect(() => {
@@ -83,7 +84,12 @@ export function useKeyboardNav({
         if (activeZone === NAV_ZONE.TABS) {
           callbacksRef.current.onTabActivate(tabIndex);
         } else {
-          callbacksRef.current.onItemActivate(sectionIndex, itemIndex);
+          const section = configRef.current.sections[sectionIndex];
+          if (section?.hasFooter && itemIndex === section.itemCount) {
+            callbacksRef.current.onFooterActivate?.(sectionIndex);
+          } else {
+            callbacksRef.current.onItemActivate(sectionIndex, itemIndex);
+          }
         }
         return;
       }

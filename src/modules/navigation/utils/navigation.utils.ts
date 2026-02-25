@@ -147,6 +147,30 @@ export function getLastRowTargetIndex(currentCol: number, targetSection: Content
   return Math.min(lastRowStart + currentCol, itemCount - 1);
 }
 
+// ── Footer navigation ───────────────────────────────────────────
+
+/**
+ * Resolves navigation when focused on a section's footer element
+ * (e.g., Load More button). Footer is at itemIndex === section.itemCount.
+ *
+ * Up → last grid item. Down → next section or no-op.
+ * Left/Right → no-op (footer is a single element).
+ */
+function resolveFooterNavigation(state: NavState, key: string, config: NavConfig): NavState {
+  const section = config.sections[state.sectionIndex];
+
+  if (key === NAV_KEY.ARROW_UP) {
+    return { ...state, itemIndex: section.itemCount - 1 };
+  }
+
+  if (key === NAV_KEY.ARROW_DOWN && state.sectionIndex < config.sections.length - 1) {
+    const nextSection = config.sections[state.sectionIndex + 1];
+    return { ...state, sectionIndex: state.sectionIndex + 1, itemIndex: getFirstRowTargetIndex(0, nextSection) };
+  }
+
+  return state;
+}
+
 // ── High-level navigation resolvers ────────────────────────────
 
 /**
@@ -178,6 +202,11 @@ function resolveContentNavigation(state: NavState, key: string, config: NavConfi
   const section = config.sections[state.sectionIndex];
   if (!section) return state;
 
+  // Delegate to footer helper when focused on a section footer
+  if (state.itemIndex === section.itemCount && section.hasFooter) {
+    return resolveFooterNavigation(state, key, config);
+  }
+
   const nextIndex = getNextGridIndex(state.itemIndex, key, section);
   const col = state.itemIndex % section.columns;
 
@@ -190,6 +219,10 @@ function resolveContentNavigation(state: NavState, key: string, config: NavConfi
   if (nextIndex === -1) {
     if (state.sectionIndex > 0) {
       const prevSection = config.sections[state.sectionIndex - 1];
+      // Land on previous section's footer if it has one
+      if (prevSection.hasFooter) {
+        return { ...state, sectionIndex: state.sectionIndex - 1, itemIndex: prevSection.itemCount };
+      }
       return {
         ...state,
         sectionIndex: state.sectionIndex - 1,
@@ -199,7 +232,11 @@ function resolveContentNavigation(state: NavState, key: string, config: NavConfi
     return { ...state, activeZone: NAV_ZONE.TABS };
   }
 
-  // Exit downward (Infinity sentinel)
+  // Exit downward (Infinity sentinel) → footer if available, else next section
+  if (section.hasFooter) {
+    return { ...state, itemIndex: section.itemCount };
+  }
+
   if (state.sectionIndex < config.sections.length - 1) {
     const nextSection = config.sections[state.sectionIndex + 1];
     return {
@@ -209,7 +246,7 @@ function resolveContentNavigation(state: NavState, key: string, config: NavConfi
     };
   }
 
-  // At bottom of last section → no-op
+  // At bottom of last section with no footer → no-op
   return state;
 }
 

@@ -6,11 +6,11 @@
  * Keyboard navigation handled via usePageNavigation.
  */
 
-import { useMemo } from 'react';
+import { useMemo, useCallback } from 'react';
 import { AppHeader } from '@/shared/components';
 import { useCategoryTabs } from '@/shared/hooks';
 import { APP_VIEW, APP_VIEW_LABELS, APP_VIEW_TABS } from '@/shared/constants';
-import { MovieGrid, useMoviesInit, MOVIE_LIST, getListSelectors } from '@/modules/movies';
+import { MovieGrid, useMoviesInit, useLoadMore, MOVIE_LIST, getListSelectors } from '@/modules/movies';
 import { usePageNavigation, GRID_COLUMNS } from '@/modules/navigation';
 import { useAppSelector } from '@/core/store';
 
@@ -21,6 +21,12 @@ export function HomePage(): React.JSX.Element {
   // Movie data for navigation sections
   const popularMovies = useAppSelector(getListSelectors(MOVIE_LIST.POPULAR).selectMovies);
   const nowPlayingMovies = useAppSelector(getListSelectors(MOVIE_LIST.NOW_PLAYING).selectMovies);
+  const hasMorePopular = useAppSelector(getListSelectors(MOVIE_LIST.POPULAR).selectHasMorePages);
+  const hasMoreNowPlaying = useAppSelector(getListSelectors(MOVIE_LIST.NOW_PLAYING).selectHasMorePages);
+
+  // Load more handlers for keyboard footer activation
+  const loadMorePopular = useLoadMore(MOVIE_LIST.POPULAR);
+  const loadMoreNowPlaying = useLoadMore(MOVIE_LIST.NOW_PLAYING);
 
   // Section items mapped by active view (order matches grid layout)
   const sectionItems = useMemo(() => {
@@ -29,6 +35,25 @@ export function HomePage(): React.JSX.Element {
     if (activeView === APP_VIEW.NOW_PLAYING) return [nowPlayingMovies];
     return [];
   }, [activeView, popularMovies, nowPlayingMovies]);
+
+  // Footer flags per section (Load More button exists when more pages available)
+  const sectionHasFooter = useMemo(() => {
+    if (activeView === APP_VIEW.HOME) return [hasMorePopular, hasMoreNowPlaying];
+    if (activeView === APP_VIEW.POPULAR) return [hasMorePopular];
+    if (activeView === APP_VIEW.NOW_PLAYING) return [hasMoreNowPlaying];
+    return [];
+  }, [activeView, hasMorePopular, hasMoreNowPlaying]);
+
+  // Maps section index → load more handler for keyboard Enter on footer
+  const handleFooterActivate = useCallback((sectionIndex: number): void => {
+    if (activeView === APP_VIEW.HOME) {
+      (sectionIndex === 0 ? loadMorePopular : loadMoreNowPlaying)();
+    } else if (activeView === APP_VIEW.POPULAR) {
+      loadMorePopular();
+    } else if (activeView === APP_VIEW.NOW_PLAYING) {
+      loadMoreNowPlaying();
+    }
+  }, [activeView, loadMorePopular, loadMoreNowPlaying]);
 
   // Keyboard navigation
   const { focusedTabIndex, focusedSectionIndex, focusedItemIndex } = usePageNavigation({
@@ -39,6 +64,8 @@ export function HomePage(): React.JSX.Element {
     onTabActivate: (index) => handleTabClick(APP_VIEW_TABS[index]),
     onItemActivate: handleSelectMovie,
     onEscape: () => handleTabClick(APP_VIEW.HOME),
+    sectionHasFooter,
+    onFooterActivate: handleFooterActivate,
   });
 
   const renderContent = (): React.JSX.Element => {

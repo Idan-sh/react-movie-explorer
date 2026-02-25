@@ -25,11 +25,11 @@ export function useMoviesInit(): UseMoviesInitReturn {
   useEffect(() => {
     dispatch(fetchMovies({
       list: MOVIE_LIST.POPULAR,
-      page: PAGINATION.DEFAULT_PAGE,
+      pageNumber: PAGINATION.DEFAULT_PAGE,
     }));
     dispatch(fetchMovies({
       list: MOVIE_LIST.NOW_PLAYING,
-      page: PAGINATION.DEFAULT_PAGE,
+      pageNumber: PAGINATION.DEFAULT_PAGE,
     }));
   }, [dispatch]);
 

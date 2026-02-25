@@ -28,6 +28,10 @@ export interface UsePageNavigationOptions<T> {
   onItemActivate: (item: T) => void;
   /** Called when Escape is pressed */
   onEscape: () => void;
+  /** Whether each section has a footer element (e.g., Load More button) */
+  sectionHasFooter?: boolean[];
+  /** Called when Enter is pressed on a section footer */
+  onFooterActivate?: (sectionIndex: number) => void;
 }
 
 /**
@@ -42,11 +46,17 @@ export function usePageNavigation<T>({
   onTabActivate,
   onItemActivate,
   onEscape,
+  sectionHasFooter,
+  onFooterActivate,
 }: UsePageNavigationOptions<T>): UseKeyboardNavReturn {
   // Derive section definitions from item arrays
   const sections = useMemo((): ContentSection[] =>
-    sectionItems.map(items => ({ itemCount: items.length, columns })),
-  [sectionItems, columns]);
+    sectionItems.map((items, i) => ({
+      itemCount: items.length,
+      columns,
+      hasFooter: sectionHasFooter?.[i] ?? false,
+    })),
+  [sectionItems, columns, sectionHasFooter]);
 
   // Look up the item by section and index, then delegate to caller
   const handleItemActivate = useCallback((sectionIdx: number, itemIdx: number): void => {
@@ -61,5 +71,6 @@ export function usePageNavigation<T>({
     onTabActivate,
     onItemActivate: handleItemActivate,
     onEscape,
+    onFooterActivate,
   });
 }
