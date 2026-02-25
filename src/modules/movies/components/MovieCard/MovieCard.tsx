@@ -16,12 +16,14 @@ export interface MovieCardProps {
   movie: TmdbMovie;
   onSelect?: (movie: TmdbMovie) => void;
   isFocused?: boolean;
+  navId?: string;
 }
 
 function MovieCardComponent({
   movie,
   onSelect,
   isFocused = false,
+  navId,
 }: MovieCardProps): React.JSX.Element {
   const {
     posterUrl,
@@ -36,7 +38,8 @@ function MovieCardComponent({
   return (
     <article
       role="button"
-      tabIndex={0}
+      tabIndex={-1}
+      data-nav-id={navId}
       onClick={handleClick}
       onKeyDown={handleKeyDown}
       aria-label={ariaLabel}

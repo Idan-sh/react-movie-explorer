@@ -10,6 +10,7 @@ import { CategoryTabs } from '../CategoryTabs';
 
 export interface AppHeaderProps {
   activeView: AppView;
+  focusedTabIndex: number;
   onTabClick: (view: AppView) => void;
   onTabFocus: (view: AppView) => void;
   onTabBlur: () => void;
@@ -17,6 +18,7 @@ export interface AppHeaderProps {
 
 export function AppHeader({
   activeView,
+  focusedTabIndex,
   onTabClick,
   onTabFocus,
   onTabBlur,
@@ -30,6 +32,7 @@ export function AppHeader({
 
         <CategoryTabs
           activeView={activeView}
+          focusedTabIndex={focusedTabIndex}
           onTabClick={onTabClick}
           onTabFocus={onTabFocus}
           onTabBlur={onTabBlur}

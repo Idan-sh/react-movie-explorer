@@ -7,6 +7,7 @@
 
 import type { TmdbMovie, MovieList } from "../../types";
 import { useMovieGrid } from "../../hooks";
+import { buildNavId, NAV_ID_PREFIX } from "@/modules/navigation";
 import { MovieCard } from "../MovieCard";
 import { MovieGridSkeleton } from "./MovieGridSkeleton";
 import { MovieGridEmpty } from "./MovieGridEmpty";
@@ -16,9 +17,15 @@ export interface MovieGridProps {
   list: MovieList;
   onSelectMovie?: (movie: TmdbMovie) => void;
   focusedIndex?: number;
+  sectionIndex?: number;
 }
 
-export function MovieGrid({ list, onSelectMovie, focusedIndex = -1 }: MovieGridProps): React.JSX.Element {
+export function MovieGrid({
+  list,
+  onSelectMovie,
+  focusedIndex = -1,
+  sectionIndex = 0,
+}: MovieGridProps): React.JSX.Element {
   const { movies, isLoading, hasError, error, isEmpty } = useMovieGrid(list);
 
   // Render content based on state priority: loading > error > empty > movies
@@ -43,6 +50,7 @@ export function MovieGrid({ list, onSelectMovie, focusedIndex = -1 }: MovieGridP
             movie={movie}
             onSelect={onSelectMovie}
             isFocused={index === focusedIndex}
+            navId={buildNavId(NAV_ID_PREFIX.ITEM, sectionIndex, index)}
           />
         ))}
       </>

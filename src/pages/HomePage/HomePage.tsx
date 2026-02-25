@@ -3,24 +3,65 @@
  *
  * Main landing page. Composes shared and module components.
  * Default view shows preview rows, tab click shows full grid.
+ * Keyboard navigation handled via usePageNavigation.
  */
 
+import { useMemo } from 'react';
 import { AppHeader } from '@/shared/components';
 import { useCategoryTabs } from '@/shared/hooks';
-import { APP_VIEW, APP_VIEW_LABELS } from '@/shared/constants';
-import { MovieGrid, useMoviesInit, MOVIE_LIST } from '@/modules/movies';
+import { APP_VIEW, APP_VIEW_LABELS, APP_VIEW_TABS } from '@/shared/constants';
+import { MovieGrid, useMoviesInit, MOVIE_LIST, getListSelectors } from '@/modules/movies';
+import { usePageNavigation, GRID_COLUMNS } from '@/modules/navigation';
+import { useAppSelector } from '@/core/store';
 
 export function HomePage(): React.JSX.Element {
   const { handleSelectMovie } = useMoviesInit();
   const { activeView, handleTabClick, handleTabFocus, handleTabBlur } = useCategoryTabs();
 
+  // Movie data for navigation sections
+  const popularMovies = useAppSelector(getListSelectors(MOVIE_LIST.POPULAR).selectMovies);
+  const nowPlayingMovies = useAppSelector(getListSelectors(MOVIE_LIST.NOW_PLAYING).selectMovies);
+
+  // Section items mapped by active view (order matches grid layout)
+  const sectionItems = useMemo(() => {
+    if (activeView === APP_VIEW.HOME) return [popularMovies, nowPlayingMovies];
+    if (activeView === APP_VIEW.POPULAR) return [popularMovies];
+    if (activeView === APP_VIEW.NOW_PLAYING) return [nowPlayingMovies];
+    return [];
+  }, [activeView, popularMovies, nowPlayingMovies]);
+
+  // Keyboard navigation
+  const { focusedTabIndex, focusedSectionIndex, focusedItemIndex } = usePageNavigation({
+    tabCount: APP_VIEW_TABS.length,
+    sectionItems,
+    columns: GRID_COLUMNS,
+    contentKey: activeView,
+    onTabActivate: (index) => handleTabClick(APP_VIEW_TABS[index]),
+    onItemActivate: handleSelectMovie,
+    onEscape: () => handleTabClick(APP_VIEW.HOME),
+  });
+
   const renderContent = (): React.JSX.Element => {
     if (activeView === APP_VIEW.POPULAR) {
-      return <MovieGrid list={MOVIE_LIST.POPULAR} onSelectMovie={handleSelectMovie} />;
+      return (
+        <MovieGrid
+          list={MOVIE_LIST.POPULAR}
+          onSelectMovie={handleSelectMovie}
+          sectionIndex={0}
+          focusedIndex={focusedSectionIndex === 0 ? focusedItemIndex : -1}
+        />
+      );
     }
 
     if (activeView === APP_VIEW.NOW_PLAYING) {
-      return <MovieGrid list={MOVIE_LIST.NOW_PLAYING} onSelectMovie={handleSelectMovie} />;
+      return (
+        <MovieGrid
+          list={MOVIE_LIST.NOW_PLAYING}
+          onSelectMovie={handleSelectMovie}
+          sectionIndex={0}
+          focusedIndex={focusedSectionIndex === 0 ? focusedItemIndex : -1}
+        />
+      );
     }
 
     if (activeView === APP_VIEW.FAVORITES) {
@@ -37,13 +78,27 @@ export function HomePage(): React.JSX.Element {
     return (
       <div className="flex flex-col gap-8">
         <section>
-          <h2 className="mb-4 text-xl font-bold text-gray-900 dark:text-white">{APP_VIEW_LABELS[APP_VIEW.POPULAR]}</h2>
-          <MovieGrid list={MOVIE_LIST.POPULAR} onSelectMovie={handleSelectMovie} />
+          <h2 className="mb-4 text-xl font-bold text-gray-900 dark:text-white">
+            {APP_VIEW_LABELS[APP_VIEW.POPULAR]}
+          </h2>
+          <MovieGrid
+            list={MOVIE_LIST.POPULAR}
+            onSelectMovie={handleSelectMovie}
+            sectionIndex={0}
+            focusedIndex={focusedSectionIndex === 0 ? focusedItemIndex : -1}
+          />
         </section>
 
         <section>
-          <h2 className="mb-4 text-xl font-bold text-gray-900 dark:text-white">{APP_VIEW_LABELS[APP_VIEW.NOW_PLAYING]}</h2>
-          <MovieGrid list={MOVIE_LIST.NOW_PLAYING} onSelectMovie={handleSelectMovie} />
+          <h2 className="mb-4 text-xl font-bold text-gray-900 dark:text-white">
+            {APP_VIEW_LABELS[APP_VIEW.NOW_PLAYING]}
+          </h2>
+          <MovieGrid
+            list={MOVIE_LIST.NOW_PLAYING}
+            onSelectMovie={handleSelectMovie}
+            sectionIndex={1}
+            focusedIndex={focusedSectionIndex === 1 ? focusedItemIndex : -1}
+          />
         </section>
       </div>
     );
@@ -53,6 +108,7 @@ export function HomePage(): React.JSX.Element {
     <div className="flex h-screen flex-col bg-gray-100 dark:bg-gray-900">
       <AppHeader
         activeView={activeView}
+        focusedTabIndex={focusedTabIndex}
         onTabClick={handleTabClick}
         onTabFocus={handleTabFocus}
         onTabBlur={handleTabBlur}
