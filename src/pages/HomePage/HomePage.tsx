@@ -1,19 +1,26 @@
 /**
  * HomePage Component
  *
- * Main landing page displaying movie grid.
- * Business logic handled by movies module hook.
+ * Main landing page. Composes shared and module components.
+ * Default view shows preview rows, tab click shows full grid.
  */
 
-import { AppHeader } from "@/shared/components";
-import { MovieGrid, useMoviesInit } from "@/modules/movies";
+import { AppHeader } from '@/shared/components';
+import { useCategoryTabs } from '@/shared/hooks';
+import { MovieGrid, useMoviesInit } from '@/modules/movies';
 
 export function HomePage(): React.JSX.Element {
   const { handleSelectMovie } = useMoviesInit();
+  const { activeView, handleTabClick, handleTabFocus, handleTabBlur } = useCategoryTabs();
 
   return (
     <div className="flex h-screen flex-col bg-gray-100 dark:bg-gray-900">
-      <AppHeader />
+      <AppHeader
+        activeView={activeView}
+        onTabClick={handleTabClick}
+        onTabFocus={handleTabFocus}
+        onTabBlur={handleTabBlur}
+      />
 
       {/* Content */}
       <main className="flex-1 overflow-auto overscroll-contain">

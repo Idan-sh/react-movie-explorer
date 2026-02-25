@@ -328,6 +328,26 @@ Two-tier approach:
 
 ---
 
+## HomePage Architecture
+
+### Default View (no tab active)
+- Shows **preview rows** for each section: Popular, Airing Now, My Favorites
+- Each preview shows one row of movies (4 cards)
+- Gives users an overview of all content
+
+### Full View (tab active)
+- Clicking a tab switches to **full grid** of that category
+- Full pagination support
+- Tabs: Popular | Airing Now | My Favorites
+
+### Category Tab Behavior
+- **Click** → fetch immediately, switch to full view
+- **Focus after 2 seconds** → auto-fetch (keyboard navigation)
+- Popular & Airing Now → TMDB API
+- My Favorites → localStorage (separate data source)
+
+---
+
 ## Keyboard Navigation Requirements
 
 - All navigation via Arrow keys, Enter, Escape
