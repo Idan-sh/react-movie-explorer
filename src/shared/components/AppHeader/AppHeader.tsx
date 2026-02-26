@@ -2,11 +2,15 @@
  * AppHeader Component
  *
  * Main application header with branding and category tabs.
- * Presentational - receives tab state via props.
+ * Desktop: horizontal tab bar. Mobile: hamburger menu with vertical dropdown.
+ * Uses useHamburgerMenu hook for mobile menu state management.
  */
 
 import type { AppView } from '@/shared/types';
+import { useHamburgerMenu } from '@/shared/hooks';
 import { CategoryTabs } from '../CategoryTabs';
+import { HamburgerButton } from './HamburgerButton';
+import { MobileMenu } from './MobileMenu';
 
 export interface AppHeaderProps {
   activeView: AppView;
@@ -23,21 +27,36 @@ export function AppHeader({
   onTabFocus,
   onTabBlur,
 }: AppHeaderProps): React.JSX.Element {
+  const { isMenuOpen, toggleMenu, handleMobileTabClick } = useHamburgerMenu(onTabClick);
+
   return (
-    <header className="shrink-0 bg-white dark:bg-gray-800 shadow-sm">
+    <header className="relative z-10 shrink-0 bg-white dark:bg-gray-800 shadow-sm">
       <div className="mx-auto flex max-w-7xl items-center gap-6 px-4 py-4">
         <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
           🎬 Movie Explorer
         </h1>
 
-        <CategoryTabs
-          activeView={activeView}
-          focusedTabIndex={focusedTabIndex}
-          onTabClick={onTabClick}
-          onTabFocus={onTabFocus}
-          onTabBlur={onTabBlur}
-        />
+        {/* Desktop: horizontal tabs */}
+        <div className="hidden md:block">
+          <CategoryTabs
+            activeView={activeView}
+            focusedTabIndex={focusedTabIndex}
+            onTabClick={onTabClick}
+            onTabFocus={onTabFocus}
+            onTabBlur={onTabBlur}
+          />
+        </div>
+
+        {/* Mobile: hamburger toggle */}
+        <HamburgerButton isOpen={isMenuOpen} onClick={toggleMenu} />
       </div>
+
+      {/* Mobile: dropdown menu */}
+      <MobileMenu
+        isOpen={isMenuOpen}
+        activeView={activeView}
+        onTabClick={handleMobileTabClick}
+      />
     </header>
   );
 }

@@ -25,6 +25,7 @@ export interface MovieCardData {
 export interface MovieCardHandlers {
   handleClick: () => void;
   handleKeyDown: (event: React.KeyboardEvent) => void;
+  handleToggleFavorite: (e: React.MouseEvent) => void;
 }
 
 export interface UseMovieCardReturn extends MovieCardData, MovieCardHandlers {}
@@ -34,10 +35,12 @@ export interface UseMovieCardReturn extends MovieCardData, MovieCardHandlers {}
  *
  * @param movie - TMDB movie object
  * @param onSelect - Optional callback when movie is selected (click/Enter)
+ * @param onToggleFavorite - Optional callback to add/remove from favorites
  */
 export function useMovieCard(
   movie: TmdbMovie,
-  onSelect?: (movie: TmdbMovie) => void
+  onSelect?: (movie: TmdbMovie) => void,
+  onToggleFavorite?: (movie: TmdbMovie) => void,
 ): UseMovieCardReturn {
   // Data transformations (trivial - no memoization needed)
   const posterUrl = getPosterUrl(movie.poster_path);
@@ -57,6 +60,12 @@ export function useMovieCard(
     }
   }, [movie, onSelect]);
 
+  // Stops propagation so the card's onClick doesn't also fire
+  const handleToggleFavorite = useCallback((e: React.MouseEvent): void => {
+    e.stopPropagation();
+    onToggleFavorite?.(movie);
+  }, [movie, onToggleFavorite]);
+
   return {
     posterUrl,
     releaseYear,
@@ -65,5 +74,6 @@ export function useMovieCard(
     ariaLabel,
     handleClick,
     handleKeyDown,
+    handleToggleFavorite,
   };
 }

@@ -3,20 +3,22 @@
  *
  * Root application component. Composes header, tabs, and content grid.
  * Each tab lazy-loads its content when first opened.
- * Only one movie grid is visible at a time.
+ * Only one grid is visible at a time.
  */
 
-import { useMemo, useCallback } from 'react';
+import { useMemo } from 'react';
 import { AppHeader } from '@/shared/components';
 import { useCategoryTabs } from '@/shared/hooks';
-import { APP_VIEW_TABS } from '@/shared/constants';
+import { APP_VIEW, APP_VIEW_TABS } from '@/shared/constants';
 import { MovieGrid, useMoviesInit, useLoadMore, MOVIE_LIST, getListSelectors } from '@/modules/movies';
+import { FavoritesGrid, useFavoriteToggle, selectFavorites } from '@/modules/favorites';
 import { usePageNavigation, GRID_COLUMNS } from '@/modules/navigation';
 import { useAppSelector } from '@/core/store';
 
 function App(): React.JSX.Element {
   const { activeView, handleTabClick, handleTabFocus, handleTabBlur } = useCategoryTabs();
   const { activeList, handleSelectMovie } = useMoviesInit(activeView);
+  const handleToggleFavorite = useFavoriteToggle();
 
   // Movie data for the active list (empty when no list, e.g., favorites)
   const movies = useAppSelector(
@@ -26,23 +28,23 @@ function App(): React.JSX.Element {
     activeList ? getListSelectors(activeList).selectHasMorePages : () => false
   );
 
-  // Load more handler for active list (defaults to POPULAR, unused for non-list views)
+  // Favorites data (always read — used for heart state and keyboard nav)
+  const favorites = useAppSelector(selectFavorites);
+  const favoriteIds = useMemo(() => new Set(favorites.map((m) => m.id)), [favorites]);
+
+  // Load more handler (defaults to POPULAR, unused for favorites tab)
   const loadMore = useLoadMore(activeList ?? MOVIE_LIST.POPULAR);
 
   // Navigation: always 0 or 1 sections
-  const sectionItems = useMemo(
-    () => (activeList ? [movies] : []),
-    [activeList, movies]
-  );
+  const sectionItems = useMemo(() => {
+    const active = activeList ? movies : activeView === APP_VIEW.FAVORITES ? favorites : [];
+    return active.length > 0 ? [active] : [];
+  }, [activeList, movies, activeView, favorites]);
 
   const sectionHasFooter = useMemo(
     () => (activeList ? [hasMorePages] : []),
     [activeList, hasMorePages]
   );
-
-  const handleFooterActivate = useCallback((): void => {
-    loadMore();
-  }, [loadMore]);
 
   const { focusedTabIndex, focusedSectionIndex, focusedItemIndex } = usePageNavigation({
     tabCount: APP_VIEW_TABS.length,
@@ -53,8 +55,10 @@ function App(): React.JSX.Element {
     onItemActivate: handleSelectMovie,
     onEscape: () => {},
     sectionHasFooter,
-    onFooterActivate: handleFooterActivate,
+    onFooterActivate: loadMore,
   });
+
+  const focusedIndex = focusedSectionIndex === 0 ? focusedItemIndex : -1;
 
   return (
     <div className="flex h-screen flex-col bg-gray-100 dark:bg-gray-900">
@@ -72,15 +76,20 @@ function App(): React.JSX.Element {
             <MovieGrid
               list={activeList}
               onSelectMovie={handleSelectMovie}
+              onToggleFavorite={handleToggleFavorite}
+              favoriteIds={favoriteIds}
               sectionIndex={0}
-              focusedIndex={focusedSectionIndex === 0 ? focusedItemIndex : -1}
+              focusedIndex={focusedIndex}
             />
-          ) : (
-            <div className="flex flex-col items-center justify-center py-16 text-gray-500 dark:text-gray-400">
-              <span className="text-4xl mb-4">❤️</span>
-              <p className="text-lg font-medium">Favorites coming soon</p>
-            </div>
-          )}
+          ) : activeView === APP_VIEW.FAVORITES ? (
+            <FavoritesGrid
+              favorites={favorites}
+              onSelectMovie={handleSelectMovie}
+              onToggleFavorite={handleToggleFavorite}
+              sectionIndex={0}
+              focusedIndex={focusedIndex}
+            />
+          ) : null}
         </div>
       </main>
     </div>

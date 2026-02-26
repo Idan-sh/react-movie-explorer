@@ -26,6 +26,8 @@ import { LoadMoreButton } from "./LoadMoreButton";
 export interface MovieGridProps {
   list: MovieList;
   onSelectMovie?: (movie: TmdbMovie) => void;
+  onToggleFavorite?: (movie: TmdbMovie) => void;
+  favoriteIds?: Set<number>;
   focusedIndex?: number;
   sectionIndex?: number;
 }
@@ -33,6 +35,8 @@ export interface MovieGridProps {
 export function MovieGrid({
   list,
   onSelectMovie,
+  onToggleFavorite,
+  favoriteIds,
   focusedIndex = -1,
   sectionIndex = 0,
 }: MovieGridProps): React.JSX.Element {
@@ -70,6 +74,8 @@ export function MovieGrid({
             key={movie.id}
             movie={movie}
             onSelect={onSelectMovie}
+            onToggleFavorite={onToggleFavorite}
+            isFavorited={favoriteIds?.has(movie.id) ?? false}
             isFocused={index === focusedIndex}
             navId={buildNavId(NAV_ID_PREFIX.ITEM, sectionIndex, index)}
           />

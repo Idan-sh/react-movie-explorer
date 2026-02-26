@@ -11,12 +11,15 @@ import { useMovieCard } from '../../hooks';
 import { MoviePoster } from './MoviePoster';
 import { MovieRating } from './MovieRating';
 import { MovieInfo } from './MovieInfo';
+import { FavoriteButton } from './FavoriteButton';
 
 export interface MovieCardProps {
   movie: TmdbMovie;
   onSelect?: (movie: TmdbMovie) => void;
   isFocused?: boolean;
   navId?: string;
+  isFavorited?: boolean;
+  onToggleFavorite?: (movie: TmdbMovie) => void;
 }
 
 function MovieCardComponent({
@@ -24,6 +27,8 @@ function MovieCardComponent({
   onSelect,
   isFocused = false,
   navId,
+  isFavorited = false,
+  onToggleFavorite,
 }: MovieCardProps): React.JSX.Element {
   const {
     posterUrl,
@@ -33,7 +38,8 @@ function MovieCardComponent({
     ariaLabel,
     handleClick,
     handleKeyDown,
-  } = useMovieCard(movie, onSelect);
+    handleToggleFavorite,
+  } = useMovieCard(movie, onSelect, onToggleFavorite);
 
   return (
     <article
@@ -55,10 +61,17 @@ function MovieCardComponent({
         }
       `}
     >
-      {/* Poster with Rating Overlay */}
+      {/* Poster with Rating + Favorite Overlay */}
       <div className="relative">
         <MoviePoster url={posterUrl} title={title} />
         <MovieRating rating={rating} />
+        {onToggleFavorite !== undefined && (
+          <FavoriteButton
+            isFavorited={isFavorited}
+            isFocused={isFocused}
+            onClick={handleToggleFavorite}
+          />
+        )}
       </div>
 
       {/* Movie Details */}
