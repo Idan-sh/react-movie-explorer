@@ -2,10 +2,11 @@
  * useMovieCard Hook
  *
  * Transforms raw TMDB movie data into display-ready values.
- * Provides event handlers for user interactions.
+ * Provides click handlers for user interactions.
+ *
+ * Enter key is handled globally by useKeyboardNav — no onKeyDown here.
  */
 
-import { useCallback } from 'react';
 import type { TmdbMovie } from '../types';
 import {
   getPosterUrl,
@@ -20,51 +21,32 @@ export interface MovieCardData {
   rating: string;
   title: string;
   ariaLabel: string;
-}
-
-export interface MovieCardHandlers {
   handleClick: () => void;
-  handleKeyDown: (event: React.KeyboardEvent) => void;
   handleToggleFavorite: (e: React.MouseEvent) => void;
 }
 
-export interface UseMovieCardReturn extends MovieCardData, MovieCardHandlers {}
-
 /**
- * Hook that transforms TMDB movie data and provides interaction handlers.
- *
- * @param movie - TMDB movie object
- * @param onSelect - Optional callback when movie is selected (click/Enter)
- * @param onToggleFavorite - Optional callback to add/remove from favorites
+ * Derives display data and interaction handlers for a movie card.
+ * Handlers are plain functions — FavoriteButton is not memoized and
+ * DOM elements don't benefit from callback identity stability.
  */
 export function useMovieCard(
   movie: TmdbMovie,
   onSelect?: (movie: TmdbMovie) => void,
   onToggleFavorite?: (movie: TmdbMovie) => void,
-): UseMovieCardReturn {
-  // Data transformations (trivial - no memoization needed)
+): MovieCardData {
   const posterUrl = getPosterUrl(movie.poster_path);
   const releaseYear = getReleaseYear(movie.release_date);
   const rating = formatRating(movie.vote_average);
   const ariaLabel = buildMovieAriaLabel(movie.title, releaseYear, rating);
 
-  // Event handlers
-  const handleClick = useCallback((): void => {
-    onSelect?.(movie);
-  }, [movie, onSelect]);
-
-  const handleKeyDown = useCallback((event: React.KeyboardEvent): void => {
-    if (event.key === 'Enter') {
-      event.preventDefault();
-      onSelect?.(movie);
-    }
-  }, [movie, onSelect]);
+  const handleClick = (): void => { onSelect?.(movie); };
 
   // Stops propagation so the card's onClick doesn't also fire
-  const handleToggleFavorite = useCallback((e: React.MouseEvent): void => {
+  const handleToggleFavorite = (e: React.MouseEvent): void => {
     e.stopPropagation();
     onToggleFavorite?.(movie);
-  }, [movie, onToggleFavorite]);
+  };
 
   return {
     posterUrl,
@@ -73,7 +55,6 @@ export function useMovieCard(
     title: movie.title,
     ariaLabel,
     handleClick,
-    handleKeyDown,
     handleToggleFavorite,
   };
 }

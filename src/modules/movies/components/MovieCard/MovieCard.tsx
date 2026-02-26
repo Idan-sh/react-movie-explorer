@@ -37,7 +37,6 @@ function MovieCardComponent({
     title,
     ariaLabel,
     handleClick,
-    handleKeyDown,
     handleToggleFavorite,
   } = useMovieCard(movie, onSelect, onToggleFavorite);
 
@@ -47,7 +46,6 @@ function MovieCardComponent({
       tabIndex={-1}
       data-nav-id={navId}
       onClick={handleClick}
-      onKeyDown={handleKeyDown}
       aria-label={ariaLabel}
       className={`
         group relative flex flex-col overflow-hidden rounded-md

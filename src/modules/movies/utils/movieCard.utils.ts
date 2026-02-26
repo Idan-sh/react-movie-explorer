@@ -37,6 +37,30 @@ export function formatRating(voteAverage: number): string {
 }
 
 /**
+ * Constructs the full backdrop URL from TMDB path
+ * @param backdropPath - TMDB backdrop path or null
+ * @returns Full CDN URL or null if no path
+ */
+export function getBackdropUrl(backdropPath: string | null): string | null {
+  if (!backdropPath) return null;
+  return `${TMDB_IMAGE.BASE_URL}/${TMDB_IMAGE.BACKDROP_SIZES.MEDIUM}${backdropPath}`;
+}
+
+/**
+ * Formats runtime minutes into a human-readable string (e.g. "2h 15m")
+ * @param minutes - Runtime in minutes, or null
+ * @returns Formatted string or null if no runtime
+ */
+export function formatRuntime(minutes: number | null): string | null {
+  if (!minutes) return null;
+  const hours = Math.floor(minutes / 60);
+  const mins = minutes % 60;
+  if (hours === 0) return `${mins}m`;
+  if (mins === 0) return `${hours}h`;
+  return `${hours}h ${mins}m`;
+}
+
+/**
  * Builds accessible aria-label for movie card
  * @param title - Movie title
  * @param releaseYear - Formatted release year

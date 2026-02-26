@@ -23,6 +23,8 @@ import { MovieGridEmpty } from "./MovieGridEmpty";
 import { MovieGridError } from "./MovieGridError";
 import { LoadMoreButton } from "./LoadMoreButton";
 
+const GRID_CLASS = "grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:gap-6";
+
 export interface MovieGridProps {
   list: MovieList;
   onSelectMovie?: (movie: TmdbMovie) => void;
@@ -55,7 +57,7 @@ export function MovieGrid({
   if (isLoading && movies.length === 0) {
     return (
       <section aria-label="Movie grid">
-        <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:gap-6">
+        <div className={GRID_CLASS}>
           <MovieGridSkeleton />
         </div>
       </section>
@@ -68,7 +70,7 @@ export function MovieGrid({
   // Has movies — render grid + pagination controls
   return (
     <section aria-label="Movie grid">
-      <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:gap-6">
+      <div className={GRID_CLASS}>
         {movies.map((movie, index) => (
           <MovieCard
             key={movie.id}

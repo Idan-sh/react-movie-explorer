@@ -7,6 +7,7 @@
 
 export const SLICE_NAMES = {
   MOVIES: 'movies',
+  MOVIE_DETAILS: 'movieDetails',
   SEARCH: 'search',
   FAVORITES: 'favorites',
 } as const;

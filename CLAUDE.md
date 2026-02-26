@@ -11,8 +11,7 @@
 
 ```
 src/
-├── App.tsx                  # Root app component
-├── main.tsx                 # React entry point (renders App into DOM)
+├── main.tsx                 # React entry point (routing + lazy loading)
 ├── index.css                # Global styles + Tailwind @theme tokens
 │
 ├── core/                    # App-wide infrastructure
@@ -27,35 +26,46 @@ src/
 │       └── hooks.ts         # Typed hooks: useAppDispatch, useAppSelector
 │
 ├── modules/                 # Feature modules (self-contained)
-│   ├── movies/              # Movie listing, pagination (IMPLEMENTED)
-│   │   ├── components/      # MovieCard/, MovieGrid/ (with sub-components)
-│   │   ├── hooks/           # useMoviesInit, useMovieGrid, useMovieCard
-│   │   ├── store/           # movies.slice, movies.saga, movies.selectors
+│   ├── movies/              # Movie listing, details, pagination
+│   │   ├── components/
+│   │   │   ├── MovieCard/       # MovieCard, FavoriteButton, MoviePoster, MovieRating, MovieInfo
+│   │   │   ├── MovieGrid/       # MovieGrid, LoadMoreButton, MovieGridEmpty, MovieGridError, MovieGridSkeleton
+│   │   │   └── MovieDetails/    # MovieDetails, MovieDetailsPoster, MovieDetailsGenres, MovieDetailsMeta, MovieDetailsOverview
+│   │   ├── hooks/           # useMoviesInit, useMovieGrid, useMovieCard, useLoadMore, useMovieDetails
+│   │   ├── store/           # movies.slice/saga/selectors + movieDetails.slice/saga/selectors
 │   │   ├── types/           # movie.types, movies.store.types
 │   │   ├── utils/           # movieCard.utils, movies.utils
 │   │   └── constants.ts     # MOVIE_LIST, TMDB_IMAGE, PAGINATION
-│   ├── navigation/          # Keyboard navigation system (IMPLEMENTED)
+│   ├── navigation/          # Keyboard navigation system
 │   │   ├── hooks/           # useKeyboardNav, usePageNavigation, useGridColumns
 │   │   ├── types/           # navigation.types (NavState, NavZone, etc.)
 │   │   ├── utils/           # navigation.utils (resolveNavigation, grid math)
 │   │   └── constants.ts     # NAV_KEY, NAV_ZONE, NAV_ID_PREFIX
-│   ├── search/              # (SCAFFOLDED - not yet implemented)
-│   └── favorites/           # (SCAFFOLDED - not yet implemented)
+│   ├── favorites/           # Favorites with localStorage persistence
+│   │   ├── components/
+│   │   │   └── FavoritesGrid/   # FavoritesGrid, FavoritesEmpty
+│   │   ├── hooks/           # useFavoriteToggle
+│   │   ├── services/        # favorites.storage (localStorage)
+│   │   ├── store/           # favorites.slice, favorites.selectors
+│   │   └── types/           # favorites.types
+│   └── search/              # (SCAFFOLDED - not yet implemented)
 │
 ├── shared/                  # Reusable across modules
-│   ├── components/          # AppHeader/, CategoryTabs/ (CategoryTab sub-component)
-│   ├── hooks/               # useCategoryTabs (tab state + auto-fetch timer)
-│   ├── utils/               # (empty - placeholder for future)
+│   ├── components/
+│   │   ├── AppHeader/       # AppHeader, HamburgerButton, MobileMenu
+│   │   └── CategoryTabs/    # CategoryTabs, CategoryTab
+│   ├── hooks/               # useCategoryTabs, useHamburgerMenu
 │   ├── types/               # request.types, views.types (derived from constants)
-│   ├── styles/              # (empty - styles in index.css)
 │   └── constants/           # Shared constants (organized by responsibility)
-│       ├── request.constants.ts  # REQUEST_STATUS (idle, loading, success, error)
-│       ├── slices.constants.ts   # SLICE_NAMES (movies, search, favorites)
-│       ├── views.constants.ts    # APP_VIEW, APP_VIEW_LABELS, APP_VIEW_TABS
-│       └── index.ts
+│       ├── request.constants.ts    # REQUEST_STATUS (idle, loading, success, error)
+│       ├── slices.constants.ts     # SLICE_NAMES (movies, search, favorites)
+│       ├── views.constants.ts      # APP_VIEW, APP_VIEW_LABELS, APP_VIEW_TABS
+│       ├── routes.constants.ts     # Route path constants
+│       └── animation.constants.ts  # Animation timing/easing constants
 │
 └── pages/                   # Route-level components (thin, no hooks)
-    └── HomePage/            # Composes modules, connects hooks
+    ├── HomePage/            # Composes modules for home view
+    └── MovieDetailsPage/    # Movie details route
 ```
 
 ---

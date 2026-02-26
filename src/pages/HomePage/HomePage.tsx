@@ -1,31 +1,40 @@
 /**
- * App Component
+ * HomePage
  *
- * Root application component. Composes header, tabs, and content grid.
+ * Route: /
+ *
+ * Composes header, tabs, and content grid.
  * Each tab lazy-loads its content when first opened.
  * Only one grid is visible at a time.
  */
 
-import { useMemo } from "react";
+import { useMemo, useCallback } from "react";
+import { useNavigate } from "react-router-dom";
 import { AnimatePresence, motion } from "framer-motion";
 import { AppHeader } from "@/shared/components";
 import { useCategoryTabs } from "@/shared/hooks";
-import { APP_VIEW, APP_VIEW_TABS, VIEW_CROSSFADE } from "@/shared/constants";
+import { APP_VIEW, APP_VIEW_TABS, VIEW_CROSSFADE, ROUTES } from "@/shared/constants";
 import {
   MovieGrid,
   useMoviesInit,
   useLoadMore,
   MOVIE_LIST,
-  getListSelectors
+  getListSelectors,
 } from "@/modules/movies";
+import type { TmdbMovie } from "@/modules/movies";
 import { FavoritesGrid, useFavoriteToggle, selectFavorites } from "@/modules/favorites";
 import { usePageNavigation, useGridColumns } from "@/modules/navigation";
 import { useAppSelector } from "@/core/store";
 
-function App(): React.JSX.Element {
+export function HomePage(): React.JSX.Element {
+  const navigate = useNavigate();
   const { activeView, handleTabClick, handleTabFocus, handleTabBlur } = useCategoryTabs();
-  const { activeList, handleSelectMovie } = useMoviesInit(activeView);
+  const { activeList } = useMoviesInit(activeView);
   const handleToggleFavorite = useFavoriteToggle();
+
+  const handleSelectMovie = useCallback((movie: TmdbMovie): void => {
+    navigate(ROUTES.movieDetails(movie.id));
+  }, [navigate]);
 
   // Movie data for the active list (empty when no list, e.g., favorites)
   const movies = useAppSelector(activeList ? getListSelectors(activeList).selectMovies : () => []);
@@ -62,7 +71,8 @@ function App(): React.JSX.Element {
     onItemActivate: handleSelectMovie,
     onEscape: () => {},
     sectionHasFooter,
-    onFooterActivate: loadMore
+    onFooterActivate: loadMore,
+    enabled: true,
   });
 
   const focusedIndex = focusedSectionIndex === 0 ? focusedItemIndex : -1;
@@ -112,5 +122,3 @@ function App(): React.JSX.Element {
     </div>
   );
 }
-
-export default App;

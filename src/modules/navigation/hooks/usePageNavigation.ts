@@ -32,6 +32,8 @@ export interface UsePageNavigationOptions<T> {
   sectionHasFooter?: boolean[];
   /** Called when Enter is pressed on a section footer */
   onFooterActivate?: (sectionIndex: number) => void;
+  /** Disable all keyboard handling (e.g. when a modal is open) */
+  enabled?: boolean;
 }
 
 /**
@@ -48,6 +50,7 @@ export function usePageNavigation<T>({
   onEscape,
   sectionHasFooter,
   onFooterActivate,
+  enabled = true,
 }: UsePageNavigationOptions<T>): UseKeyboardNavReturn {
   // Derive section definitions from item arrays
   const sections = useMemo((): ContentSection[] =>
@@ -72,5 +75,6 @@ export function usePageNavigation<T>({
     onItemActivate: handleItemActivate,
     onEscape,
     onFooterActivate,
+    enabled,
   });
 }

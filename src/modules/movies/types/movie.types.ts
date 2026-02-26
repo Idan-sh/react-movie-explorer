@@ -3,10 +3,12 @@
  *
  * Based on TMDB API responses:
  * https://developer.themoviedb.org/reference/movie-popular-list
+ * https://developer.themoviedb.org/reference/movie-details
  * https://developer.themoviedb.org/reference/movie-now-playing-list
  */
 
 import { MOVIE_LIST } from '../constants';
+import type { RequestStatus } from '@/shared/types';
 
 /**
  * Movie object from TMDB API list endpoints (popular, now_playing)
@@ -50,3 +52,34 @@ export type TmdbMovieListResponse = TmdbPaginatedResponse<TmdbMovie>;
  * Category filter type - derived from MOVIE_LIST constant values
  */
 export type MovieList = (typeof MOVIE_LIST)[keyof typeof MOVIE_LIST];
+
+/**
+ * Full movie detail response from TMDB /movie/{id}
+ * Superset of TmdbMovie — includes genres (as objects), runtime, tagline.
+ */
+export interface TmdbMovieDetails {
+  id: number;
+  title: string;
+  original_title: string;
+  tagline: string;
+  overview: string;
+  poster_path: string | null;
+  backdrop_path: string | null;
+  release_date: string;
+  runtime: number | null;
+  vote_average: number;
+  vote_count: number;
+  genres: Array<{ id: number; name: string }>;
+  status: string;
+  original_language: string;
+}
+
+/**
+ * Redux state for the movie details page
+ */
+export interface MovieDetailsState {
+  /** Full details from /movie/{id} — fetched when page mounts */
+  details: TmdbMovieDetails | null;
+  status: RequestStatus;
+  error: string | null;
+}

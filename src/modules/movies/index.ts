@@ -6,24 +6,25 @@
  */
 
 // Components: public components for pages
-export { MovieCard, MovieGrid } from "./components";
+export { MovieCard, MovieGrid, MovieDetails } from "./components";
 export type { MovieCardProps, MovieGridProps } from "./components";
 
 // Hooks: public hooks for pages
-export { useMoviesInit, useLoadMore } from "./hooks";
+export { useMoviesInit, useLoadMore, useMovieDetails } from "./hooks";
 export type { UseMoviesInitReturn } from "./hooks";
 
-// Store: reducer and saga for root store
+// Store: reducers and sagas for root store
 export { moviesReducer, moviesSaga } from "./store";
+export { movieDetailsReducer, movieDetailsSaga } from "./store";
 
-// Store: public actions for components
-export { fetchMovies, resetMovies } from "./store";
+// Store: public actions
+export { fetchMovies, resetMovies, fetchMovieDetails, clearMovieDetails } from "./store";
 
-// Store: selectors for components
-export { getListSelectors } from "./store";
+// Store: public selectors
+export { getListSelectors, selectMovieDetails, selectDetailsIsLoading, selectDetailsError } from "./store";
 
 // Types: public types for components
-export type { TmdbMovie, MovieList } from "./types";
+export type { TmdbMovie, TmdbMovieDetails, MovieList } from "./types";
 
 // Constants: public constants for components
 export { MOVIE_LIST, TMDB_IMAGE, PAGINATION } from "./constants";

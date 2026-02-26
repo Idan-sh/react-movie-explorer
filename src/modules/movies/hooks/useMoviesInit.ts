@@ -3,21 +3,18 @@
  *
  * Lazy-loads movie data for the active view tab.
  * Only fetches when a tab is first opened (status is idle).
- * Provides selection handler for movie cards.
  */
 
-import { useEffect, useCallback } from 'react';
+import { useEffect } from 'react';
 import { useAppDispatch, useAppSelector } from '@/core/store';
-import { APP_VIEW } from '@/shared/constants';
 import type { AppView } from '@/shared/types';
 import { fetchMovies, getListSelectors } from '../store';
-import { MOVIE_LIST, PAGINATION } from '../constants';
-import type { TmdbMovie, MovieList } from '../types';
+import { PAGINATION } from '../constants';
+import type { MovieList } from '../types';
 import { getViewList } from '../utils';
 
 export interface UseMoviesInitReturn {
   activeList: MovieList | null;
-  handleSelectMovie: (movie: TmdbMovie) => void;
 }
 
 /**
@@ -43,14 +40,5 @@ export function useMoviesInit(activeView: AppView): UseMoviesInitReturn {
     }
   }, [dispatch, activeList, isIdle]);
 
-  // Handle movie selection (will navigate to details page later)
-  const handleSelectMovie = useCallback((movie: TmdbMovie): void => {
-    // TODO: Navigate to movie details page
-    console.log('Selected movie:', movie.title);
-  }, []);
-
-  return {
-    activeList,
-    handleSelectMovie,
-  };
+  return { activeList };
 }

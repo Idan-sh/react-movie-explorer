@@ -22,7 +22,7 @@
  */
 
 import { all, fork } from 'redux-saga/effects';
-import { moviesSaga } from '@/modules/movies/store';
+import { moviesSaga, movieDetailsSaga } from '@/modules/movies/store';
 
 /**
  * Root saga that forks all feature sagas
@@ -34,5 +34,6 @@ import { moviesSaga } from '@/modules/movies/store';
 export function* rootSaga(): Generator {
   yield all([
     fork(moviesSaga),
+    fork(movieDetailsSaga),
   ]);
 }
