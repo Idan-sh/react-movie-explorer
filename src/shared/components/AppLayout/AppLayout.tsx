@@ -9,16 +9,16 @@
  * can sync focusedTabIndex back up via the provided setter.
  */
 
-import { useState, useCallback } from 'react';
-import { Outlet, useLocation, useNavigate } from 'react-router-dom';
-import { useCategoryTabs } from '@/shared/hooks';
-import { ROUTES } from '@/shared/constants';
-import { AppHeader } from '../AppHeader';
-import { AppFooter } from '../AppFooter';
-import { ScrollToTopButton } from '../ScrollToTopButton';
-import { useScrollToTop } from '../ScrollToTopButton';
-import type { AppView } from '@/shared/types';
-import type { LayoutContext } from './layout.types';
+import { useState, useCallback } from "react";
+import { Outlet, useLocation, useNavigate } from "react-router-dom";
+import { useCategoryTabs } from "@/shared/hooks";
+import { ROUTES } from "@/shared/constants";
+import { AppHeader } from "../AppHeader";
+import { AppFooter } from "../AppFooter";
+import { ScrollToTopButton } from "../ScrollToTopButton";
+import { useScrollToTop } from "../ScrollToTopButton";
+import type { AppView } from "@/shared/types";
+import type { LayoutContext } from "./layout.types";
 
 export function AppLayout(): React.JSX.Element {
   const { activeView, handleTabClick, handleTabFocus, handleTabBlur } = useCategoryTabs();
@@ -40,11 +40,11 @@ export function AppLayout(): React.JSX.Element {
   const layoutContext: LayoutContext = {
     activeView,
     handleTabClick: handleTabClickWithNav,
-    setFocusedTabIndex,
+    setFocusedTabIndex
   };
 
   return (
-    <div className="flex h-screen flex-col bg-gray-100 dark:bg-gray-900">
+    <div className="flex h-screen flex-col">
       <AppHeader
         activeView={activeView}
         focusedTabIndex={focusedTabIndex}
@@ -53,13 +53,14 @@ export function AppLayout(): React.JSX.Element {
         onTabBlur={handleTabBlur}
       />
 
-      <main ref={scrollRef} className="relative z-0 flex-1 overflow-auto overscroll-contain">
-        <div className="flex min-h-full flex-col">
-          <div className="flex-1">
-            <Outlet context={layoutContext} />
-          </div>
-          <AppFooter />
+      <main
+        ref={scrollRef}
+        className="relative z-0 flex-1 flex flex-col overflow-auto overscroll-contain"
+      >
+        <div className="grow shrink-0 bg-gray-100 dark:bg-gray-900">
+          <Outlet context={layoutContext} />
         </div>
+        <AppFooter />
       </main>
 
       <ScrollToTopButton isVisible={isScrollTopVisible} onClick={scrollToTop} />

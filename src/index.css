@@ -9,6 +9,17 @@ body,
   overflow: hidden;
 }
 
+/* Match header/footer bg so overscroll bounce blends seamlessly */
+html {
+  background-color: white;
+}
+
+@media (prefers-color-scheme: dark) {
+  html {
+    background-color: var(--color-gray-900);
+  }
+}
+
 /* Custom scrollbar styling */
 * {
   scrollbar-width: thin;
