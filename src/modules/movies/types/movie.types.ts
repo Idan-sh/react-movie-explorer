@@ -7,8 +7,8 @@
  * https://developer.themoviedb.org/reference/movie-now-playing-list
  */
 
-import { MOVIE_LIST } from '../constants';
-import type { RequestStatus } from '@/shared/types';
+import { MOVIE_LIST } from "../constants";
+import type { RequestStatus } from "@/shared/types";
 
 /**
  * Movie object from TMDB API list endpoints (popular, now_playing)
@@ -19,7 +19,7 @@ import type { RequestStatus } from '@/shared/types';
 export interface TmdbMovie {
   adult: boolean;
   backdrop_path: string | null;
-  genre_ids: number[];
+  genre_ids?: number[]; // present in list endpoints, absent in details endpoint
   id: number;
   original_language: string;
   original_title: string;
@@ -31,6 +31,19 @@ export interface TmdbMovie {
   video: boolean;
   vote_average: number;
   vote_count: number;
+}
+
+/**
+ * Full movie detail response from TMDB /movie/{id}
+ * Extends TmdbMovie — adds genres (as objects), runtime, tagline, status.
+ * Because it extends TmdbMovie it can be passed anywhere TmdbMovie is expected
+ * (e.g. toggleFavorite), without any mapping.
+ */
+export interface TmdbMovieDetails extends TmdbMovie {
+  tagline: string;
+  runtime: number | null;
+  genres: Array<{ id: number; name: string }>;
+  status: string;
 }
 
 /**
@@ -52,27 +65,6 @@ export type TmdbMovieListResponse = TmdbPaginatedResponse<TmdbMovie>;
  * Category filter type - derived from MOVIE_LIST constant values
  */
 export type MovieList = (typeof MOVIE_LIST)[keyof typeof MOVIE_LIST];
-
-/**
- * Full movie detail response from TMDB /movie/{id}
- * Superset of TmdbMovie — includes genres (as objects), runtime, tagline.
- */
-export interface TmdbMovieDetails {
-  id: number;
-  title: string;
-  original_title: string;
-  tagline: string;
-  overview: string;
-  poster_path: string | null;
-  backdrop_path: string | null;
-  release_date: string;
-  runtime: number | null;
-  vote_average: number;
-  vote_count: number;
-  genres: Array<{ id: number; name: string }>;
-  status: string;
-  original_language: string;
-}
 
 /**
  * Redux state for the movie details page

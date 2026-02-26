@@ -3,24 +3,29 @@
  *
  * Route: /movie/:id
  *
- * Reads movie id from URL, fetches details, renders MovieDetails component.
- * Escape key navigates back (capture phase, before any other handler).
+ * Reads movie id from URL, fetches details, renders MovieDetails.
+ * Escape navigates back (capture phase so it fires before any other handler).
  */
 
 import { useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
+import { useAppSelector } from "@/core/store";
 import { useMovieDetails, MovieDetails } from "@/modules/movies";
+import { useFavoriteToggle, selectFavorites } from "@/modules/favorites";
 
 export function MovieDetailsPage(): React.JSX.Element {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const { details, isLoading, error } = useMovieDetails(Number(id));
+  const movieId = Number(id);
 
-  const handleBack = (): void => {
-    navigate(-1);
-  };
+  const { details, isLoading, error } = useMovieDetails(movieId);
+  const toggleFavorite = useFavoriteToggle();
+  const favorites = useAppSelector(selectFavorites);
+  const isFavorited = favorites.some((f) => f.id === movieId);
 
-  // Escape → go back
+  const handleBack = (): void => { navigate(-1); };
+  const handleToggleFavorite = (): void => { if (details) toggleFavorite(details); };
+
   useEffect(() => {
     function handleKeyDown(e: KeyboardEvent): void {
       if (e.key === "Escape") {
@@ -35,7 +40,14 @@ export function MovieDetailsPage(): React.JSX.Element {
 
   return (
     <div className="flex h-screen flex-col bg-gray-100 dark:bg-gray-900 overflow-auto">
-      <MovieDetails details={details} isLoading={isLoading} error={error} onBack={handleBack} />
+      <MovieDetails
+        details={details}
+        isLoading={isLoading}
+        error={error}
+        isFavorited={isFavorited}
+        onBack={handleBack}
+        onToggleFavorite={handleToggleFavorite}
+      />
     </div>
   );
 }

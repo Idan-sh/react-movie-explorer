@@ -382,6 +382,7 @@ Uses ESLint 9 flat config format (`eslint.config.js`):
 - Don't make API calls directly in components
 - Don't hardcode strings/numbers - use constants (unless it defeats the purpose)
 - Don't use inline styles (use Tailwind classes)
+- Don't pass inline arrow functions as JSX props — define named handlers in the component body instead
 - Don't skip error handling
 - Don't leave console.logs in production code
 

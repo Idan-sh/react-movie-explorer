@@ -16,12 +16,15 @@ import { MovieDetailsPoster } from './MovieDetailsPoster';
 import { MovieDetailsMeta } from './MovieDetailsMeta';
 import { MovieDetailsGenres } from './MovieDetailsGenres';
 import { MovieDetailsOverview } from './MovieDetailsOverview';
+import { FavoriteToggleButton } from './FavoriteToggleButton';
 
 interface MovieDetailsProps {
   details: TmdbMovieDetails | null;
   isLoading: boolean;
   error: string | null;
+  isFavorited: boolean;
   onBack: () => void;
+  onToggleFavorite: () => void;
 }
 
 function BackButton({ onClick }: { onClick: () => void }): React.JSX.Element {
@@ -42,27 +45,21 @@ function BackButton({ onClick }: { onClick: () => void }): React.JSX.Element {
 function LoadingSkeleton(): React.JSX.Element {
   return (
     <div className="animate-pulse">
-      {/* Backdrop skeleton */}
       <div className="h-48 sm:h-64 rounded-lg bg-gray-200 dark:bg-gray-700 mb-6" />
       <div className="flex gap-6">
-        {/* Poster skeleton */}
         <div className="hidden sm:block w-44 shrink-0 rounded-lg bg-gray-200 dark:bg-gray-700 aspect-[2/3]" />
         <div className="flex flex-1 flex-col gap-4">
-          {/* Title skeleton */}
           <div className="h-8 w-3/4 rounded bg-gray-200 dark:bg-gray-700" />
-          {/* Meta skeleton */}
           <div className="flex gap-3">
             <div className="h-5 w-12 rounded bg-gray-200 dark:bg-gray-700" />
             <div className="h-5 w-10 rounded bg-gray-200 dark:bg-gray-700" />
             <div className="h-5 w-14 rounded bg-gray-200 dark:bg-gray-700" />
           </div>
-          {/* Genre skeletons */}
           <div className="flex gap-2">
             <div className="h-6 w-16 rounded-full bg-gray-200 dark:bg-gray-700" />
             <div className="h-6 w-20 rounded-full bg-gray-200 dark:bg-gray-700" />
             <div className="h-6 w-14 rounded-full bg-gray-200 dark:bg-gray-700" />
           </div>
-          {/* Overview skeleton lines */}
           <div className="flex flex-col gap-2 mt-2">
             <div className="h-4 w-full rounded bg-gray-200 dark:bg-gray-700" />
             <div className="h-4 w-full rounded bg-gray-200 dark:bg-gray-700" />
@@ -74,12 +71,18 @@ function LoadingSkeleton(): React.JSX.Element {
   );
 }
 
-export function MovieDetails({ details, isLoading, error, onBack }: MovieDetailsProps): React.JSX.Element {
+export function MovieDetails({
+  details,
+  isLoading,
+  error,
+  isFavorited,
+  onBack,
+  onToggleFavorite,
+}: MovieDetailsProps): React.JSX.Element {
   const backdropUrl = details ? getBackdropUrl(details.backdrop_path) : null;
 
   return (
     <div className="mx-auto max-w-3xl px-4 py-6">
-      {/* Back button */}
       <div className="mb-4">
         <BackButton onClick={onBack} />
       </div>
@@ -93,7 +96,6 @@ export function MovieDetails({ details, isLoading, error, onBack }: MovieDetails
         </div>
       ) : details ? (
         <>
-          {/* Backdrop */}
           {backdropUrl && (
             <div className="relative mb-6 h-48 sm:h-64 overflow-hidden rounded-lg">
               <img src={backdropUrl} alt="" aria-hidden="true" className="h-full w-full object-cover" />
@@ -101,7 +103,6 @@ export function MovieDetails({ details, isLoading, error, onBack }: MovieDetails
             </div>
           )}
 
-          {/* Poster + info */}
           <div className="flex gap-6">
             <MovieDetailsPoster movie={details} />
 
@@ -112,6 +113,7 @@ export function MovieDetails({ details, isLoading, error, onBack }: MovieDetails
 
               <MovieDetailsMeta details={details} />
               <MovieDetailsGenres details={details} />
+              <FavoriteToggleButton isFavorited={isFavorited} onClick={onToggleFavorite} />
               <MovieDetailsOverview details={details} />
             </div>
           </div>
