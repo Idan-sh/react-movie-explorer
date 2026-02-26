@@ -54,8 +54,12 @@ export function AppLayout(): React.JSX.Element {
       />
 
       <main ref={scrollRef} className="relative z-0 flex-1 overflow-auto overscroll-contain">
-        <Outlet context={layoutContext} />
-        <AppFooter />
+        <div className="flex min-h-full flex-col">
+          <div className="flex-1">
+            <Outlet context={layoutContext} />
+          </div>
+          <AppFooter />
+        </div>
       </main>
 
       <ScrollToTopButton isVisible={isScrollTopVisible} onClick={scrollToTop} />
