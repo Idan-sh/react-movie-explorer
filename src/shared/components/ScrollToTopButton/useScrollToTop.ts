@@ -12,7 +12,7 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 
 const SCROLL_THRESHOLD_PX = 600;
-const IDLE_DELAY_MS = 200;
+const IDLE_DELAY_MS = 800;
 
 export interface UseScrollToTopReturn {
   scrollRef: React.RefObject<HTMLElement | null>;
