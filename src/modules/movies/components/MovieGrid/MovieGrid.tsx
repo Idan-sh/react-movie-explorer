@@ -88,7 +88,6 @@ export function MovieGrid({
 
       {!isLoadingMore && hasMorePages && (
         <LoadMoreButton
-          isLoading={false}
           hasError={hasError}
           isFocused={focusedIndex === movies.length}
           navId={buildNavId(NAV_ID_PREFIX.ITEM, sectionIndex, movies.length)}
