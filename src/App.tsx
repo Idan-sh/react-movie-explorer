@@ -6,14 +6,21 @@
  * Only one grid is visible at a time.
  */
 
-import { useMemo } from 'react';
-import { AppHeader } from '@/shared/components';
-import { useCategoryTabs } from '@/shared/hooks';
-import { APP_VIEW, APP_VIEW_TABS } from '@/shared/constants';
-import { MovieGrid, useMoviesInit, useLoadMore, MOVIE_LIST, getListSelectors } from '@/modules/movies';
-import { FavoritesGrid, useFavoriteToggle, selectFavorites } from '@/modules/favorites';
-import { usePageNavigation, GRID_COLUMNS } from '@/modules/navigation';
-import { useAppSelector } from '@/core/store';
+import { useMemo } from "react";
+import { AnimatePresence, motion } from "framer-motion";
+import { AppHeader } from "@/shared/components";
+import { useCategoryTabs } from "@/shared/hooks";
+import { APP_VIEW, APP_VIEW_TABS, VIEW_CROSSFADE } from "@/shared/constants";
+import {
+  MovieGrid,
+  useMoviesInit,
+  useLoadMore,
+  MOVIE_LIST,
+  getListSelectors
+} from "@/modules/movies";
+import { FavoritesGrid, useFavoriteToggle, selectFavorites } from "@/modules/favorites";
+import { usePageNavigation, GRID_COLUMNS } from "@/modules/navigation";
+import { useAppSelector } from "@/core/store";
 
 function App(): React.JSX.Element {
   const { activeView, handleTabClick, handleTabFocus, handleTabBlur } = useCategoryTabs();
@@ -21,9 +28,7 @@ function App(): React.JSX.Element {
   const handleToggleFavorite = useFavoriteToggle();
 
   // Movie data for the active list (empty when no list, e.g., favorites)
-  const movies = useAppSelector(
-    activeList ? getListSelectors(activeList).selectMovies : () => []
-  );
+  const movies = useAppSelector(activeList ? getListSelectors(activeList).selectMovies : () => []);
   const hasMorePages = useAppSelector(
     activeList ? getListSelectors(activeList).selectHasMorePages : () => false
   );
@@ -55,7 +60,7 @@ function App(): React.JSX.Element {
     onItemActivate: handleSelectMovie,
     onEscape: () => {},
     sectionHasFooter,
-    onFooterActivate: loadMore,
+    onFooterActivate: loadMore
   });
 
   const focusedIndex = focusedSectionIndex === 0 ? focusedItemIndex : -1;
@@ -70,26 +75,36 @@ function App(): React.JSX.Element {
         onTabBlur={handleTabBlur}
       />
 
-      <main className="flex-1 overflow-auto overscroll-contain">
+      <main className="relative z-0 flex-1 overflow-auto overscroll-contain">
         <div className="mx-auto max-w-7xl px-4 py-6">
-          {activeList ? (
-            <MovieGrid
-              list={activeList}
-              onSelectMovie={handleSelectMovie}
-              onToggleFavorite={handleToggleFavorite}
-              favoriteIds={favoriteIds}
-              sectionIndex={0}
-              focusedIndex={focusedIndex}
-            />
-          ) : activeView === APP_VIEW.FAVORITES ? (
-            <FavoritesGrid
-              favorites={favorites}
-              onSelectMovie={handleSelectMovie}
-              onToggleFavorite={handleToggleFavorite}
-              sectionIndex={0}
-              focusedIndex={focusedIndex}
-            />
-          ) : null}
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={activeView}
+              initial={VIEW_CROSSFADE.initial}
+              animate={VIEW_CROSSFADE.animate}
+              exit={VIEW_CROSSFADE.exit}
+              transition={VIEW_CROSSFADE.transition}
+            >
+              {activeList ? (
+                <MovieGrid
+                  list={activeList}
+                  onSelectMovie={handleSelectMovie}
+                  onToggleFavorite={handleToggleFavorite}
+                  favoriteIds={favoriteIds}
+                  sectionIndex={0}
+                  focusedIndex={focusedIndex}
+                />
+              ) : activeView === APP_VIEW.FAVORITES ? (
+                <FavoritesGrid
+                  favorites={favorites}
+                  onSelectMovie={handleSelectMovie}
+                  onToggleFavorite={handleToggleFavorite}
+                  sectionIndex={0}
+                  focusedIndex={focusedIndex}
+                />
+              ) : null}
+            </motion.div>
+          </AnimatePresence>
         </div>
       </main>
     </div>
