@@ -2,15 +2,16 @@
  * AppHeader Component
  *
  * Main application header with branding and category tabs.
- * Desktop: horizontal tab bar. Mobile: hamburger menu with vertical dropdown.
- * Uses useHamburgerMenu hook for mobile menu state management.
+ * Desktop: horizontal tab bar with animated underline indicator.
+ * Mobile: hamburger menu with vertical dropdown.
+ * Uses glassmorphism (backdrop-blur + semi-transparent bg) for depth.
  */
 
-import type { AppView } from '@/shared/types';
-import { useHamburgerMenu } from '@/shared/hooks';
-import { CategoryTabs } from '../CategoryTabs';
-import { HamburgerButton } from './HamburgerButton';
-import { MobileMenu } from './MobileMenu';
+import type { AppView } from "@/shared/types";
+import { useHamburgerMenu } from "@/shared/hooks";
+import { CategoryTabs } from "../CategoryTabs";
+import { HamburgerButton } from "./HamburgerButton";
+import { MobileMenu } from "./MobileMenu";
 
 export interface AppHeaderProps {
   activeView: AppView;
@@ -25,19 +26,28 @@ export function AppHeader({
   focusedTabIndex,
   onTabClick,
   onTabFocus,
-  onTabBlur,
+  onTabBlur
 }: AppHeaderProps): React.JSX.Element {
-  const { isMenuOpen, focusedMenuIndex, toggleMenu, handleMobileTabClick } = useHamburgerMenu(onTabClick, focusedTabIndex);
+  const { isMenuOpen, focusedMenuIndex, toggleMenu, handleMobileTabClick } = useHamburgerMenu(
+    onTabClick,
+    focusedTabIndex
+  );
 
   return (
-    <header className="relative z-10 shrink-0 bg-white dark:bg-gray-800 shadow-sm">
-      <div className="mx-auto flex max-w-7xl items-center gap-6 px-4 py-4">
-        <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
-          🎬 Movie Explorer
-        </h1>
+    <header className="sticky top-0 z-10 shrink-0 border-b border-gray-200/60 dark:border-gray-700/60 bg-white/80 dark:bg-gray-900/80 backdrop-blur-lg">
+      <div className="mx-auto flex h-20 max-w-7xl items-center gap-10 px-6">
+        {/* Branding */}
+        <div className="flex items-center gap-3.5">
+          <svg className="h-9 w-9 shrink-0 text-primary" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M18 4l2 4h-3l-2-4h-2l2 4h-3l-2-4H8l2 4H7L5 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V4h-4z" />
+          </svg>
+          <h1 className="font-heading text-3xl leading-none translate-y-px font-bold uppercase tracking-tight text-gray-900 dark:text-white">
+            Movie Explorer
+          </h1>
+        </div>
 
         {/* Desktop: horizontal tabs */}
-        <div className="hidden md:block">
+        <div className="hidden md:flex h-full items-stretch">
           <CategoryTabs
             activeView={activeView}
             focusedTabIndex={focusedTabIndex}

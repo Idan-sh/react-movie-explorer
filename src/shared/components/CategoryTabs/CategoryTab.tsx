@@ -1,8 +1,14 @@
 /**
  * CategoryTab Component
  *
- * Single tab button. Purely presentational.
+ * Single tab button with animated underline indicator.
+ * Active tab shows a sliding underline via framer-motion layoutId.
+ * Purely presentational.
  */
+
+import { motion } from 'framer-motion';
+
+const TAB_INDICATOR_TRANSITION = { type: 'spring', stiffness: 500, damping: 35 } as const;
 
 export interface CategoryTabProps {
   label: string;
@@ -33,20 +39,29 @@ export function CategoryTab({
       onFocus={onFocus}
       onBlur={onBlur}
       className={`
-        rounded-full px-4 py-2 text-sm font-medium
-        transition-colors duration-150 ease-in-out
+        relative flex items-center px-4 text-base font-medium
+        transition-colors duration-200
         outline-none cursor-pointer
         ${isFocused
-          ? 'ring-2 ring-primary'
-          : 'focus-visible:ring-2 focus-visible:ring-primary'
+          ? 'bg-primary/10 dark:bg-primary/15 text-primary'
+          : ''
         }
         ${isActive
-          ? 'bg-primary text-white'
-          : 'text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700'
+          ? 'text-primary'
+          : isFocused
+            ? ''
+            : 'text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white'
         }
       `}
     >
       {label}
+      {isActive && (
+        <motion.span
+          layoutId="active-tab-indicator"
+          className="absolute inset-x-0 bottom-0 h-0.5 rounded-full bg-primary"
+          transition={TAB_INDICATOR_TRANSITION}
+        />
+      )}
     </button>
   );
 }

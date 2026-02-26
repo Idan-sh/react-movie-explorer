@@ -43,6 +43,9 @@ body,
   --color-success: #22c55e;
   --color-warning: #f59e0b;
 
+  /* Font families */
+  --font-heading: 'Rajdhani', sans-serif;
+
   /* Border radius - Sharp, easily swappable */
   --radius-sm: 2px;
   --radius-md: 4px;

@@ -26,7 +26,7 @@ export function CategoryTabs({
   onTabBlur,
 }: CategoryTabsProps): React.JSX.Element {
   return (
-    <nav role="tablist" aria-label="Category tabs" className="flex gap-2">
+    <nav role="tablist" aria-label="Category tabs" className="flex h-full items-stretch gap-1">
       {APP_VIEW_TABS.map((view, index) => (
         <CategoryTab
           key={view}
