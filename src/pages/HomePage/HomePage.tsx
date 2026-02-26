@@ -11,7 +11,7 @@
 import { useMemo, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { AnimatePresence, motion } from "framer-motion";
-import { AppHeader } from "@/shared/components";
+import { AppHeader, ScrollToTopButton, useScrollToTop } from "@/shared/components";
 import { useCategoryTabs } from "@/shared/hooks";
 import { APP_VIEW, APP_VIEW_TABS, VIEW_CROSSFADE, ROUTES } from "@/shared/constants";
 import {
@@ -29,6 +29,7 @@ import { useAppSelector } from "@/core/store";
 export function HomePage(): React.JSX.Element {
   const navigate = useNavigate();
   const { activeView, handleTabClick, handleTabFocus, handleTabBlur } = useCategoryTabs();
+  const { scrollRef, isVisible: isScrollTopVisible, scrollToTop } = useScrollToTop();
   const { activeList } = useMoviesInit(activeView);
   const handleToggleFavorite = useFavoriteToggle();
 
@@ -90,7 +91,7 @@ export function HomePage(): React.JSX.Element {
         onTabBlur={handleTabBlur}
       />
 
-      <main className="relative z-0 flex-1 overflow-auto overscroll-contain">
+      <main ref={scrollRef} className="relative z-0 flex-1 overflow-auto overscroll-contain">
         <div className="mx-auto max-w-7xl px-4 pt-8 pb-10">
           <AnimatePresence mode="wait">
             <motion.div
@@ -122,6 +123,8 @@ export function HomePage(): React.JSX.Element {
           </AnimatePresence>
         </div>
       </main>
+
+      <ScrollToTopButton isVisible={isScrollTopVisible} onClick={scrollToTop} />
     </div>
   );
 }
