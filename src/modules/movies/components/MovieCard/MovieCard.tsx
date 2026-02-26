@@ -55,10 +55,7 @@ function MovieCardComponent({
         shadow-md hover:shadow-lg
         transition-all duration-150 ease-in-out
         cursor-pointer outline-none
-        ${isFocused
-          ? 'ring-2 ring-primary scale-105'
-          : 'focus-visible:ring-2 focus-visible:ring-primary focus-visible:scale-105'
-        }
+        ${isFocused ? 'ring-2 ring-primary scale-105' : ''}
       `}
     >
       {/* Poster with Rating + Favorite Overlay */}

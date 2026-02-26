@@ -122,10 +122,17 @@ export function useKeyboardNav({
   useEffect(() => {
     if (!enabled) return;
 
-    if (state.activeZone === NAV_ZONE.TABS) {
-      focusNavElement(buildNavId(NAV_ID_PREFIX.TAB, state.tabIndex));
-    } else {
-      focusNavElement(buildNavId(NAV_ID_PREFIX.ITEM, state.sectionIndex, state.itemIndex));
+    const navId = state.activeZone === NAV_ZONE.TABS
+      ? buildNavId(NAV_ID_PREFIX.TAB, state.tabIndex)
+      : buildNavId(NAV_ID_PREFIX.ITEM, state.sectionIndex, state.itemIndex);
+
+    const focused = focusNavElement(navId);
+
+    // If focus couldn't move (e.g. target is display:none on mobile),
+    // explicitly blur the stale element so it doesn't retain a visible ring
+    // or intercept keyboard events.
+    if (!focused) {
+      (document.activeElement as HTMLElement)?.blur();
     }
   }, [enabled, state]);
 

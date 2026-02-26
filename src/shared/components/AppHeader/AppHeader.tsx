@@ -27,7 +27,7 @@ export function AppHeader({
   onTabFocus,
   onTabBlur,
 }: AppHeaderProps): React.JSX.Element {
-  const { isMenuOpen, toggleMenu, handleMobileTabClick } = useHamburgerMenu(onTabClick);
+  const { isMenuOpen, focusedMenuIndex, toggleMenu, handleMobileTabClick } = useHamburgerMenu(onTabClick, focusedTabIndex);
 
   return (
     <header className="relative z-10 shrink-0 bg-white dark:bg-gray-800 shadow-sm">
@@ -48,13 +48,18 @@ export function AppHeader({
         </div>
 
         {/* Mobile: hamburger toggle */}
-        <HamburgerButton isOpen={isMenuOpen} onClick={toggleMenu} />
+        <HamburgerButton
+          isOpen={isMenuOpen}
+          isFocused={focusedTabIndex !== -1 && !isMenuOpen}
+          onClick={toggleMenu}
+        />
       </div>
 
       {/* Mobile: dropdown menu */}
       <MobileMenu
         isOpen={isMenuOpen}
         activeView={activeView}
+        focusedMenuIndex={focusedMenuIndex}
         onTabClick={handleMobileTabClick}
       />
     </header>

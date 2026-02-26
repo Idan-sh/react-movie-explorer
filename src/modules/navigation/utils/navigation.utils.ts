@@ -82,14 +82,20 @@ export function buildNavId(prefix: string, ...indices: number[]): string {
 
 /**
  * Moves DOM focus to the element matching a data-nav-id.
- * Uses scrollIntoView to keep the focused element visible.
+ * Returns true if the element was found and received focus, false otherwise.
+ * Callers can use the return value to detect when focus couldn't move
+ * (e.g., target is display:none) and explicitly blur the stale element.
  */
-export function focusNavElement(navId: string): void {
+export function focusNavElement(navId: string): boolean {
   const element = document.querySelector(`[data-nav-id="${navId}"]`);
   if (element instanceof HTMLElement) {
     element.focus({ preventScroll: true });
-    element.scrollIntoView({ block: "nearest", behavior: "smooth" });
+    if (document.activeElement === element) {
+      element.scrollIntoView({ block: "nearest", behavior: "smooth" });
+      return true;
+    }
   }
+  return false;
 }
 
 /**

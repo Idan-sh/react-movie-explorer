@@ -19,5 +19,5 @@ export type { UsePageNavigationOptions } from './hooks';
 // Constants needed by components for data-nav-id attributes
 export { GRID_COLUMNS, NAV_ID_PREFIX } from './constants';
 
-// Utility for building nav IDs (used by CategoryTabs and MovieGrid)
-export { buildNavId } from './utils';
+// Utilities for building nav IDs and programmatic focus
+export { buildNavId, focusNavElement } from './utils';
