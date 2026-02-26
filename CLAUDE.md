@@ -35,10 +35,10 @@ src/
 │   │   ├── utils/           # movieCard.utils, movies.utils
 │   │   └── constants.ts     # MOVIE_LIST, TMDB_IMAGE, PAGINATION
 │   ├── navigation/          # Keyboard navigation system (IMPLEMENTED)
-│   │   ├── hooks/           # useKeyboardNav, usePageNavigation
+│   │   ├── hooks/           # useKeyboardNav, usePageNavigation, useGridColumns
 │   │   ├── types/           # navigation.types (NavState, NavZone, etc.)
 │   │   ├── utils/           # navigation.utils (resolveNavigation, grid math)
-│   │   └── constants.ts     # NAV_KEY, NAV_ZONE, GRID_COLUMNS, NAV_ID_PREFIX
+│   │   └── constants.ts     # NAV_KEY, NAV_ZONE, NAV_ID_PREFIX
 │   ├── search/              # (SCAFFOLDED - not yet implemented)
 │   └── favorites/           # (SCAFFOLDED - not yet implemented)
 │

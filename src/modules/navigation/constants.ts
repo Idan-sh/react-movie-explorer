@@ -27,11 +27,6 @@ export const NAV_ZONE = {
 } as const;
 
 /**
- * Default number of columns in movie grids
- */
-export const GRID_COLUMNS = 4;
-
-/**
  * Prefixes for data-nav-id attributes on DOM elements.
  * Used to programmatically move focus to the correct element.
  */

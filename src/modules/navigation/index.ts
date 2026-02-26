@@ -6,7 +6,7 @@
  */
 
 // Hooks
-export { useKeyboardNav, usePageNavigation } from './hooks';
+export { useKeyboardNav, usePageNavigation, useGridColumns } from './hooks';
 
 // Types
 export type {
@@ -17,7 +17,7 @@ export type {
 export type { UsePageNavigationOptions } from './hooks';
 
 // Constants needed by components for data-nav-id attributes
-export { GRID_COLUMNS, NAV_ID_PREFIX } from './constants';
+export { NAV_ID_PREFIX } from './constants';
 
 // Utilities for building nav IDs and programmatic focus
 export { buildNavId, focusNavElement } from './utils';

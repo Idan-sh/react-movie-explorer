@@ -19,7 +19,7 @@ import {
   getListSelectors
 } from "@/modules/movies";
 import { FavoritesGrid, useFavoriteToggle, selectFavorites } from "@/modules/favorites";
-import { usePageNavigation, GRID_COLUMNS } from "@/modules/navigation";
+import { usePageNavigation, useGridColumns } from "@/modules/navigation";
 import { useAppSelector } from "@/core/store";
 
 function App(): React.JSX.Element {
@@ -51,10 +51,12 @@ function App(): React.JSX.Element {
     [activeList, hasMorePages]
   );
 
+  const gridColumns = useGridColumns();
+
   const { focusedTabIndex, focusedSectionIndex, focusedItemIndex } = usePageNavigation({
     tabCount: APP_VIEW_TABS.length,
     sectionItems,
-    columns: GRID_COLUMNS,
+    columns: gridColumns,
     contentKey: activeView,
     onTabActivate: (index) => handleTabClick(APP_VIEW_TABS[index]),
     onItemActivate: handleSelectMovie,
