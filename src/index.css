@@ -9,6 +9,29 @@ body,
   overflow: hidden;
 }
 
+/* Custom scrollbar styling */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #122848 transparent;
+}
+
+*::-webkit-scrollbar {
+  width: 8px;
+}
+
+*::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+*::-webkit-scrollbar-thumb {
+  background-color: #4b5563;
+  border-radius: 9999px;
+}
+
+*::-webkit-scrollbar-thumb:hover {
+  background-color: #8b5cf6;
+}
+
 @theme {
   /* Primary - Purple */
   --color-primary: #8b5cf6;
