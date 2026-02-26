@@ -92,7 +92,7 @@ export function HomePage(): React.JSX.Element {
       />
 
       <main ref={scrollRef} className="relative z-0 flex-1 overflow-auto overscroll-contain">
-        <div className="mx-auto max-w-7xl px-4 pt-8 pb-10">
+        <div className="mx-auto max-w-7xl px-4 pt-8 pb-10 sm:px-8 md:px-10 lg:px-20">
           <AnimatePresence mode="wait">
             <motion.div
               key={activeView}
