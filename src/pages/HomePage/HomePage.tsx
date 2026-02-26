@@ -19,7 +19,7 @@ import {
   useMoviesInit,
   useLoadMore,
   MOVIE_LIST,
-  getListSelectors,
+  getListSelectors
 } from "@/modules/movies";
 import type { TmdbMovie } from "@/modules/movies";
 import { FavoritesGrid, useFavoriteToggle, selectFavorites } from "@/modules/favorites";
@@ -32,9 +32,12 @@ export function HomePage(): React.JSX.Element {
   const { activeList } = useMoviesInit(activeView);
   const handleToggleFavorite = useFavoriteToggle();
 
-  const handleSelectMovie = useCallback((movie: TmdbMovie): void => {
-    navigate(ROUTES.movieDetails(movie.id));
-  }, [navigate]);
+  const handleSelectMovie = useCallback(
+    (movie: TmdbMovie): void => {
+      navigate(ROUTES.movieDetails(movie.id));
+    },
+    [navigate]
+  );
 
   // Movie data for the active list (empty when no list, e.g., favorites)
   const movies = useAppSelector(activeList ? getListSelectors(activeList).selectMovies : () => []);
@@ -72,7 +75,7 @@ export function HomePage(): React.JSX.Element {
     onEscape: () => {},
     sectionHasFooter,
     onFooterActivate: loadMore,
-    enabled: true,
+    enabled: true
   });
 
   const focusedIndex = focusedSectionIndex === 0 ? focusedItemIndex : -1;
@@ -88,7 +91,7 @@ export function HomePage(): React.JSX.Element {
       />
 
       <main className="relative z-0 flex-1 overflow-auto overscroll-contain">
-        <div className="mx-auto max-w-7xl px-4 py-6">
+        <div className="mx-auto max-w-7xl px-4 pt-8 pb-10">
           <AnimatePresence mode="wait">
             <motion.div
               key={activeView}
