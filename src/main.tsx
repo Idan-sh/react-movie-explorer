@@ -15,6 +15,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import { store } from '@/core/store';
 import { ROUTES } from '@/shared/constants';
+import { AppLayout } from '@/shared/components';
 import './index.css';
 
 const HomePage = lazy(() => import('./pages/HomePage'));
@@ -26,8 +27,10 @@ createRoot(document.getElementById('root')!).render(
       <BrowserRouter>
         <Suspense fallback={null}>
           <Routes>
-            <Route path={ROUTES.HOME} element={<HomePage />} />
-            <Route path={ROUTES.MOVIE_DETAILS} element={<MovieDetailsPage />} />
+            <Route element={<AppLayout />}>
+              <Route path={ROUTES.HOME} element={<HomePage />} />
+              <Route path={ROUTES.MOVIE_DETAILS} element={<MovieDetailsPage />} />
+            </Route>
           </Routes>
         </Suspense>
       </BrowserRouter>

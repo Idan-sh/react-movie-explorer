@@ -3,16 +3,15 @@
  *
  * Route: /
  *
- * Composes header, tabs, and content grid.
- * Each tab lazy-loads its content when first opened.
- * Only one grid is visible at a time.
+ * Composes content grid for the active tab.
+ * Tab state comes from AppLayout via outlet context.
+ * Syncs keyboard nav focus back to the layout header.
  */
 
-import { useMemo, useCallback } from "react";
-import { useNavigate } from "react-router-dom";
+import { useEffect, useMemo, useCallback } from "react";
+import { useNavigate, useOutletContext } from "react-router-dom";
 import { AnimatePresence, motion } from "framer-motion";
-import { AppHeader, ScrollToTopButton, useScrollToTop } from "@/shared/components";
-import { useCategoryTabs } from "@/shared/hooks";
+import type { LayoutContext } from "@/shared/components";
 import { APP_VIEW, APP_VIEW_TABS, VIEW_CROSSFADE, ROUTES } from "@/shared/constants";
 import {
   MovieGrid,
@@ -28,8 +27,7 @@ import { useAppSelector } from "@/core/store";
 
 export function HomePage(): React.JSX.Element {
   const navigate = useNavigate();
-  const { activeView, handleTabClick, handleTabFocus, handleTabBlur } = useCategoryTabs();
-  const { scrollRef, isVisible: isScrollTopVisible, scrollToTop } = useScrollToTop();
+  const { activeView, handleTabClick, setFocusedTabIndex } = useOutletContext<LayoutContext>();
   const { activeList } = useMoviesInit(activeView);
   const handleToggleFavorite = useFavoriteToggle();
 
@@ -79,52 +77,44 @@ export function HomePage(): React.JSX.Element {
     enabled: true
   });
 
+  // Sync keyboard nav focus state up to the layout header
+  useEffect(() => {
+    setFocusedTabIndex(focusedTabIndex);
+    return () => setFocusedTabIndex(-1);
+  }, [focusedTabIndex, setFocusedTabIndex]);
+
   const focusedIndex = focusedSectionIndex === 0 ? focusedItemIndex : -1;
 
   return (
-    <div className="flex h-screen flex-col bg-gray-100 dark:bg-gray-900">
-      <AppHeader
-        activeView={activeView}
-        focusedTabIndex={focusedTabIndex}
-        onTabClick={handleTabClick}
-        onTabFocus={handleTabFocus}
-        onTabBlur={handleTabBlur}
-      />
-
-      <main ref={scrollRef} className="relative z-0 flex-1 overflow-auto overscroll-contain">
-        <div className="mx-auto max-w-7xl px-4 pt-8 pb-10 sm:px-8 md:px-10 lg:px-20">
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={activeView}
-              initial={VIEW_CROSSFADE.initial}
-              animate={VIEW_CROSSFADE.animate}
-              exit={VIEW_CROSSFADE.exit}
-              transition={VIEW_CROSSFADE.transition}
-            >
-              {activeList ? (
-                <MovieGrid
-                  list={activeList}
-                  onSelectMovie={handleSelectMovie}
-                  onToggleFavorite={handleToggleFavorite}
-                  favoriteIds={favoriteIds}
-                  sectionIndex={0}
-                  focusedIndex={focusedIndex}
-                />
-              ) : activeView === APP_VIEW.FAVORITES ? (
-                <FavoritesGrid
-                  favorites={favorites}
-                  onSelectMovie={handleSelectMovie}
-                  onToggleFavorite={handleToggleFavorite}
-                  sectionIndex={0}
-                  focusedIndex={focusedIndex}
-                />
-              ) : null}
-            </motion.div>
-          </AnimatePresence>
-        </div>
-      </main>
-
-      <ScrollToTopButton isVisible={isScrollTopVisible} onClick={scrollToTop} />
+    <div className="mx-auto max-w-7xl px-4 pt-8 pb-10 sm:px-8 md:px-10 lg:px-20">
+      <AnimatePresence mode="wait">
+        <motion.div
+          key={activeView}
+          initial={VIEW_CROSSFADE.initial}
+          animate={VIEW_CROSSFADE.animate}
+          exit={VIEW_CROSSFADE.exit}
+          transition={VIEW_CROSSFADE.transition}
+        >
+          {activeList ? (
+            <MovieGrid
+              list={activeList}
+              onSelectMovie={handleSelectMovie}
+              onToggleFavorite={handleToggleFavorite}
+              favoriteIds={favoriteIds}
+              sectionIndex={0}
+              focusedIndex={focusedIndex}
+            />
+          ) : activeView === APP_VIEW.FAVORITES ? (
+            <FavoritesGrid
+              favorites={favorites}
+              onSelectMovie={handleSelectMovie}
+              onToggleFavorite={handleToggleFavorite}
+              sectionIndex={0}
+              focusedIndex={focusedIndex}
+            />
+          ) : null}
+        </motion.div>
+      </AnimatePresence>
     </div>
   );
 }

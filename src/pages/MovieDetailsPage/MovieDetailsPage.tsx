@@ -39,15 +39,13 @@ export function MovieDetailsPage(): React.JSX.Element {
   }, [navigate]);
 
   return (
-    <div className="flex h-screen flex-col bg-gray-100 dark:bg-gray-900 overflow-auto">
-      <MovieDetails
-        details={details}
-        isLoading={isLoading}
-        error={error}
-        isFavorited={isFavorited}
-        onBack={handleBack}
-        onToggleFavorite={handleToggleFavorite}
-      />
-    </div>
+    <MovieDetails
+      details={details}
+      isLoading={isLoading}
+      error={error}
+      isFavorited={isFavorited}
+      onBack={handleBack}
+      onToggleFavorite={handleToggleFavorite}
+    />
   );
 }
