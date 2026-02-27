@@ -4,7 +4,7 @@
  * Derived from APP_VIEW constants.
  */
 
-import { APP_VIEW } from '../constants';
+import { APP_VIEW } from "../constants";
 
 /**
  * All possible app views

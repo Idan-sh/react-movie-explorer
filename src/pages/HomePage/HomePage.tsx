@@ -6,6 +6,10 @@
  * Composes content grid for the active tab.
  * Tab state comes from AppLayout via outlet context.
  * Syncs keyboard nav focus back to the layout header.
+ *
+ * When search is active (query >= 2 chars), replaces tab content
+ * with TMDB search results via MovieGridLayout.
+ * Keyboard nav is disabled while the search input is focused.
  */
 
 import { useEffect, useMemo, useCallback } from "react";
@@ -13,23 +17,37 @@ import { useNavigate, useOutletContext } from "react-router-dom";
 import { AnimatePresence, motion } from "framer-motion";
 import type { LayoutContext } from "@/shared/components";
 import { APP_VIEW, APP_VIEW_TABS, VIEW_CROSSFADE, ROUTES } from "@/shared/constants";
+import { useLoadMore } from "@/shared/hooks";
+import { useAppSelector, useAppDispatch } from "@/core/store";
 import {
   MovieGrid,
+  MovieGridLayout,
   useMoviesInit,
-  useLoadMore,
-  MOVIE_LIST,
-  getListSelectors
+  getListSelectors,
+  fetchMovies,
+  showNextPage,
 } from "@/modules/movies";
 import type { TmdbMovie } from "@/modules/movies";
 import { FavoritesGrid, useFavoriteToggle, selectFavorites } from "@/modules/favorites";
 import { usePageNavigation, useGridColumns } from "@/modules/navigation";
-import { useAppSelector } from "@/core/store";
+import { useSearchGrid } from "@/modules/search";
+
+// Stable fallback selectors — used when activeList is null (e.g. Favorites tab).
+// Defined at module level so their references never change between renders.
+const selectNoMovies = (): TmdbMovie[] => [];
+const selectFalse = (): boolean => false;
+const selectZero = (): number => 0;
 
 export function HomePage(): React.JSX.Element {
   const navigate = useNavigate();
-  const { activeView, handleTabClick, setFocusedTabIndex } = useOutletContext<LayoutContext>();
+  const dispatch = useAppDispatch();
+  const { activeView, handleTabClick, setFocusedTabIndex, isSearchFocused } =
+    useOutletContext<LayoutContext>();
   const { activeList } = useMoviesInit(activeView);
   const handleToggleFavorite = useFavoriteToggle();
+
+  // Search grid state — provides MovieGridState + isActive + query
+  const searchGrid = useSearchGrid(0);
 
   const handleSelectMovie = useCallback(
     (movie: TmdbMovie): void => {
@@ -38,29 +56,62 @@ export function HomePage(): React.JSX.Element {
     [navigate]
   );
 
-  // Movie data for the active list (empty when no list, e.g., favorites)
-  const movies = useAppSelector(activeList ? getListSelectors(activeList).selectMovies : () => []);
-  const hasMorePages = useAppSelector(
-    activeList ? getListSelectors(activeList).selectHasMorePages : () => false
-  );
+  // Movie data for the active list (empty when no list, e.g., favorites).
+  // getListSelectors returns stable references per list type (built once at module load),
+  // so activeSelectors is stable as long as activeList doesn't change.
+  const activeSelectors = activeList ? getListSelectors(activeList) : null;
+  const movies       = useAppSelector(activeSelectors?.selectMovies       ?? selectNoMovies);
+  const hasMorePages = useAppSelector(activeSelectors?.selectHasMorePages ?? selectFalse);
+  const hasNextPage  = useAppSelector(activeSelectors?.selectHasNextPage  ?? selectFalse);
+  const pageNumber   = useAppSelector(activeSelectors?.selectPageNumber   ?? selectZero);
 
   // Favorites data (always read — used for heart state and keyboard nav)
   const favorites = useAppSelector(selectFavorites);
   const favoriteIds = useMemo(() => new Set(favorites.map((m) => m.id)), [favorites]);
 
-  // Load more handler (defaults to POPULAR, unused for favorites tab)
-  const loadMore = useLoadMore(activeList ?? MOVIE_LIST.POPULAR);
+  const onMovieLoad = useCallback((): void => {
+    if (!activeList) return;
+    if (hasNextPage) dispatch(showNextPage({ list: activeList }));
+    else dispatch(fetchMovies({ list: activeList, pageNumber: pageNumber + 1 }));
+  }, [dispatch, activeList, hasNextPage, pageNumber]);
 
-  // Navigation: always 0 or 1 sections
+  // Keyboard-nav Load More for movie lists (own useLoadMore instance owns its scroll ref).
+  // selectMovieCount / selectCanLoad are stable references from getListSelectors.
+  const movieLoadMore = useLoadMore({
+    itemCountSelector: activeSelectors?.selectMovieCount ?? selectZero,
+    canLoadSelector:   activeSelectors?.selectCanLoad    ?? selectFalse,
+    onLoad:            onMovieLoad,
+    sectionIndex:      0,
+  });
+
+  const {
+    isActive: isSearchActive,
+    handleLoadMore: searchLoadMore,
+    movies: searchMovies,
+    hasMorePages: searchHasMorePages,
+    query: searchQuery,
+  } = searchGrid;
+
+  const handleFooterActivate = useCallback((): void => {
+    if (isSearchActive) searchLoadMore();
+    else movieLoadMore();
+  }, [isSearchActive, searchLoadMore, movieLoadMore]);
+
+  // Navigation sections: search results OR current tab items
   const sectionItems = useMemo(() => {
+    if (isSearchActive) {
+      return searchMovies.length > 0 ? [searchMovies] : [];
+    }
     const active = activeList ? movies : activeView === APP_VIEW.FAVORITES ? favorites : [];
     return active.length > 0 ? [active] : [];
-  }, [activeList, movies, activeView, favorites]);
+  }, [isSearchActive, searchMovies, activeList, movies, activeView, favorites]);
 
-  const sectionHasFooter = useMemo(
-    () => (activeList ? [hasMorePages] : []),
-    [activeList, hasMorePages]
-  );
+  const sectionHasFooter = useMemo(() => {
+    if (isSearchActive) {
+      return searchMovies.length > 0 ? [searchHasMorePages] : [];
+    }
+    return activeList ? [hasMorePages] : [];
+  }, [isSearchActive, searchMovies, searchHasMorePages, activeList, hasMorePages]);
 
   const gridColumns = useGridColumns();
 
@@ -68,16 +119,15 @@ export function HomePage(): React.JSX.Element {
     tabCount: APP_VIEW_TABS.length,
     sectionItems,
     columns: gridColumns,
-    contentKey: activeView,
+    contentKey: isSearchActive ? "search" : activeView,
     onTabActivate: (index) => handleTabClick(APP_VIEW_TABS[index]),
     onItemActivate: handleSelectMovie,
     onEscape: () => {},
     sectionHasFooter,
-    onFooterActivate: loadMore,
-    enabled: true
+    onFooterActivate: handleFooterActivate,
+    enabled: !isSearchFocused,
   });
 
-  // Sync keyboard nav focus state up to the layout header
   useEffect(() => {
     setFocusedTabIndex(focusedTabIndex);
     return () => setFocusedTabIndex(-1);
@@ -85,17 +135,35 @@ export function HomePage(): React.JSX.Element {
 
   const focusedIndex = focusedSectionIndex === 0 ? focusedItemIndex : -1;
 
+  const searchEmptyNode = (
+    <div className="py-16 text-center">
+      <p className="text-gray-500 dark:text-gray-400">
+        No results for &ldquo;{searchQuery}&rdquo;
+      </p>
+    </div>
+  );
+
   return (
     <div className="mx-auto max-w-7xl px-4 pt-8 pb-10 sm:px-8 md:px-10 lg:px-20">
       <AnimatePresence mode="wait">
         <motion.div
-          key={activeView}
+          key={isSearchActive ? "search" : activeView}
           initial={VIEW_CROSSFADE.initial}
           animate={VIEW_CROSSFADE.animate}
           exit={VIEW_CROSSFADE.exit}
           transition={VIEW_CROSSFADE.transition}
         >
-          {activeList ? (
+          {isSearchActive ? (
+            <MovieGridLayout
+              {...searchGrid}
+              onSelectMovie={handleSelectMovie}
+              onToggleFavorite={handleToggleFavorite}
+              favoriteIds={favoriteIds}
+              sectionIndex={0}
+              focusedIndex={focusedIndex}
+              emptyNode={searchEmptyNode}
+            />
+          ) : activeList ? (
             <MovieGrid
               list={activeList}
               onSelectMovie={handleSelectMovie}

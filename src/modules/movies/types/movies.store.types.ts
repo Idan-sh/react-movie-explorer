@@ -73,3 +73,18 @@ export interface PrefetchSuccessPayload {
 export interface ShowNextPagePayload {
   list: MovieList;
 }
+
+/**
+ * UI state shape for movie grids.
+ * Returned by useMovieGrid and useSearchGrid — consumed by MovieGridLayout.
+ */
+export interface MovieGridState {
+  movies: TmdbMovie[];
+  isLoading: boolean;
+  isLoadingMore: boolean;
+  hasError: boolean;
+  error: string | null;
+  isEmpty: boolean;
+  hasMorePages: boolean;
+  handleLoadMore: () => void;
+}

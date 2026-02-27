@@ -77,6 +77,18 @@ function buildListSelectors(list: MovieList) {
     (listState) => listState.page.pageNumber < listState.page.numberOfPages
   );
 
+  /** Item count for use with shared useLoadMore */
+  const selectMovieCount = createSelector(
+    [selectMovies],
+    (movies) => movies.length
+  );
+
+  /** True when a next page can be fetched (has buffer or more pages, not currently loading) */
+  const selectCanLoad = createSelector(
+    [selectHasNextPage, selectHasMorePages, selectIsLoading],
+    (hasNext, hasMore, isLoading) => hasNext || (hasMore && !isLoading)
+  );
+
   return {
     selectState,
     selectMovies,
@@ -88,6 +100,8 @@ function buildListSelectors(list: MovieList) {
     selectIsLoading,
     selectHasError,
     selectHasMorePages,
+    selectMovieCount,
+    selectCanLoad,
   };
 }
 

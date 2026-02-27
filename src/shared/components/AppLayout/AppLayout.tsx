@@ -7,12 +7,16 @@
  * Owns tab state (useCategoryTabs) and exposes it to child pages
  * via React Router's Outlet context. Pages that need keyboard nav
  * can sync focusedTabIndex back up via the provided setter.
+ *
+ * Also owns isSearchFocused — passed to header (for SearchBar) and
+ * to child pages (to pause keyboard nav while the user is typing).
  */
 
 import { useState, useCallback } from "react";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import { useCategoryTabs } from "@/shared/hooks";
 import { ROUTES, Z_LAYER } from "@/shared/constants";
+import { SearchBar } from "@/modules/search";
 import { AppHeader } from "../AppHeader";
 import { AppFooter } from "../AppFooter";
 import { ScrollToTopButton } from "../ScrollToTopButton";
@@ -23,6 +27,7 @@ import type { LayoutContext } from "./layout.types";
 export function AppLayout(): React.JSX.Element {
   const { activeView, handleTabClick, handleTabFocus, handleTabBlur } = useCategoryTabs();
   const [focusedTabIndex, setFocusedTabIndex] = useState(-1);
+  const [isSearchFocused, setIsSearchFocused] = useState(false);
   const { scrollRef, isVisible: isScrollTopVisible, scrollToTop } = useScrollToTop();
   const location = useLocation();
   const navigate = useNavigate();
@@ -37,11 +42,24 @@ export function AppLayout(): React.JSX.Element {
     [handleTabClick, location.pathname, navigate]
   );
 
+  const handleSearchFocus = useCallback((): void => {
+    setIsSearchFocused(true);
+  }, []);
+
+  const handleSearchBlur = useCallback((): void => {
+    setIsSearchFocused(false);
+  }, []);
+
   const layoutContext: LayoutContext = {
     activeView,
     handleTabClick: handleTabClickWithNav,
-    setFocusedTabIndex
+    setFocusedTabIndex,
+    isSearchFocused,
   };
+
+  const searchBar = (
+    <SearchBar onFocus={handleSearchFocus} onBlur={handleSearchBlur} />
+  );
 
   return (
     <div className="flex h-screen flex-col">
@@ -51,6 +69,7 @@ export function AppLayout(): React.JSX.Element {
         onTabClick={handleTabClickWithNav}
         onTabFocus={handleTabFocus}
         onTabBlur={handleTabBlur}
+        rightSlot={searchBar}
       />
 
       <main

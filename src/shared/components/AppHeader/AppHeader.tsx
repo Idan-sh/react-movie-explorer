@@ -5,6 +5,8 @@
  * Desktop: horizontal tab bar with animated underline indicator.
  * Mobile: hamburger menu with vertical dropdown.
  * Uses glassmorphism (backdrop-blur + semi-transparent bg) for depth.
+ *
+ * rightSlot: optional content rendered between tabs and hamburger (e.g. SearchBar).
  */
 
 import type { AppView } from "@/shared/types";
@@ -20,6 +22,7 @@ export interface AppHeaderProps {
   onTabClick: (view: AppView) => void;
   onTabFocus: (view: AppView) => void;
   onTabBlur: () => void;
+  rightSlot?: React.ReactNode;
 }
 
 export function AppHeader({
@@ -27,7 +30,8 @@ export function AppHeader({
   focusedTabIndex,
   onTabClick,
   onTabFocus,
-  onTabBlur
+  onTabBlur,
+  rightSlot,
 }: AppHeaderProps): React.JSX.Element {
   const { isMenuOpen, focusedMenuIndex, toggleMenu, handleMobileTabClick } = useHamburgerMenu(
     onTabClick,
@@ -58,12 +62,15 @@ export function AppHeader({
           />
         </div>
 
-        {/* Mobile: hamburger toggle */}
-        <HamburgerButton
-          isOpen={isMenuOpen}
-          isFocused={focusedTabIndex !== -1 && !isMenuOpen}
-          onClick={toggleMenu}
-        />
+        {/* Right slot (e.g. SearchBar) + hamburger */}
+        <div className="ml-auto flex items-center gap-3">
+          {rightSlot}
+          <HamburgerButton
+            isOpen={isMenuOpen}
+            isFocused={focusedTabIndex !== -1 && !isMenuOpen}
+            onClick={toggleMenu}
+          />
+        </div>
       </div>
 
       {/* Mobile: dropdown menu */}
