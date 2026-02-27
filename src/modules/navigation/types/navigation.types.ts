@@ -40,6 +40,8 @@ export interface UseKeyboardNavOptions {
   onEscape: () => void;
   /** Called when Enter is pressed on a section footer (e.g., Load More button) */
   onFooterActivate?: (sectionIndex: number) => void;
+  /** Which zone to start in on mount (default: tabs) */
+  initialZone?: NavZone;
   /** Whether keyboard navigation is enabled (default: true) */
   enabled?: boolean;
 }

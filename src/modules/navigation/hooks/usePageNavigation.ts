@@ -10,7 +10,7 @@
  */
 
 import { useMemo, useCallback } from 'react';
-import type { ContentSection, UseKeyboardNavReturn } from '../types';
+import type { ContentSection, NavZone, UseKeyboardNavReturn } from '../types';
 import { useKeyboardNav } from './useKeyboardNav';
 
 export interface UsePageNavigationOptions<T> {
@@ -32,6 +32,8 @@ export interface UsePageNavigationOptions<T> {
   sectionHasFooter?: boolean[];
   /** Called when Enter is pressed on a section footer */
   onFooterActivate?: (sectionIndex: number) => void;
+  /** Which zone to start in on mount (default: tabs) */
+  initialZone?: NavZone;
   /** Disable all keyboard handling (e.g. when a modal is open) */
   enabled?: boolean;
 }
@@ -50,6 +52,7 @@ export function usePageNavigation<T>({
   onEscape,
   sectionHasFooter,
   onFooterActivate,
+  initialZone,
   enabled = true,
 }: UsePageNavigationOptions<T>): UseKeyboardNavReturn {
   // Derive section definitions from item arrays
@@ -75,6 +78,7 @@ export function usePageNavigation<T>({
     onItemActivate: handleItemActivate,
     onEscape,
     onFooterActivate,
+    initialZone,
     enabled,
   });
 }

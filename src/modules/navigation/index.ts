@@ -16,8 +16,8 @@ export type {
 } from './types';
 export type { UsePageNavigationOptions } from './hooks';
 
-// Constants needed by components for data-nav-id attributes
-export { NAV_ID_PREFIX } from './constants';
+// Constants needed by components for data-nav-id attributes and zone selection
+export { NAV_ID_PREFIX, NAV_ZONE } from './constants';
 
 // Utilities for building nav IDs and programmatic focus
 export { buildNavId, focusNavElement } from './utils';

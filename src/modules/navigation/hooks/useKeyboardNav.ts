@@ -41,9 +41,13 @@ export function useKeyboardNav({
   onItemActivate,
   onEscape,
   onFooterActivate,
+  initialZone = NAV_ZONE.TABS,
   enabled = true,
 }: UseKeyboardNavOptions): UseKeyboardNavReturn {
-  const [state, setState] = useState<NavState>(INITIAL_STATE);
+  const [state, setState] = useState<NavState>({
+    ...INITIAL_STATE,
+    activeZone: initialZone,
+  });
 
   // Refs keep the event handler stable (registered once) while
   // always reading the latest values via .current
