@@ -12,7 +12,7 @@
 import { useState, useCallback } from "react";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import { useCategoryTabs } from "@/shared/hooks";
-import { ROUTES } from "@/shared/constants";
+import { ROUTES, Z_LAYER } from "@/shared/constants";
 import { AppHeader } from "../AppHeader";
 import { AppFooter } from "../AppFooter";
 import { ScrollToTopButton } from "../ScrollToTopButton";
@@ -55,7 +55,8 @@ export function AppLayout(): React.JSX.Element {
 
       <main
         ref={scrollRef}
-        className="relative z-0 flex-1 flex flex-col overflow-auto overscroll-contain"
+        style={{ zIndex: Z_LAYER.CONTENT }}
+        className="relative flex-1 flex flex-col overflow-auto overscroll-contain"
       >
         <div className="grow shrink-0 bg-gray-100 dark:bg-gray-900">
           <Outlet context={layoutContext} />

@@ -9,6 +9,7 @@
 
 import type { AppView } from "@/shared/types";
 import { useHamburgerMenu } from "@/shared/hooks";
+import { Z_LAYER } from "@/shared/constants";
 import { CategoryTabs } from "../CategoryTabs";
 import { HamburgerButton } from "./HamburgerButton";
 import { MobileMenu } from "./MobileMenu";
@@ -34,7 +35,7 @@ export function AppHeader({
   );
 
   return (
-    <header className="sticky top-0 z-10 shrink-0 border-b border-gray-200/60 dark:border-gray-700/60 bg-white/80 dark:bg-gray-900/80 backdrop-blur-lg">
+    <header style={{ zIndex: Z_LAYER.HEADER }} className="sticky top-0 shrink-0 border-b border-gray-200/60 dark:border-gray-700/60 bg-white/80 dark:bg-gray-900/80 backdrop-blur-lg">
       <div className="mx-auto flex h-20 max-w-7xl items-center gap-10 px-6">
         {/* Branding */}
         <div className="flex items-center gap-3.5">

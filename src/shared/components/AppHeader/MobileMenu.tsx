@@ -9,7 +9,7 @@
 
 import { AnimatePresence, motion } from "framer-motion";
 import type { AppView } from "@/shared/types";
-import { APP_VIEW_TABS, APP_VIEW_LABELS } from "@/shared/constants";
+import { APP_VIEW_TABS, APP_VIEW_LABELS, Z_LAYER } from "@/shared/constants";
 import { buildNavId, NAV_ID_PREFIX } from "@/modules/navigation";
 import { MENU_CLOSED, MENU_OPEN, MENU_TRANSITION } from "./mobileMenu.constants";
 
@@ -31,8 +31,9 @@ export function MobileMenu({ isOpen, activeView, focusedMenuIndex, onTabClick }:
           animate={MENU_OPEN}
           exit={MENU_CLOSED}
           transition={MENU_TRANSITION}
+          style={{ zIndex: Z_LAYER.MOBILE_MENU }}
           className="
-            absolute left-0 right-0 z-20 md:hidden overflow-hidden
+            absolute left-0 right-0 md:hidden overflow-hidden
             border-b border-gray-200/60 dark:border-gray-700/60
             bg-white/95 dark:bg-gray-900/95 backdrop-blur-lg shadow-lg
           "
