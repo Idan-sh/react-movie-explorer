@@ -18,7 +18,8 @@ export {
   MovieDetailsCast,
   MovieDetailsTrailer,
   MovieDetailsRecommendations,
-  FavoriteToggleButton
+  FavoriteToggleButton,
+  MovieDetailsSkeleton
 } from "./components";
 export type {
   MovieCardProps,

@@ -9,3 +9,4 @@ export type { MovieDetailsCastProps } from './MovieDetailsCast';
 export { MovieDetailsTrailer } from './MovieDetailsTrailer';
 export { MovieDetailsRecommendations } from './MovieDetailsRecommendations';
 export { FavoriteToggleButton } from './FavoriteToggleButton';
+export { MovieDetailsSkeleton } from './MovieDetailsSkeleton';

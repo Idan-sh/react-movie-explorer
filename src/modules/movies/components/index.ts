@@ -14,5 +14,6 @@ export {
   MovieDetailsTrailer,
   MovieDetailsRecommendations,
   FavoriteToggleButton,
+  MovieDetailsSkeleton,
 } from './MovieDetails';
 export type { MovieDetailsMetaProps, MovieDetailsCastProps } from './MovieDetails';

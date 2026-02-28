@@ -16,3 +16,5 @@ export type { ThemeToggleProps, UseThemeReturn, Theme } from "./Theme";
 
 export { SettingsButton, useSettings } from "./Settings";
 export type { UseSettingsReturn } from "./Settings";
+
+export { BackButton } from "./BackButton";
