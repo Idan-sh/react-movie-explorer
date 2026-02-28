@@ -31,12 +31,12 @@ src/
 │   │   │   ├── CircularMovieRating/  # CircularMovieRating (SVG ring with IntersectionObserver animation)
 │   │   │   ├── MovieCard/       # MovieCard, FavoriteButton, MoviePoster, MovieInfo
 │   │   │   ├── MovieGrid/       # MovieGrid, MovieGridLayout, LoadMoreButton, MovieGridEmpty, MovieGridError, MovieGridSkeleton
-│   │   │   └── MovieDetails/    # MovieDetails, FavoriteToggleButton, MovieDetailsPoster, MovieDetailsGenres, MovieDetailsMeta, MovieDetailsOverview
+│   │   │   └── MovieDetails/    # MovieDetails, FavoriteToggleButton, MovieDetailsPoster, MovieDetailsGenres, MovieDetailsMeta, MovieDetailsOverview, MovieDetailsCast, MovieDetailsTrailer, MovieDetailsRecommendations
 │   │   ├── hooks/           # useMoviesInit, useMovieGrid, useMovieCard, useMovieDetails
 │   │   ├── store/           # movies.slice/saga/selectors + movieDetails.slice/saga/selectors
 │   │   ├── types/           # movie.types, movies.store.types
-│   │   ├── utils/           # movieCard.utils, movies.utils, confetti.utils
-│   │   └── constants.ts     # MOVIE_LIST, TMDB_IMAGE, PAGINATION
+│   │   ├── utils/           # movieCard.utils, movieDetails.utils, movies.utils, confetti.utils
+│   │   └── constants.ts     # MOVIE_LIST, TMDB_IMAGE, PAGINATION, CAST, MOVIE_DETAILS_APPEND
 │   ├── navigation/          # Keyboard navigation system
 │   │   ├── hooks/           # useKeyboardNav, usePageNavigation, useGridColumns
 │   │   ├── types/           # navigation.types (NavState, NavZone, NavConfig, etc.)
@@ -64,6 +64,8 @@ src/
 │   │   ├── AppFooter/       # AppFooter
 │   │   ├── CategoryTabs/    # CategoryTabs, CategoryTab
 │   │   ├── ScrollToTopButton/   # ScrollToTopButton (with useScrollToTop hook)
+│   │   ├── ScrollRow/       # ScrollRow (horizontal scroll container with fade hint)
+│   │   ├── Settings/        # SettingsButton (gear icon + dropdown) + useSettings hook
 │   │   └── Theme/           # ThemeToggle component + useTheme hook
 │   ├── hooks/               # useCategoryTabs, useHamburgerMenu, useLoadMore, useIsMobile
 │   ├── types/               # request.types, views.types (derived from constants)
@@ -73,6 +75,7 @@ src/
 │       ├── slices.constants.ts     # SLICE_NAMES (movies, search, favorites)
 │       ├── views.constants.ts      # APP_VIEW, APP_VIEW_LABELS, APP_VIEW_TABS
 │       ├── routes.constants.ts     # Route path constants
+│       ├── storage.constants.ts   # STORAGE_KEY registry (all localStorage keys)
 │       └── animation.constants.ts  # Animation timing/easing constants
 │
 └── pages/                   # Route-level components (thin, no hooks)
@@ -429,7 +432,7 @@ Four tabs: **Home** | **Popular** | **Airing Now** | **My Favorites**
 
 - All navigation via Arrow keys, Enter, Escape
 - **Tab key DISABLED** (per requirements - always prevented)
-- **Mouse scroll DISABLED** — `overflow: hidden` on `html/body/#root` + `overflow-hidden` on the `<main>` scroll container. Programmatic scrolling via `element.scrollIntoView()` still works (browsers allow setting `scrollTop` on `overflow:hidden` containers).
+- **Mouse scroll toggleable** — defaults to disabled (`overflow-hidden` on `<main>`). User can enable via Settings gear icon in the header. Persisted in `localStorage` via `STORAGE_KEY.SETTINGS.SCROLL_ENABLED`. Programmatic scrolling via `element.scrollIntoView()` always works regardless of setting.
 - Focus management is critical for UX
 
 ### Navigation Zones (implemented)
@@ -460,6 +463,53 @@ Two mutually exclusive zones — only one has focus at a time:
 - `useSearch` — input control only: `{ query, handleChange, handleClear }`
 - `useSearchGrid` — grid state for `MovieGridLayout`: reads Redux, calls shared `useLoadMore`
 - State managed in Redux (`search.slice`) — results, page, totalPages, status, error, query
+
+---
+
+## Movie Details Page
+
+The `/movie/:id` page fetches enriched data in a **single API call** using TMDB's `append_to_response`:
+
+```
+GET /movie/{id}?append_to_response=credits,videos,recommendations
+```
+
+### Sections displayed
+- **Backdrop + Poster + Title** — hero area with favorite toggle
+- **Meta** — rating (CircularMovieRating), year, runtime, budget, revenue
+- **Genres** — pill badges
+- **Overview** — tagline + synopsis
+- **Cast** — horizontal `ScrollRow` of top 8 cast members with profile photos + director credit
+- **Trailer** — YouTube facade pattern (thumbnail + play button; click swaps to iframe with autoplay)
+- **Recommendations** — horizontal `ScrollRow` of `MovieCard` components ("More Like This")
+
+### Key files
+- Types: `TmdbCastMember`, `TmdbCrewMember`, `TmdbVideo` in `movie.types.ts`
+- Utils: `movieDetails.utils.ts` — `getProfileUrl`, `formatMoney`, `getDirector`, `getTrailer`, `getYoutubeThumbnailUrl`
+- Constant: `MOVIE_DETAILS_APPEND` controls the `append_to_response` value
+
+---
+
+## Settings
+
+- **SettingsButton** — gear icon in the header (right of ThemeToggle), opens a dropdown popover
+- **useSettings** hook — manages settings state persisted in `localStorage`
+- Currently supports: **Mouse Scroll** toggle (enable/disable trackpad/mouse-wheel scrolling)
+- Click outside or Escape closes the dropdown
+- All localStorage keys are centralized in `shared/constants/storage.constants.ts` (`STORAGE_KEY`)
+
+---
+
+## localStorage Key Registry
+
+All keys in `shared/constants/storage.constants.ts` — single source of truth:
+```typescript
+STORAGE_KEY = {
+  THEME: "theme",
+  MOVIES: { FAVORITES: "movies:favorites" },
+  SETTINGS: { SCROLL_ENABLED: "settings:scroll-enabled" },
+}
+```
 
 ---
 

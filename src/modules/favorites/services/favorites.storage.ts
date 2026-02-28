@@ -10,7 +10,7 @@ import { STORAGE_KEY } from "@/shared/constants";
 
 export function loadFavorites(): TmdbMovie[] {
   try {
-    const raw = localStorage.getItem(STORAGE_KEY.FAVORITES);
+    const raw = localStorage.getItem(STORAGE_KEY.MOVIES.FAVORITES);
     return raw ? (JSON.parse(raw) as TmdbMovie[]) : [];
   } catch {
     return [];
@@ -19,7 +19,7 @@ export function loadFavorites(): TmdbMovie[] {
 
 export function saveFavorites(movies: TmdbMovie[]): void {
   try {
-    localStorage.setItem(STORAGE_KEY.FAVORITES, JSON.stringify(movies));
+    localStorage.setItem(STORAGE_KEY.MOVIES.FAVORITES, JSON.stringify(movies));
   } catch {
     // Silent fail — private browsing or storage quota exceeded
   }

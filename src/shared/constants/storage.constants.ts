@@ -6,6 +6,11 @@
  */
 
 export const STORAGE_KEY = {
-  THEME: 'theme',
-  FAVORITES: 'movie-explorer-favorites',
+  THEME: "theme",
+  MOVIES: {
+    FAVORITES: "movies:favorites"
+  },
+  SETTINGS: {
+    SCROLL_ENABLED: "settings:scroll-enabled"
+  },
 } as const;

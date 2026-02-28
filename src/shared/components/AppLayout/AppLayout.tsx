@@ -22,6 +22,7 @@ import { AppFooter } from "../AppFooter";
 import { ScrollToTopButton } from "../ScrollToTopButton";
 import { useScrollToTop } from "../ScrollToTopButton";
 import { ThemeToggle, useTheme } from "../Theme";
+import { SettingsButton, useSettings } from "../Settings";
 import type { AppView } from "@/shared/types";
 import type { LayoutContext } from "./layout.types";
 
@@ -30,6 +31,7 @@ export function AppLayout(): React.JSX.Element {
   const [focusedTabIndex, setFocusedTabIndex] = useState(-1);
   const [isSearchFocused, setIsSearchFocused] = useState(false);
   const { isDark, toggleTheme } = useTheme();
+  const { isScrollEnabled, toggleScroll } = useSettings();
   const { scrollRef, isVisible: isScrollTopVisible, scrollToTop } = useScrollToTop();
   const location = useLocation();
   const navigate = useNavigate();
@@ -64,6 +66,7 @@ export function AppLayout(): React.JSX.Element {
     <>
       <SearchBar onFocus={handleSearchFocus} onBlur={handleSearchBlur} />
       <ThemeToggle isDark={isDark} onToggle={toggleTheme} />
+      <SettingsButton isScrollEnabled={isScrollEnabled} onToggleScroll={toggleScroll} />
     </>
   );
 
@@ -86,7 +89,7 @@ export function AppLayout(): React.JSX.Element {
       <main
         ref={scrollRef}
         style={{ zIndex: Z_LAYER.CONTENT }}
-        className="relative flex-1 flex flex-col overflow-hidden"
+        className={`relative flex-1 flex flex-col ${isScrollEnabled ? 'overflow-y-auto' : 'overflow-hidden'}`}
       >
         <div className="grow shrink-0 bg-gray-100 dark:bg-gray-900">
           <Outlet context={layoutContext} />
