@@ -34,19 +34,19 @@ import { configureStore } from '@reduxjs/toolkit';
 import createSagaMiddleware from 'redux-saga';
 import { rootReducer } from './rootReducer';
 import { rootSaga } from './rootSaga';
+import { SAGA_IGNORED_ACTIONS } from './store.constants';
 
-// Create saga middleware
 const sagaMiddleware = createSagaMiddleware();
 
-// Configure store
 export const store = configureStore({
   reducer: rootReducer,
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
-      // Disable serializable check for saga actions if needed
-      serializableCheck: false,
+      serializableCheck: {
+        ignoredActions: SAGA_IGNORED_ACTIONS,
+      },
     }).concat(sagaMiddleware),
-  devTools: import.meta.env.DEV, // Enable Redux DevTools in development
+  devTools: import.meta.env.DEV,
 });
 
 // Run the root saga

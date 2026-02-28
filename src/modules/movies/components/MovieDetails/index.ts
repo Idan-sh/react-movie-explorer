@@ -1,1 +1,11 @@
-export { MovieDetails } from './MovieDetails';
+export { MovieDetailsBackdrop } from './MovieDetailsBackdrop';
+export { MovieDetailsPoster } from './MovieDetailsPoster';
+export { MovieDetailsMeta } from './MovieDetailsMeta';
+export type { MovieDetailsMetaProps } from './MovieDetailsMeta';
+export { MovieDetailsGenres } from './MovieDetailsGenres';
+export { MovieDetailsOverview } from './MovieDetailsOverview';
+export { MovieDetailsCast } from './MovieDetailsCast';
+export type { MovieDetailsCastProps } from './MovieDetailsCast';
+export { MovieDetailsTrailer } from './MovieDetailsTrailer';
+export { MovieDetailsRecommendations } from './MovieDetailsRecommendations';
+export { FavoriteToggleButton } from './FavoriteToggleButton';

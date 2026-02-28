@@ -166,6 +166,7 @@ function resolveFooterNavigation(state: NavState, key: string, config: NavConfig
   const section = config.sections[state.sectionIndex];
 
   if (key === NAV_KEY.ARROW_UP) {
+    if (section.itemCount === 0) return state;
     return { ...state, itemIndex: section.itemCount - 1 };
   }
 

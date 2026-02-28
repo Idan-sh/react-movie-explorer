@@ -2,10 +2,11 @@
  * MoviePoster Component
  *
  * Displays movie poster image with lazy loading.
- * Shows placeholder when no image available.
+ * Shows placeholder when no image available or when load fails.
  */
 
 import { FilmPlaceholder } from "@/shared/components";
+import { usePosterImage } from "../../hooks";
 
 export interface MoviePosterProps {
   url: string | null;
@@ -13,17 +14,20 @@ export interface MoviePosterProps {
 }
 
 export function MoviePoster({ url, title }: MoviePosterProps): React.JSX.Element {
+  const { showPlaceholder, handleError } = usePosterImage(url);
+
   return (
     <div className="relative aspect-[2/3] w-full overflow-hidden bg-gray-200 dark:bg-gray-700">
-      {url ? (
+      {showPlaceholder ? (
+        <FilmPlaceholder iconSize="h-32 w-32" />
+      ) : (
         <img
-          src={url}
+          src={url!}
           alt={`${title} poster`}
           loading="lazy"
           className="h-full w-full object-cover transition-transform duration-150 group-hover:scale-105"
+          onError={handleError}
         />
-      ) : (
-        <FilmPlaceholder iconSize="h-30 w-30" />
       )}
     </div>
   );

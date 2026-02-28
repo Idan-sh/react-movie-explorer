@@ -74,19 +74,9 @@ export function AppHeader({
             />
           </div>
 
-          {/* Desktop: search inline */}
-          <div className="ml-auto hidden md:flex shrink-0 items-center gap-3">
-            {searchSlot}
-            {actionsSlot}
-            <HamburgerButton
-              isOpen={isMenuOpen}
-              isFocused={focusedTabIndex !== -1 && !isMenuOpen}
-              onClick={toggleMenu}
-            />
-          </div>
-
-          {/* Mobile: actions only (no search) */}
-          <div className="ml-auto flex md:hidden shrink-0 items-center gap-1.5">
+          {/* Right side: search (desktop only), actions, hamburger — single HamburgerButton for both breakpoints */}
+          <div className="ml-auto flex shrink-0 items-center gap-1.5 md:gap-3">
+            <div className="hidden md:block">{searchSlot}</div>
             {actionsSlot}
             <HamburgerButton
               isOpen={isMenuOpen}

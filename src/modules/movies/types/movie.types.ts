@@ -45,6 +45,34 @@ export interface TmdbCastMember {
 }
 
 /**
+ * Cast member with resolved profile URL for display (used by MovieDetailsCast).
+ */
+export interface CastMemberDisplay {
+  id: number;
+  name: string;
+  character: string;
+  profileUrl: string | null;
+}
+
+export interface MovieDetailsMetaDisplay {
+  rating: number | null;
+  year: string;
+  runtime: string | null;
+  budget: string | null;
+  revenue: string | null;
+}
+
+export interface MovieDetailsCastDisplay {
+  director: string | null;
+  cast: CastMemberDisplay[];
+}
+
+export interface MovieDetailsDisplay {
+  meta: MovieDetailsMetaDisplay;
+  cast: MovieDetailsCastDisplay | null;
+}
+
+/**
  * Crew member from TMDB /movie/{id}/credits
  */
 export interface TmdbCrewMember {

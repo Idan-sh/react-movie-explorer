@@ -2,27 +2,28 @@
  * MovieDetailsMeta Component
  *
  * Rating, release year, runtime, budget, and revenue row.
+ * Receives pre-formatted values only — no data transformation.
  */
 
 import { CircularMovieRating } from "../CircularMovieRating";
-import type { TmdbMovieDetails } from "../../types";
-import { formatRating, getReleaseYear, formatRuntime, formatMoney } from "../../utils";
 
-interface MovieDetailsMetaProps {
-  details: TmdbMovieDetails;
+export interface MovieDetailsMetaProps {
+  rating: number | null;
+  year: string;
+  runtime: string | null;
+  budget: string | null;
+  revenue: string | null;
   actionSlot?: React.ReactNode;
 }
 
 export function MovieDetailsMeta({
-  details,
+  rating,
+  year,
+  runtime,
+  budget,
+  revenue,
   actionSlot
 }: MovieDetailsMetaProps): React.JSX.Element {
-  const rating = formatRating(details.vote_average);
-  const year = getReleaseYear(details.release_date);
-  const runtime = formatRuntime(details.runtime);
-  const budget = formatMoney(details.budget);
-  const revenue = formatMoney(details.revenue);
-
   return (
     <div className="flex flex-col gap-2">
       <div className="flex items-center justify-between gap-3">

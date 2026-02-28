@@ -5,7 +5,7 @@
  * Only fetches when a tab is first opened (status is idle).
  */
 
-import { useEffect } from 'react';
+import { useEffect, useMemo } from 'react';
 import { useAppDispatch, useAppSelector } from '@/core/store';
 import type { AppView } from '@/shared/types';
 import { fetchMovies, getListSelectors } from '../store';
@@ -23,14 +23,14 @@ export interface UseMoviesInitReturn {
 export function useMoviesInit(activeView: AppView): UseMoviesInitReturn {
   const dispatch = useAppDispatch();
 
+  const selectNeverIdle = useMemo(() => (): boolean => false, []);
+
   const activeList = getViewList(activeView);
 
-  // Only read idle status for movie list views
   const isIdle = useAppSelector(
-    activeList ? getListSelectors(activeList).selectIsIdle : () => false
+    activeList ? getListSelectors(activeList).selectIsIdle : selectNeverIdle
   );
 
-  // Fetch when tab becomes active and data hasn't been loaded yet
   useEffect(() => {
     if (activeList && isIdle) {
       dispatch(fetchMovies({

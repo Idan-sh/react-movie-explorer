@@ -1,5 +1,6 @@
 import type { AppView } from '@/shared/types';
 
+/** Context provided by AppLayout to route outlets (e.g. HomePage, MovieDetailsPage). */
 export interface LayoutContext {
   activeView: AppView;
   handleTabClick: (view: AppView) => void;

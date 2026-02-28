@@ -34,48 +34,34 @@ export const tmdbClient = axios.create({
  */
 tmdbClient.interceptors.request.use(
   (config: InternalAxiosRequestConfig) => {
-    // Append API key to all requests
     config.params = {
       ...config.params,
       api_key: env.tmdb.apiKey,
     };
 
-    // Dev logging
     if (env.isDev) {
       console.log(`[API] ${config.method?.toUpperCase()} ${config.url}`);
     }
 
     return config;
-  },
-  (error: AxiosError) => {
-    return Promise.reject(error);
   }
 );
 
 /**
  * Response interceptor
- * - Extracts data from response (no need to access .data everywhere)
- * - Transforms errors to consistent format
+ * - On success: returns the full response (call sites use response.data).
+ * - On error: rejects with an Error so sagas can use error.message for user-facing text.
  */
 tmdbClient.interceptors.response.use(
   (response) => {
-    // Return the data directly, not the full response
     return response;
   },
   (error: AxiosError) => {
-    // Log errors in development
     if (env.isDev) {
       console.error('[API Error]', error.message);
     }
-
-    // Transform to consistent error format
-    const apiError = {
-      message: getErrorMessage(error),
-      status: error.response?.status,
-      code: error.code,
-    };
-
-    return Promise.reject(apiError);
+    const message = getErrorMessage(error);
+    return Promise.reject(new Error(message));
   }
 );
 

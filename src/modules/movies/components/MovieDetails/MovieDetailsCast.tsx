@@ -3,27 +3,24 @@
  *
  * Horizontal scrollable row of top-billed cast members with profile photos.
  * Shows director credit above the cast row.
+ * Receives pre-formatted director and cast with profile URLs — no data transformation.
  */
 
 import { UserIcon } from '@heroicons/react/24/solid';
-import type { TmdbCastMember, TmdbCrewMember } from '../../types';
-import { getProfileUrl, getDirector } from '../../utils';
-import { CAST } from '../../constants';
+import type { CastMemberDisplay } from '../../types';
 import { ScrollRow } from '@/shared/components';
 
-interface MovieDetailsCastProps {
-  cast: TmdbCastMember[];
-  crew: TmdbCrewMember[];
+export interface MovieDetailsCastProps {
+  director: string | null;
+  cast: CastMemberDisplay[];
 }
 
-function CastMemberCard({ member }: { member: TmdbCastMember }): React.JSX.Element {
-  const profileUrl = getProfileUrl(member.profile_path);
-
+function CastMemberCard({ member }: { member: CastMemberDisplay }): React.JSX.Element {
   return (
     <div className="flex w-24 shrink-0 flex-col items-center gap-1.5 text-center">
-      {profileUrl ? (
+      {member.profileUrl ? (
         <img
-          src={profileUrl}
+          src={member.profileUrl}
           alt={member.name}
           className="h-24 w-24 rounded-full object-cover"
           loading="lazy"
@@ -43,11 +40,8 @@ function CastMemberCard({ member }: { member: TmdbCastMember }): React.JSX.Eleme
   );
 }
 
-export function MovieDetailsCast({ cast, crew }: MovieDetailsCastProps): React.JSX.Element | null {
+export function MovieDetailsCast({ director, cast }: MovieDetailsCastProps): React.JSX.Element | null {
   if (cast.length === 0) return null;
-
-  const director = getDirector(crew);
-  const displayCast = cast.slice(0, CAST.MAX_DISPLAY);
 
   return (
     <div className="flex flex-col gap-3">
@@ -61,7 +55,7 @@ export function MovieDetailsCast({ cast, crew }: MovieDetailsCastProps): React.J
       </div>
 
       <ScrollRow>
-        {displayCast.map((member) => (
+        {cast.map((member) => (
           <CastMemberCard key={member.id} member={member} />
         ))}
       </ScrollRow>

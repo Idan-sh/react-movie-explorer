@@ -3,73 +3,192 @@
  *
  * Route: /movie/:id
  *
- * Reads movie id from URL, fetches details, renders MovieDetails.
- *
- * Keyboard navigation:
- * - TABS zone: Left/Right cycle through header tabs; Enter activates (navigates home + tab)
- * - CONTENT zone: item 0 = Back button; ArrowDown from tabs → Back; ArrowUp → tabs
- * - Escape or Enter on Back: navigates back to previous page
+ * Full-page layout for movie details. Uses useMovieDetailsPage() for data and nav.
+ * STATES: Loading → skeleton; Error → message + back; Success → full details layout.
  */
 
-import { useEffect, useMemo, useCallback } from "react";
-import { useParams, useNavigate, useOutletContext } from "react-router-dom";
-import { useAppSelector } from "@/core/store";
-import { useMovieDetails, MovieDetails } from "@/modules/movies";
-import { useFavoriteToggle, selectFavorites } from "@/modules/favorites";
-import { usePageNavigation } from "@/modules/navigation";
-import type { LayoutContext } from "@/shared/components";
-import { APP_VIEW_TABS } from "@/shared/constants";
+import { ChevronLeftIcon } from "@heroicons/react/24/outline";
+import {
+  useMovieDetailsPage,
+  getBackdropUrl,
+  MovieDetailsBackdrop,
+  MovieDetailsPoster,
+  MovieDetailsMeta,
+  MovieDetailsGenres,
+  MovieDetailsOverview,
+  MovieDetailsCast,
+  MovieDetailsTrailer,
+  MovieDetailsRecommendations,
+  FavoriteToggleButton,
+} from "@/modules/movies";
+import { buildNavId, NAV_ID_PREFIX } from "@/modules/navigation";
+
+function BackButton({
+  onClick,
+  navId,
+  isFocused = false,
+}: {
+  onClick: () => void;
+  navId?: string;
+  isFocused?: boolean;
+}): React.JSX.Element {
+  return (
+    <button
+      type="button"
+      tabIndex={-1}
+      data-nav-id={navId}
+      onClick={onClick}
+      className={`
+        flex items-center gap-1.5 text-sm font-medium outline-none
+        text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white
+        transition-colors rounded-sm
+        ${isFocused ? "ring-2 ring-primary" : ""}
+      `}
+    >
+      <ChevronLeftIcon className="h-4 w-4" aria-hidden="true" />
+      Back
+    </button>
+  );
+}
+
+function LoadingSkeleton(): React.JSX.Element {
+  return (
+    <div className="animate-pulse">
+      <div className="h-48 sm:h-64 rounded-lg bg-gray-200 dark:bg-gray-700 mb-6" />
+      <div className="flex items-start gap-6">
+        <div className="hidden sm:block w-44 shrink-0 rounded-lg bg-gray-200 dark:bg-gray-700 aspect-[2/3]" />
+        <div className="flex flex-1 flex-col gap-3">
+          <div className="h-8 w-3/4 rounded bg-gray-200 dark:bg-gray-700" />
+          <div className="flex items-center justify-between gap-3">
+            <div className="flex items-center gap-3">
+              <div className="h-14 w-14 shrink-0 rounded-full bg-gray-200 dark:bg-gray-700" />
+              <div className="h-4 w-12 rounded bg-gray-200 dark:bg-gray-700" />
+              <div className="h-4 w-16 rounded bg-gray-200 dark:bg-gray-700" />
+            </div>
+            <div className="h-8 w-36 rounded-full bg-gray-200 dark:bg-gray-700" />
+          </div>
+          <div className="flex gap-3">
+            <div className="h-3 w-20 rounded bg-gray-200 dark:bg-gray-700" />
+            <div className="h-3 w-24 rounded bg-gray-200 dark:bg-gray-700" />
+          </div>
+          <div className="flex gap-2">
+            <div className="h-5 w-16 rounded-full bg-gray-200 dark:bg-gray-700" />
+            <div className="h-5 w-20 rounded-full bg-gray-200 dark:bg-gray-700" />
+            <div className="h-5 w-14 rounded-full bg-gray-200 dark:bg-gray-700" />
+          </div>
+          <div className="flex flex-col gap-2">
+            <div className="h-4 w-2/3 rounded bg-gray-200 dark:bg-gray-700" />
+            <div className="h-4 w-full rounded bg-gray-200 dark:bg-gray-700" />
+            <div className="h-4 w-full rounded bg-gray-200 dark:bg-gray-700" />
+            <div className="h-4 w-5/6 rounded bg-gray-200 dark:bg-gray-700" />
+          </div>
+        </div>
+      </div>
+      <div className="mt-8 flex flex-col gap-3">
+        <div className="h-6 w-24 rounded bg-gray-200 dark:bg-gray-700" />
+        <div className="flex gap-4">
+          {Array.from({ length: 5 }).map((_, i) => (
+            <div key={i} className="flex w-24 shrink-0 flex-col items-center gap-1.5">
+              <div className="h-24 w-24 rounded-full bg-gray-200 dark:bg-gray-700" />
+              <div className="h-3 w-16 rounded bg-gray-200 dark:bg-gray-700" />
+              <div className="h-3 w-12 rounded bg-gray-200 dark:bg-gray-700" />
+            </div>
+          ))}
+        </div>
+      </div>
+      <div className="mt-8 flex flex-col gap-3">
+        <div className="h-6 w-20 rounded bg-gray-200 dark:bg-gray-700" />
+        <div className="aspect-video w-full rounded-lg bg-gray-200 dark:bg-gray-700" />
+      </div>
+    </div>
+  );
+}
 
 export function MovieDetailsPage(): React.JSX.Element {
-  const { id } = useParams<{ id: string }>();
-  const navigate = useNavigate();
-  const movieId = Number(id);
+  const {
+    details,
+    error,
+    display,
+    isFavorited,
+    onBack,
+    onToggleFavorite,
+    focusedItemIndex = -1,
+  } = useMovieDetailsPage();
 
-  const { activeView, handleTabClick, setFocusedTabIndex, scrollRef } =
-    useOutletContext<LayoutContext>();
+  if (error) {
+    return (
+      <div className="mx-auto max-w-3xl px-4 pt-6 pb-16">
+        <div className="flex flex-col items-center gap-4 py-16 text-center">
+          <p className="text-gray-500 dark:text-gray-400">{error}</p>
+          <BackButton onClick={onBack} />
+        </div>
+      </div>
+    );
+  }
 
-  const { details, error } = useMovieDetails(movieId);
-  const toggleFavorite = useFavoriteToggle();
-  const favorites = useAppSelector(selectFavorites);
-  const isFavorited = favorites.some((f) => f.id === movieId);
-
-  const handleBack = useCallback((): void => {
-    navigate(-1);
-  }, [navigate]);
-  const handleToggleFavorite = useCallback((): void => {
-    if (details) toggleFavorite(details);
-  }, [details, toggleFavorite]);
-
-  // Single navigable item: the Back button.
-  const sectionItems = useMemo(() => [["back"]], []);
-
-  const { focusedTabIndex, focusedSectionIndex, focusedItemIndex } = usePageNavigation<string>({
-    tabCount: APP_VIEW_TABS.length,
-    sectionItems,
-    columns: 1,
-    contentKey: "details",
-    onTabActivate: (index) => handleTabClick(APP_VIEW_TABS[index]),
-    onItemActivate: () => handleBack(),
-    onEscape: handleBack,
-    activeTabIndex: APP_VIEW_TABS.indexOf(activeView),
-    scrollContainerRef: scrollRef
-  });
-
-  useEffect(() => {
-    setFocusedTabIndex(focusedTabIndex);
-    return () => setFocusedTabIndex(-1);
-  }, [focusedTabIndex, setFocusedTabIndex]);
-
-  const focusedIndex = focusedSectionIndex === 0 ? focusedItemIndex : -1;
+  if (!details) {
+    return (
+      <div className="mx-auto max-w-3xl px-4 pt-6 pb-16">
+        <div className="mb-4">
+          <BackButton
+            onClick={onBack}
+            navId={buildNavId(NAV_ID_PREFIX.ITEM, 0, 0)}
+            isFocused={focusedItemIndex === 0}
+          />
+        </div>
+        <LoadingSkeleton />
+      </div>
+    );
+  }
 
   return (
-    <MovieDetails
-      details={details}
-      error={error}
-      isFavorited={isFavorited}
-      onBack={handleBack}
-      onToggleFavorite={handleToggleFavorite}
-      focusedItemIndex={focusedIndex}
-    />
+    <div className="mx-auto max-w-3xl px-4 pt-6 pb-16">
+      <div className="mb-4">
+        <BackButton
+          onClick={onBack}
+          navId={buildNavId(NAV_ID_PREFIX.ITEM, 0, 0)}
+          isFocused={focusedItemIndex === 0}
+        />
+      </div>
+
+      <MovieDetailsBackdrop url={getBackdropUrl(details.backdrop_path)} />
+
+      <div className="flex items-start gap-6">
+        <MovieDetailsPoster movie={details} />
+        <div className="flex min-w-0 flex-1 flex-col gap-3">
+          <h1 className="text-2xl font-bold leading-snug text-gray-900 dark:text-white">
+            {details.title}
+          </h1>
+          {display && (
+            <MovieDetailsMeta
+              {...display.meta}
+              actionSlot={
+                <FavoriteToggleButton isFavorited={isFavorited} onClick={onToggleFavorite} />
+              }
+            />
+          )}
+          <MovieDetailsGenres details={details} />
+          <MovieDetailsOverview details={details} />
+        </div>
+      </div>
+
+      {display?.cast && (
+        <div className="mt-8">
+          <MovieDetailsCast director={display.cast.director} cast={display.cast.cast} />
+        </div>
+      )}
+
+      {details.videos && (
+        <div className="mt-8">
+          <MovieDetailsTrailer videos={details.videos.results} />
+        </div>
+      )}
+
+      {details.recommendations && details.recommendations.results.length > 0 && (
+        <div className="mt-8">
+          <MovieDetailsRecommendations movies={details.recommendations.results} />
+        </div>
+      )}
+    </div>
   );
 }

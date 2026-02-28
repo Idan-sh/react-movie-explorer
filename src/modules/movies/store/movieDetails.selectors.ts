@@ -13,11 +13,6 @@ export const selectMovieDetails = createSelector(
   (s) => s.details
 );
 
-export const selectDetailsStatus = createSelector(
-  [selectMovieDetailsState],
-  (s) => s.status
-);
-
 export const selectDetailsIsLoading = createSelector(
   [selectMovieDetailsState],
   (s) => s.status === REQUEST_STATUS.LOADING
