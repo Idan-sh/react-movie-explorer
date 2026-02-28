@@ -7,6 +7,7 @@
 
 import { HeartIcon as HeartSolid } from '@heroicons/react/24/solid';
 import { HeartIcon as HeartOutline } from '@heroicons/react/24/outline';
+import { fireFavoriteConfetti } from '../../utils';
 
 export interface FavoriteToggleButtonProps {
   isFavorited: boolean;
@@ -16,10 +17,15 @@ export interface FavoriteToggleButtonProps {
 export function FavoriteToggleButton({ isFavorited, onClick }: FavoriteToggleButtonProps): React.JSX.Element {
   const Icon = isFavorited ? HeartSolid : HeartOutline;
 
+  const handleClick = (e: React.MouseEvent<HTMLButtonElement>): void => {
+    fireFavoriteConfetti(e.currentTarget, !isFavorited);
+    onClick();
+  };
+
   return (
     <button
       type="button"
-      onClick={onClick}
+      onClick={handleClick}
       className={`
         flex items-center gap-2 self-start rounded-full px-4 py-1.5 text-sm font-medium
         transition-colors duration-150
