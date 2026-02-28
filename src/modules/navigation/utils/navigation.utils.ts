@@ -177,6 +177,67 @@ function resolveFooterNavigation(state: NavState, key: string, config: NavConfig
   return state;
 }
 
+// ── Scroll controller ───────────────────────────────────────────
+
+/**
+ * Encapsulates lerp-based RAF scroll state.
+ * Owns its own target position and animation frame id so the hook
+ * doesn't need to manage raw refs for these concerns.
+ */
+export interface ScrollController {
+  /** Advance the scroll target and start (or continue) the lerp loop. */
+  scrollTo(el: HTMLElement, target: number): void;
+  /** Cancel any in-flight animation. */
+  cancel(): void;
+}
+
+/**
+ * Creates a scroll controller that smoothly lerps scrollTop toward a target.
+ * 12% of remaining delta per frame at 60fps ≈ natural ease-out curve.
+ * Holding an arrow key keeps advancing the target, producing smooth acceleration.
+ */
+export function createScrollController(): ScrollController {
+  let target = 0;
+  let rafId: number | null = null;
+
+  function step(el: HTMLElement): void {
+    const delta = target - el.scrollTop;
+    if (Math.abs(delta) < 0.5) {
+      el.scrollTop = target;
+      rafId = null;
+      return;
+    }
+    el.scrollTop = el.scrollTop + delta * 0.12;
+    rafId = requestAnimationFrame(() => step(el));
+  }
+
+  return {
+    scrollTo(el: HTMLElement, newTarget: number): void {
+      target = newTarget;
+      if (rafId !== null) cancelAnimationFrame(rafId);
+      rafId = requestAnimationFrame(() => step(el));
+    },
+    cancel(): void {
+      if (rafId !== null) {
+        cancelAnimationFrame(rafId);
+        rafId = null;
+      }
+    }
+  };
+}
+
+// ── Nav ID from state ────────────────────────────────────────────
+
+/**
+ * Derives the data-nav-id string from the current nav state.
+ * Used by the DOM focus sync effect to locate the focused element.
+ */
+export function getNavIdFromState(state: NavState): string {
+  return state.activeZone === NAV_ZONE.TABS
+    ? buildNavId(NAV_ID_PREFIX.TAB, state.tabIndex)
+    : buildNavId(NAV_ID_PREFIX.ITEM, state.sectionIndex, state.itemIndex);
+}
+
 // ── High-level navigation resolvers ────────────────────────────
 
 /**

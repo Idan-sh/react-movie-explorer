@@ -57,6 +57,7 @@ export function AppLayout(): React.JSX.Element {
     handleTabClick: handleTabClickWithNav,
     setFocusedTabIndex,
     isSearchFocused,
+    scrollRef,
   };
 
   const rightSlot = (

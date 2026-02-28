@@ -38,6 +38,8 @@ export interface UsePageNavigationOptions<T> {
   activeTabIndex?: number;
   /** Disable all keyboard handling (e.g. when a modal is open) */
   enabled?: boolean;
+  /** When provided, Up/Down in content zone scroll this element instead of navigating */
+  scrollContainerRef?: React.RefObject<HTMLElement | null>;
 }
 
 /**
@@ -57,6 +59,7 @@ export function usePageNavigation<T>({
   initialZone,
   activeTabIndex,
   enabled = true,
+  scrollContainerRef,
 }: UsePageNavigationOptions<T>): UseKeyboardNavReturn {
   // Derive section definitions from item arrays
   const sections = useMemo((): ContentSection[] =>
@@ -84,5 +87,6 @@ export function usePageNavigation<T>({
     initialZone,
     activeTabIndex,
     enabled,
+    scrollContainerRef,
   });
 }

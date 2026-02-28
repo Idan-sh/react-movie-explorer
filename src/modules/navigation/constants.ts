@@ -34,3 +34,11 @@ export const NAV_ID_PREFIX = {
   TAB: 'nav-tab',
   ITEM: 'nav-item',
 } as const;
+
+/**
+ * How far ahead (px) to set the scroll target per arrow key press.
+ * A lerp loop then animates scrollTop toward that target each rAF frame,
+ * producing a natural ease-out curve. Holding the key keeps advancing
+ * the target, causing smooth acceleration.
+ */
+export const NAV_SCROLL_STEP = 120;

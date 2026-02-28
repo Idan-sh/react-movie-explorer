@@ -46,6 +46,12 @@ export interface UseKeyboardNavOptions {
   activeTabIndex?: number;
   /** Whether keyboard navigation is enabled (default: true) */
   enabled?: boolean;
+  /**
+   * When provided, Up/Down in the CONTENT zone scroll this element instead of
+   * navigating the grid. Up falls through to normal nav once scrollTop reaches 0,
+   * allowing the user to exit back to the tabs zone naturally.
+   */
+  scrollContainerRef?: React.RefObject<HTMLElement | null>;
 }
 
 /**

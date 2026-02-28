@@ -25,7 +25,7 @@ export function MovieDetailsPage(): React.JSX.Element {
   const navigate = useNavigate();
   const movieId = Number(id);
 
-  const { activeView, handleTabClick, setFocusedTabIndex } = useOutletContext<LayoutContext>();
+  const { activeView, handleTabClick, setFocusedTabIndex, scrollRef } = useOutletContext<LayoutContext>();
 
   const { details, isLoading, error } = useMovieDetails(movieId);
   const toggleFavorite = useFavoriteToggle();
@@ -49,6 +49,7 @@ export function MovieDetailsPage(): React.JSX.Element {
     onItemActivate: () => handleBack(),
     onEscape: handleBack,
     activeTabIndex: APP_VIEW_TABS.indexOf(activeView),
+    scrollContainerRef: scrollRef,
   });
 
   useEffect(() => {

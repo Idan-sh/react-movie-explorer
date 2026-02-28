@@ -10,15 +10,15 @@
  * - Success → full details layout
  */
 
-import { ChevronLeftIcon } from '@heroicons/react/24/outline';
-import type { TmdbMovieDetails } from '../../types';
-import { getBackdropUrl } from '../../utils';
-import { MovieDetailsPoster } from './MovieDetailsPoster';
-import { MovieDetailsMeta } from './MovieDetailsMeta';
-import { MovieDetailsGenres } from './MovieDetailsGenres';
-import { MovieDetailsOverview } from './MovieDetailsOverview';
-import { FavoriteToggleButton } from './FavoriteToggleButton';
-import { buildNavId, NAV_ID_PREFIX } from '@/modules/navigation';
+import { ChevronLeftIcon } from "@heroicons/react/24/outline";
+import type { TmdbMovieDetails } from "../../types";
+import { getBackdropUrl } from "../../utils";
+import { MovieDetailsPoster } from "./MovieDetailsPoster";
+import { MovieDetailsMeta } from "./MovieDetailsMeta";
+import { MovieDetailsGenres } from "./MovieDetailsGenres";
+import { MovieDetailsOverview } from "./MovieDetailsOverview";
+import { FavoriteToggleButton } from "./FavoriteToggleButton";
+import { buildNavId, NAV_ID_PREFIX } from "@/modules/navigation";
 
 interface MovieDetailsProps {
   details: TmdbMovieDetails | null;
@@ -31,7 +31,15 @@ interface MovieDetailsProps {
   focusedItemIndex?: number;
 }
 
-function BackButton({ onClick, navId, isFocused = false }: { onClick: () => void; navId?: string; isFocused?: boolean }): React.JSX.Element {
+function BackButton({
+  onClick,
+  navId,
+  isFocused = false
+}: {
+  onClick: () => void;
+  navId?: string;
+  isFocused?: boolean;
+}): React.JSX.Element {
   return (
     <button
       type="button"
@@ -42,7 +50,7 @@ function BackButton({ onClick, navId, isFocused = false }: { onClick: () => void
         flex items-center gap-1.5 text-sm font-medium outline-none
         text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white
         transition-colors rounded-sm
-        ${isFocused ? 'ring-2 ring-primary' : ''}
+        ${isFocused ? "ring-2 ring-primary" : ""}
       `}
     >
       <ChevronLeftIcon className="h-4 w-4" aria-hidden="true" />
@@ -103,7 +111,7 @@ export function MovieDetails({
   isFavorited,
   onBack,
   onToggleFavorite,
-  focusedItemIndex = -1,
+  focusedItemIndex = -1
 }: MovieDetailsProps): React.JSX.Element {
   const backdropUrl = details ? getBackdropUrl(details.backdrop_path) : null;
 
@@ -128,7 +136,12 @@ export function MovieDetails({
         <>
           {backdropUrl && (
             <div className="relative mb-6 h-48 sm:h-64 overflow-hidden rounded-lg">
-              <img src={backdropUrl} alt="" aria-hidden="true" className="h-full w-full object-cover" />
+              <img
+                src={backdropUrl}
+                alt=""
+                aria-hidden="true"
+                className="h-full w-full object-cover"
+              />
               <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-white dark:to-gray-900" />
             </div>
           )}
@@ -144,7 +157,9 @@ export function MovieDetails({
               <MovieDetailsMeta details={details} />
               <MovieDetailsGenres details={details} />
               <FavoriteToggleButton isFavorited={isFavorited} onClick={onToggleFavorite} />
-              <MovieDetailsOverview details={details} />
+              {Array.from({ length: 30 }).map((_, index) => {
+                return <MovieDetailsOverview details={details} />;
+              })}
             </div>
           </div>
         </>
