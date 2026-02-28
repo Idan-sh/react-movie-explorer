@@ -41,7 +41,7 @@ export function MovieDetailsBackdrop({ url }: MovieDetailsBackdropProps): React.
         onError={handleError}
         className="h-full w-full object-cover"
       />
-      <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-white dark:to-gray-900" />
+      <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-gray-100 dark:to-gray-900" />
     </div>
   );
 }
