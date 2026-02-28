@@ -40,7 +40,7 @@ export function AppLayout(): React.JSX.Element {
     (view: AppView): void => {
       handleTabClick(view);
       if (location.pathname !== ROUTES.HOME) {
-        navigate(ROUTES.HOME);
+        navigate(ROUTES.HOME, { viewTransition: true });
       }
     },
     [handleTabClick, location.pathname, navigate]

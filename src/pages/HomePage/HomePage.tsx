@@ -58,7 +58,7 @@ export function HomePage(): React.JSX.Element {
 
   const handleSelectMovie = useCallback(
     (movie: TmdbMovie): void => {
-      navigate(ROUTES.movieDetails(movie.id));
+      navigate(ROUTES.movieDetails(movie.id), { viewTransition: true });
     },
     [navigate]
   );

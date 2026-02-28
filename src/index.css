@@ -48,6 +48,27 @@ button,
   background-color: var(--color-primary);
 }
 
+/* View Transitions — smooth crossfade between routes */
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+}
+
+@keyframes fade-out {
+  to {
+    opacity: 0;
+  }
+}
+
+::view-transition-old(root) {
+  animation: fade-out 150ms ease-in-out;
+}
+
+::view-transition-new(root) {
+  animation: fade-in 150ms ease-in-out;
+}
+
 @theme {
   /* Primary - Purple */
   --color-primary: #8b5cf6;

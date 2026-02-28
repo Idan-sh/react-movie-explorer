@@ -4,36 +4,51 @@
  * SETUP:
  * - StrictMode: Highlights potential problems in development
  * - Provider: Makes Redux store available to all components
- * - BrowserRouter + Routes: Client-side routing
+ * - Data router (createBrowserRouter): Enables viewTransition for smooth page transitions
  *
  * Both pages are lazy-loaded so each route only downloads its code on demand.
  */
 
-import { StrictMode, lazy, Suspense } from 'react';
-import { createRoot } from 'react-dom/client';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import { Provider } from 'react-redux';
-import { store } from '@/core/store';
-import { ROUTES } from '@/shared/constants';
-import { AppLayout } from '@/shared/components';
-import './index.css';
+import { StrictMode, lazy, Suspense } from "react";
+import { createRoot } from "react-dom/client";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import { Provider } from "react-redux";
+import { store } from "@/core/store";
+import { ROUTES } from "@/shared/constants";
+import { AppLayout } from "@/shared/components";
+import "./index.css";
 
-const HomePage = lazy(() => import('./pages/HomePage'));
-const MovieDetailsPage = lazy(() => import('./pages/MovieDetailsPage'));
+const HomePage = lazy(() => import("./pages/HomePage"));
+const MovieDetailsPage = lazy(() => import("./pages/MovieDetailsPage"));
 
-createRoot(document.getElementById('root')!).render(
+const router = createBrowserRouter([
+  {
+    element: <AppLayout />,
+    children: [
+      {
+        path: ROUTES.HOME,
+        element: (
+          <Suspense fallback={null}>
+            <HomePage />
+          </Suspense>
+        )
+      },
+      {
+        path: ROUTES.MOVIE_DETAILS,
+        element: (
+          <Suspense fallback={null}>
+            <MovieDetailsPage />
+          </Suspense>
+        )
+      }
+    ]
+  }
+]);
+
+createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <Provider store={store}>
-      <BrowserRouter>
-        <Suspense fallback={null}>
-          <Routes>
-            <Route element={<AppLayout />}>
-              <Route path={ROUTES.HOME} element={<HomePage />} />
-              <Route path={ROUTES.MOVIE_DETAILS} element={<MovieDetailsPage />} />
-            </Route>
-          </Routes>
-        </Suspense>
-      </BrowserRouter>
+      <RouterProvider router={router} />
     </Provider>
   </StrictMode>
 );

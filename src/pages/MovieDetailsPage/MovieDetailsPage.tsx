@@ -25,31 +25,34 @@ export function MovieDetailsPage(): React.JSX.Element {
   const navigate = useNavigate();
   const movieId = Number(id);
 
-  const { activeView, handleTabClick, setFocusedTabIndex, scrollRef } = useOutletContext<LayoutContext>();
+  const { activeView, handleTabClick, setFocusedTabIndex, scrollRef } =
+    useOutletContext<LayoutContext>();
 
   const { details, error } = useMovieDetails(movieId);
   const toggleFavorite = useFavoriteToggle();
   const favorites = useAppSelector(selectFavorites);
   const isFavorited = favorites.some((f) => f.id === movieId);
 
-  const handleBack = useCallback((): void => { navigate(-1); }, [navigate]);
+  const handleBack = useCallback((): void => {
+    navigate(-1);
+  }, [navigate]);
   const handleToggleFavorite = useCallback((): void => {
     if (details) toggleFavorite(details);
   }, [details, toggleFavorite]);
 
   // Single navigable item: the Back button.
-  const sectionItems = useMemo(() => [['back']], []);
+  const sectionItems = useMemo(() => [["back"]], []);
 
   const { focusedTabIndex, focusedSectionIndex, focusedItemIndex } = usePageNavigation<string>({
     tabCount: APP_VIEW_TABS.length,
     sectionItems,
     columns: 1,
-    contentKey: 'details',
+    contentKey: "details",
     onTabActivate: (index) => handleTabClick(APP_VIEW_TABS[index]),
     onItemActivate: () => handleBack(),
     onEscape: handleBack,
     activeTabIndex: APP_VIEW_TABS.indexOf(activeView),
-    scrollContainerRef: scrollRef,
+    scrollContainerRef: scrollRef
   });
 
   useEffect(() => {

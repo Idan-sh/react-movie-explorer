@@ -5,11 +5,11 @@
  * Click navigates to that movie's detail page.
  */
 
-import { useNavigate } from 'react-router-dom';
-import { useCallback } from 'react';
-import type { TmdbMovie } from '../../types';
-import { MovieCard } from '../MovieCard';
-import { ScrollRow } from '@/shared/components';
+import { useNavigate } from "react-router-dom";
+import { useCallback } from "react";
+import type { TmdbMovie } from "../../types";
+import { MovieCard } from "../MovieCard";
+import { ScrollRow } from "@/shared/components";
 
 interface MovieDetailsRecommendationsProps {
   movies: TmdbMovie[];
@@ -17,14 +17,16 @@ interface MovieDetailsRecommendationsProps {
 
 const MAX_RECOMMENDATIONS = 10;
 
-export function MovieDetailsRecommendations({ movies }: MovieDetailsRecommendationsProps): React.JSX.Element | null {
+export function MovieDetailsRecommendations({
+  movies
+}: MovieDetailsRecommendationsProps): React.JSX.Element | null {
   const navigate = useNavigate();
 
   const handleSelect = useCallback(
     (movie: TmdbMovie): void => {
-      navigate(`/movie/${movie.id}`);
+      navigate(`/movie/${movie.id}`, { viewTransition: true });
     },
-    [navigate],
+    [navigate]
   );
 
   if (movies.length === 0) return null;
@@ -33,9 +35,7 @@ export function MovieDetailsRecommendations({ movies }: MovieDetailsRecommendati
 
   return (
     <div className="flex flex-col gap-3">
-      <h2 className="text-lg font-semibold text-gray-900 dark:text-white">
-        More Like This
-      </h2>
+      <h2 className="text-lg font-semibold text-gray-900 dark:text-white">More Like This</h2>
 
       <ScrollRow className="items-stretch">
         {displayMovies.map((movie) => (
