@@ -27,7 +27,7 @@ export function MovieDetailsPage(): React.JSX.Element {
 
   const { activeView, handleTabClick, setFocusedTabIndex, scrollRef } = useOutletContext<LayoutContext>();
 
-  const { details, isLoading, error } = useMovieDetails(movieId);
+  const { details, error } = useMovieDetails(movieId);
   const toggleFavorite = useFavoriteToggle();
   const favorites = useAppSelector(selectFavorites);
   const isFavorited = favorites.some((f) => f.id === movieId);
@@ -62,7 +62,6 @@ export function MovieDetailsPage(): React.JSX.Element {
   return (
     <MovieDetails
       details={details}
-      isLoading={isLoading}
       error={error}
       isFavorited={isFavorited}
       onBack={handleBack}

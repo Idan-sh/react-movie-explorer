@@ -26,7 +26,6 @@ import { buildNavId, NAV_ID_PREFIX } from "@/modules/navigation";
 
 interface MovieDetailsProps {
   details: TmdbMovieDetails | null;
-  isLoading: boolean;
   error: string | null;
   isFavorited: boolean;
   onBack: () => void;
@@ -136,14 +135,37 @@ function LoadingSkeleton(): React.JSX.Element {
 
 export function MovieDetails({
   details,
-  isLoading,
   error,
   isFavorited,
   onBack,
   onToggleFavorite,
   focusedItemIndex = -1
 }: MovieDetailsProps): React.JSX.Element {
-  const backdropUrl = details ? getBackdropUrl(details.backdrop_path) : null;
+  if (error) {
+    return (
+      <div className="mx-auto max-w-3xl px-4 pt-6 pb-16">
+        <div className="flex flex-col items-center gap-4 py-16 text-center">
+          <p className="text-gray-500 dark:text-gray-400">{error}</p>
+          <BackButton onClick={onBack} />
+        </div>
+      </div>
+    );
+  }
+
+  if (!details) {
+    return (
+      <div className="mx-auto max-w-3xl px-4 pt-6 pb-16">
+        <div className="mb-4">
+          <BackButton
+            onClick={onBack}
+            navId={buildNavId(NAV_ID_PREFIX.ITEM, 0, 0)}
+            isFocused={focusedItemIndex === 0}
+          />
+        </div>
+        <LoadingSkeleton />
+      </div>
+    );
+  }
 
   return (
     <div className="mx-auto max-w-3xl px-4 pt-6 pb-16">
@@ -155,55 +177,44 @@ export function MovieDetails({
         />
       </div>
 
-      {isLoading ? (
-        <LoadingSkeleton />
-      ) : error ? (
-        <div className="flex flex-col items-center gap-4 py-16 text-center">
-          <p className="text-gray-500 dark:text-gray-400">{error}</p>
-          <BackButton onClick={onBack} />
+      <MovieDetailsBackdrop url={getBackdropUrl(details.backdrop_path)} />
+
+      <div className="flex items-start gap-6">
+        <MovieDetailsPoster movie={details} />
+
+        <div className="flex min-w-0 flex-1 flex-col gap-3">
+          <h1 className="text-2xl font-bold leading-snug text-gray-900 dark:text-white">
+            {details.title}
+          </h1>
+
+          <MovieDetailsMeta
+            details={details}
+            actionSlot={
+              <FavoriteToggleButton isFavorited={isFavorited} onClick={onToggleFavorite} />
+            }
+          />
+          <MovieDetailsGenres details={details} />
+          <MovieDetailsOverview details={details} />
         </div>
-      ) : details ? (
-        <>
-          <MovieDetailsBackdrop url={backdropUrl} />
+      </div>
 
-          <div className="flex items-start gap-6">
-            <MovieDetailsPoster movie={details} />
+      {details.credits && (
+        <div className="mt-8">
+          <MovieDetailsCast cast={details.credits.cast} crew={details.credits.crew} />
+        </div>
+      )}
 
-            <div className="flex min-w-0 flex-1 flex-col gap-3">
-              <h1 className="text-2xl font-bold leading-snug text-gray-900 dark:text-white">
-                {details.title}
-              </h1>
+      {details.videos && (
+        <div className="mt-8">
+          <MovieDetailsTrailer videos={details.videos.results} />
+        </div>
+      )}
 
-              <MovieDetailsMeta
-                details={details}
-                actionSlot={
-                  <FavoriteToggleButton isFavorited={isFavorited} onClick={onToggleFavorite} />
-                }
-              />
-              <MovieDetailsGenres details={details} />
-              <MovieDetailsOverview details={details} />
-            </div>
-          </div>
-
-          {details.credits && (
-            <div className="mt-8">
-              <MovieDetailsCast cast={details.credits.cast} crew={details.credits.crew} />
-            </div>
-          )}
-
-          {details.videos && (
-            <div className="mt-8">
-              <MovieDetailsTrailer videos={details.videos.results} />
-            </div>
-          )}
-
-          {details.recommendations && details.recommendations.results.length > 0 && (
-            <div className="mt-8">
-              <MovieDetailsRecommendations movies={details.recommendations.results} />
-            </div>
-          )}
-        </>
-      ) : null}
+      {details.recommendations && details.recommendations.results.length > 0 && (
+        <div className="mt-8">
+          <MovieDetailsRecommendations movies={details.recommendations.results} />
+        </div>
+      )}
     </div>
   );
 }
