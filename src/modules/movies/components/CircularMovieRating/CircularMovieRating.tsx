@@ -30,9 +30,9 @@ const SIZE_CONFIG = {
   },
   lg: {
     container: "h-14 w-14",
-    text: "text-sm",
-    percent: "text-[8px]",
-    strokeWidth: 2.5
+    text: "text-[16px]",
+    percent: "text-[7px]",
+    strokeWidth: 2
   }
 } as const;
 
