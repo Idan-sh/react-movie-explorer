@@ -65,7 +65,7 @@ function LoadingSkeleton(): React.JSX.Element {
       {/* Backdrop: h-48 sm:h-64 rounded-lg */}
       <div className="h-48 sm:h-64 rounded-lg bg-gray-200 dark:bg-gray-700 mb-6" />
 
-      <div className="flex gap-6">
+      <div className="flex items-start gap-6">
         {/* Poster: hidden sm:block w-44 aspect-[2/3] */}
         <div className="hidden sm:block w-44 shrink-0 rounded-lg bg-gray-200 dark:bg-gray-700 aspect-[2/3]" />
 
@@ -146,7 +146,7 @@ export function MovieDetails({
             </div>
           )}
 
-          <div className="flex gap-6">
+          <div className="flex items-start gap-6">
             <MovieDetailsPoster movie={details} />
 
             <div className="flex min-w-0 flex-1 flex-col gap-3">
