@@ -7,7 +7,7 @@
 
 import type { AppView } from "@/shared/types";
 import { APP_VIEW_TABS, APP_VIEW_CONFIG } from "@/shared/constants";
-import { buildNavId, NAV_ID_PREFIX } from "@/modules/navigation";
+import { buildNavId, NAV_ID_PREFIX } from "@/core/navigation";
 import { CategoryTab } from "./CategoryTab";
 
 export interface CategoryTabsProps {

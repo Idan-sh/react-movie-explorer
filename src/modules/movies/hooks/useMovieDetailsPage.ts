@@ -18,7 +18,7 @@ import type { MovieDetailsDisplay, MovieDetailsMetaDisplay, MovieDetailsCastDisp
 import { formatRating, getReleaseYear, formatRuntime, formatMoney, getDirector, getProfileUrl } from '../utils';
 import { CAST } from '../constants';
 import { useFavoriteToggle, selectFavorites } from '@/modules/favorites';
-import { usePageNavigation } from '@/modules/navigation';
+import { usePageNavigation } from '@/core/navigation';
 import type { LayoutContext } from '@/shared/components';
 import { APP_VIEW_TABS } from '@/shared/constants';
 

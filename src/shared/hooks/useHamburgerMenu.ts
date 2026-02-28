@@ -23,7 +23,7 @@
 import { useState, useCallback, useEffect, useRef } from "react";
 import type { AppView } from "@/shared/types";
 import { APP_VIEW_TABS } from "@/shared/constants";
-import { buildNavId, focusNavElement, NAV_ID_PREFIX } from "@/modules/navigation";
+import { buildNavId, focusNavElement, NAV_ID_PREFIX } from "@/core/navigation";
 import { useIsMobile } from "./useIsMobile";
 
 const TAB_COUNT = APP_VIEW_TABS.length;

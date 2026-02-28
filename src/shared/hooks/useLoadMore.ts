@@ -9,10 +9,10 @@
  * Deferred by one frame to run after useKeyboardNav's DOM focus sync.
  */
 
-import { useCallback, useRef, useEffect } from 'react';
-import { useAppSelector } from '@/core/store';
-import { buildNavId, NAV_ID_PREFIX } from '@/modules/navigation';
-import type { RootState } from '@/core/store';
+import { useCallback, useRef, useEffect } from "react";
+import { useAppSelector } from "@/core/store";
+import { buildNavId, NAV_ID_PREFIX } from "@/core/navigation";
+import type { RootState } from "@/core/store";
 
 export interface UseLoadMoreOptions {
   /** Selector returning the current item count (used as scroll anchor) */
@@ -24,7 +24,12 @@ export interface UseLoadMoreOptions {
   sectionIndex?: number;
 }
 
-export function useLoadMore({ itemCountSelector, canLoadSelector, onLoad, sectionIndex = 0 }: UseLoadMoreOptions): () => void {
+export function useLoadMore({
+  itemCountSelector,
+  canLoadSelector,
+  onLoad,
+  sectionIndex = 0
+}: UseLoadMoreOptions): () => void {
   const itemCount = useAppSelector(itemCountSelector);
   const canLoad = useAppSelector(canLoadSelector);
 
@@ -45,8 +50,8 @@ export function useLoadMore({ itemCountSelector, canLoadSelector, onLoad, sectio
 
     const frameId = requestAnimationFrame(() => {
       document.querySelector(`[data-nav-id="${navId}"]`)?.scrollIntoView({
-        block: 'start',
-        behavior: 'smooth',
+        block: "start",
+        behavior: "smooth"
       });
     });
 

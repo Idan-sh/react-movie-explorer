@@ -21,7 +21,7 @@ import {
   MovieDetailsSkeleton,
   FavoriteToggleButton,
 } from "@/modules/movies";
-import { buildNavId, NAV_ID_PREFIX } from "@/modules/navigation";
+import { buildNavId, NAV_ID_PREFIX } from "@/core/navigation";
 import { BackButton } from "@/shared/components/BackButton";
 
 export function MovieDetailsPage(): React.JSX.Element {

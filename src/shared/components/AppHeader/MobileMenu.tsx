@@ -10,7 +10,7 @@
 import { AnimatePresence, motion } from "framer-motion";
 import type { AppView } from "@/shared/types";
 import { APP_VIEW_TABS, APP_VIEW_CONFIG, Z_LAYER } from "@/shared/constants";
-import { buildNavId, NAV_ID_PREFIX } from "@/modules/navigation";
+import { buildNavId, NAV_ID_PREFIX } from "@/core/navigation";
 import { MENU_CLOSED, MENU_OPEN, MENU_TRANSITION } from "./mobileMenu.constants";
 
 export interface MobileMenuProps {
@@ -20,7 +20,12 @@ export interface MobileMenuProps {
   onTabClick: (view: AppView) => void;
 }
 
-export function MobileMenu({ isOpen, activeView, focusedMenuIndex, onTabClick }: MobileMenuProps): React.JSX.Element {
+export function MobileMenu({
+  isOpen,
+  activeView,
+  focusedMenuIndex,
+  onTabClick
+}: MobileMenuProps): React.JSX.Element {
   return (
     <AnimatePresence initial={false}>
       {isOpen && (

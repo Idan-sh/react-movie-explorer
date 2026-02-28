@@ -25,7 +25,7 @@ import {
 } from '@/modules/movies';
 import type { TmdbMovie } from '@/modules/movies';
 import { useFavoriteToggle, selectFavorites } from '@/modules/favorites';
-import { usePageNavigation, useGridColumns } from '@/modules/navigation';
+import { usePageNavigation, useGridColumns } from '@/core/navigation';
 import { useSearchGrid } from '@/modules/search';
 
 const EMPTY_MOVIES: TmdbMovie[] = [];
