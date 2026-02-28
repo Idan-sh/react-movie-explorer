@@ -18,6 +18,7 @@ import { MovieDetailsMeta } from './MovieDetailsMeta';
 import { MovieDetailsGenres } from './MovieDetailsGenres';
 import { MovieDetailsOverview } from './MovieDetailsOverview';
 import { FavoriteToggleButton } from './FavoriteToggleButton';
+import { buildNavId, NAV_ID_PREFIX } from '@/modules/navigation';
 
 interface MovieDetailsProps {
   details: TmdbMovieDetails | null;
@@ -26,14 +27,23 @@ interface MovieDetailsProps {
   isFavorited: boolean;
   onBack: () => void;
   onToggleFavorite: () => void;
+  /** Index of the focused action button (-1 = none, 0 = back, 1 = favorite) */
+  focusedItemIndex?: number;
 }
 
-function BackButton({ onClick }: { onClick: () => void }): React.JSX.Element {
+function BackButton({ onClick, navId, isFocused = false }: { onClick: () => void; navId?: string; isFocused?: boolean }): React.JSX.Element {
   return (
     <button
       type="button"
+      tabIndex={-1}
+      data-nav-id={navId}
       onClick={onClick}
-      className="flex items-center gap-1.5 text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors"
+      className={`
+        flex items-center gap-1.5 text-sm font-medium outline-none
+        text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white
+        transition-colors rounded-sm
+        ${isFocused ? 'ring-2 ring-primary' : ''}
+      `}
     >
       <ChevronLeftIcon className="h-4 w-4" aria-hidden="true" />
       Back
@@ -77,13 +87,18 @@ export function MovieDetails({
   isFavorited,
   onBack,
   onToggleFavorite,
+  focusedItemIndex = -1,
 }: MovieDetailsProps): React.JSX.Element {
   const backdropUrl = details ? getBackdropUrl(details.backdrop_path) : null;
 
   return (
     <div className="mx-auto max-w-3xl px-4 py-6">
       <div className="mb-4">
-        <BackButton onClick={onBack} />
+        <BackButton
+          onClick={onBack}
+          navId={buildNavId(NAV_ID_PREFIX.ITEM, 0, 0)}
+          isFocused={focusedItemIndex === 0}
+        />
       </div>
 
       {isLoading ? (

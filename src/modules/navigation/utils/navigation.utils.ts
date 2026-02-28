@@ -260,12 +260,13 @@ function resolveContentNavigation(state: NavState, key: string, config: NavConfi
  * Pure state transition for keyboard navigation.
  * Given current state + key press, returns the new state.
  *
- * Handles: Escape (reset to tabs), arrow keys in both zones.
+ * Handles: Escape (snap back to active tab), arrow keys in both zones.
  * Does NOT handle: Enter (side effect), Tab (preventDefault only).
  */
 export function resolveNavigation(state: NavState, key: string, config: NavConfig): NavState {
   if (key === NAV_KEY.ESCAPE) {
-    return { activeZone: NAV_ZONE.TABS, tabIndex: 0, sectionIndex: 0, itemIndex: 0 };
+    const tabIndex = config.activeTabIndex ?? state.tabIndex;
+    return { ...state, activeZone: NAV_ZONE.TABS, tabIndex, sectionIndex: 0, itemIndex: 0 };
   }
 
   if (state.activeZone === NAV_ZONE.TABS) {

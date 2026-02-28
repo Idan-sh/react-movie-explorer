@@ -34,6 +34,8 @@ export interface UsePageNavigationOptions<T> {
   onFooterActivate?: (sectionIndex: number) => void;
   /** Which zone to start in on mount (default: tabs) */
   initialZone?: NavZone;
+  /** Index of the currently active (displayed) tab — also used as initial focus on mount */
+  activeTabIndex?: number;
   /** Disable all keyboard handling (e.g. when a modal is open) */
   enabled?: boolean;
 }
@@ -53,6 +55,7 @@ export function usePageNavigation<T>({
   sectionHasFooter,
   onFooterActivate,
   initialZone,
+  activeTabIndex,
   enabled = true,
 }: UsePageNavigationOptions<T>): UseKeyboardNavReturn {
   // Derive section definitions from item arrays
@@ -79,6 +82,7 @@ export function usePageNavigation<T>({
     onEscape,
     onFooterActivate,
     initialZone,
+    activeTabIndex,
     enabled,
   });
 }

@@ -42,6 +42,8 @@ export interface UseKeyboardNavOptions {
   onFooterActivate?: (sectionIndex: number) => void;
   /** Which zone to start in on mount (default: tabs) */
   initialZone?: NavZone;
+  /** Index of the currently active (displayed) tab — also used as initial focus on mount */
+  activeTabIndex?: number;
   /** Whether keyboard navigation is enabled (default: true) */
   enabled?: boolean;
 }
@@ -77,4 +79,6 @@ export interface NavState {
 export interface NavConfig {
   tabCount: number;
   sections: ContentSection[];
+  /** Index of the currently active (displayed) tab — used by Escape to snap back to it */
+  activeTabIndex?: number;
 }

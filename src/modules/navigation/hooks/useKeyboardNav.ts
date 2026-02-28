@@ -42,11 +42,13 @@ export function useKeyboardNav({
   onEscape,
   onFooterActivate,
   initialZone = NAV_ZONE.TABS,
+  activeTabIndex,
   enabled = true,
 }: UseKeyboardNavOptions): UseKeyboardNavReturn {
   const [state, setState] = useState<NavState>({
     ...INITIAL_STATE,
     activeZone: initialZone,
+    tabIndex: activeTabIndex ?? 0,
   });
 
   // Refs keep the event handler stable (registered once) while
@@ -54,8 +56,8 @@ export function useKeyboardNav({
   const stateRef = useRef(state);
   stateRef.current = state;
 
-  const configRef = useRef({ tabCount, sections });
-  configRef.current = { tabCount, sections };
+  const configRef = useRef({ tabCount, sections, activeTabIndex });
+  configRef.current = { tabCount, sections, activeTabIndex };
 
   const callbacksRef = useRef({ onTabActivate, onItemActivate, onEscape, onFooterActivate });
   callbacksRef.current = { onTabActivate, onItemActivate, onEscape, onFooterActivate };

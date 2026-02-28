@@ -13,7 +13,7 @@
  */
 
 import { useEffect, useMemo, useCallback } from "react";
-import { useNavigate, useNavigationType, useOutletContext } from "react-router-dom";
+import { useNavigate, useOutletContext } from "react-router-dom";
 import { AnimatePresence, motion } from "framer-motion";
 import type { LayoutContext } from "@/shared/components";
 import { APP_VIEW, APP_VIEW_TABS, VIEW_CROSSFADE, ROUTES } from "@/shared/constants";
@@ -29,7 +29,7 @@ import {
 } from "@/modules/movies";
 import type { TmdbMovie } from "@/modules/movies";
 import { FavoritesGrid, useFavoriteToggle, selectFavorites } from "@/modules/favorites";
-import { usePageNavigation, useGridColumns, NAV_ZONE } from "@/modules/navigation";
+import { usePageNavigation, useGridColumns } from "@/modules/navigation";
 import { useSearchGrid } from "@/modules/search";
 
 // Stable fallback selectors — used when activeList is null (e.g. Favorites tab).
@@ -40,7 +40,6 @@ const selectZero = (): number => 0;
 
 export function HomePage(): React.JSX.Element {
   const navigate = useNavigate();
-  const navigationType = useNavigationType();
   const dispatch = useAppDispatch();
   const { activeView, handleTabClick, setFocusedTabIndex, isSearchFocused } =
     useOutletContext<LayoutContext>();
@@ -116,8 +115,6 @@ export function HomePage(): React.JSX.Element {
 
   const gridColumns = useGridColumns();
 
-  const initialZone = navigationType === "POP" ? NAV_ZONE.CONTENT : NAV_ZONE.TABS;
-
   const { focusedTabIndex, focusedSectionIndex, focusedItemIndex } = usePageNavigation({
     tabCount: APP_VIEW_TABS.length,
     sectionItems,
@@ -128,7 +125,7 @@ export function HomePage(): React.JSX.Element {
     onEscape: () => {},
     sectionHasFooter,
     onFooterActivate: handleFooterActivate,
-    initialZone,
+    activeTabIndex: APP_VIEW_TABS.indexOf(activeView),
     enabled: !isSearchFocused,
   });
 
