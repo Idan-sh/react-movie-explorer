@@ -30,9 +30,10 @@ export function getReleaseYear(releaseDate: string): string {
 /**
  * Formats vote average to one decimal place
  * @param voteAverage - Raw vote average (0-10)
- * @returns Formatted string (e.g., "7.5")
+ * @returns Formatted string (e.g., "7.5") or null for unrated movies
  */
-export function formatRating(voteAverage: number): string {
+export function formatRating(voteAverage: number): string | null {
+  if (!voteAverage) return null;
   return voteAverage.toFixed(1);
 }
 
@@ -70,7 +71,8 @@ export function formatRuntime(minutes: number | null): string | null {
 export function buildMovieAriaLabel(
   title: string,
   releaseYear: string,
-  rating: string
+  rating: string | null
 ): string {
-  return `${title}, ${releaseYear}, Rating: ${rating}`;
+  const ratingText = rating ? `Rating: ${rating}` : 'No rating available';
+  return `${title}, ${releaseYear}, ${ratingText}`;
 }
