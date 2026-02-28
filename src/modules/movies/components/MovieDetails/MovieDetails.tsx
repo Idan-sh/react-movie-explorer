@@ -88,6 +88,12 @@ function LoadingSkeleton(): React.JSX.Element {
             <div className="h-8 w-36 rounded-full bg-gray-200 dark:bg-gray-700" />
           </div>
 
+          {/* Budget / Revenue */}
+          <div className="flex gap-3">
+            <div className="h-3 w-20 rounded bg-gray-200 dark:bg-gray-700" />
+            <div className="h-3 w-24 rounded bg-gray-200 dark:bg-gray-700" />
+          </div>
+
           {/* Genres: rounded-full py-0.5 text-xs ≈ h-5 */}
           <div className="flex gap-2">
             <div className="h-5 w-16 rounded-full bg-gray-200 dark:bg-gray-700" />
