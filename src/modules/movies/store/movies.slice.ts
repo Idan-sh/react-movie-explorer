@@ -88,9 +88,10 @@ const moviesSlice = createSlice({
         state[key].page = page;
         state[key].nextPage = null;
       } else {
+        const existingIds = new Set(state[key].page.movies.map((m) => m.id));
         state[key].page = {
           ...page,
-          movies: [...state[key].page.movies, ...page.movies],
+          movies: [...state[key].page.movies, ...page.movies.filter((m) => !existingIds.has(m.id))],
         };
       }
     },
@@ -122,9 +123,10 @@ const moviesSlice = createSlice({
       const { nextPage } = state[key];
       if (!nextPage) return;
 
+      const existingIds = new Set(state[key].page.movies.map((m) => m.id));
       state[key].page = {
         ...nextPage,
-        movies: [...state[key].page.movies, ...nextPage.movies],
+        movies: [...state[key].page.movies, ...nextPage.movies.filter((m) => !existingIds.has(m.id))],
       };
       state[key].nextPage = null;
     },

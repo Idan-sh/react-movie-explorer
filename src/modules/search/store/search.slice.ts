@@ -46,7 +46,10 @@ const searchSlice = createSlice({
       state.status = REQUEST_STATUS.SUCCESS;
       state.page = page;
       state.totalPages = totalPages;
-      state.results = page === 1 ? results : [...state.results, ...results];
+
+      const existing = page === 1 ? [] : state.results;
+      const existingIds = new Set(existing.map((m) => m.id));
+      state.results = [...existing, ...results.filter((m) => !existingIds.has(m.id))];
     },
 
     searchMoviesFailure: (state, action: PayloadAction<SearchFailurePayload>) => {
