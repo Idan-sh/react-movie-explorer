@@ -54,22 +54,38 @@ function BackButton({ onClick, navId, isFocused = false }: { onClick: () => void
 function LoadingSkeleton(): React.JSX.Element {
   return (
     <div className="animate-pulse">
+      {/* Backdrop: h-48 sm:h-64 rounded-lg */}
       <div className="h-48 sm:h-64 rounded-lg bg-gray-200 dark:bg-gray-700 mb-6" />
+
       <div className="flex gap-6">
+        {/* Poster: hidden sm:block w-44 aspect-[2/3] */}
         <div className="hidden sm:block w-44 shrink-0 rounded-lg bg-gray-200 dark:bg-gray-700 aspect-[2/3]" />
-        <div className="flex flex-1 flex-col gap-4">
+
+        {/* Right column: matches flex flex-col gap-3 */}
+        <div className="flex flex-1 flex-col gap-3">
+          {/* Title: text-2xl font-bold ≈ h-8 */}
           <div className="h-8 w-3/4 rounded bg-gray-200 dark:bg-gray-700" />
-          <div className="flex gap-3">
-            <div className="h-5 w-12 rounded bg-gray-200 dark:bg-gray-700" />
-            <div className="h-5 w-10 rounded bg-gray-200 dark:bg-gray-700" />
-            <div className="h-5 w-14 rounded bg-gray-200 dark:bg-gray-700" />
+
+          {/* Meta: CircularMovieRating lg (h-14 w-14) + year + runtime inline */}
+          <div className="flex items-center gap-3">
+            <div className="h-14 w-14 shrink-0 rounded-full bg-gray-200 dark:bg-gray-700" />
+            <div className="h-4 w-12 rounded bg-gray-200 dark:bg-gray-700" />
+            <div className="h-4 w-16 rounded bg-gray-200 dark:bg-gray-700" />
           </div>
+
+          {/* Genres: rounded-full py-0.5 text-xs ≈ h-5 */}
           <div className="flex gap-2">
-            <div className="h-6 w-16 rounded-full bg-gray-200 dark:bg-gray-700" />
-            <div className="h-6 w-20 rounded-full bg-gray-200 dark:bg-gray-700" />
-            <div className="h-6 w-14 rounded-full bg-gray-200 dark:bg-gray-700" />
+            <div className="h-5 w-16 rounded-full bg-gray-200 dark:bg-gray-700" />
+            <div className="h-5 w-20 rounded-full bg-gray-200 dark:bg-gray-700" />
+            <div className="h-5 w-14 rounded-full bg-gray-200 dark:bg-gray-700" />
           </div>
-          <div className="flex flex-col gap-2 mt-2">
+
+          {/* FavoriteToggleButton: rounded-full px-4 py-1.5 text-sm ≈ h-8 */}
+          <div className="h-8 w-36 rounded-full bg-gray-200 dark:bg-gray-700" />
+
+          {/* Overview: tagline (italic) + overview lines */}
+          <div className="flex flex-col gap-2">
+            <div className="h-4 w-2/3 rounded bg-gray-200 dark:bg-gray-700" />
             <div className="h-4 w-full rounded bg-gray-200 dark:bg-gray-700" />
             <div className="h-4 w-full rounded bg-gray-200 dark:bg-gray-700" />
             <div className="h-4 w-5/6 rounded bg-gray-200 dark:bg-gray-700" />
