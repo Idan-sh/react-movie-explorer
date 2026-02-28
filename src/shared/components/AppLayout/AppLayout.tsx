@@ -77,10 +77,15 @@ export function AppLayout(): React.JSX.Element {
         rightSlot={rightSlot}
       />
 
+      {/*
+        overflow-hidden: disables trackpad/mouse-wheel scrolling per requirements.
+        The element is still a scroll container — scrollTop can be set programmatically,
+        so keyboard nav's scrollIntoView() and ScrollToTopButton still work correctly.
+      */}
       <main
         ref={scrollRef}
         style={{ zIndex: Z_LAYER.CONTENT }}
-        className="relative flex-1 flex flex-col overflow-auto overscroll-contain"
+        className="relative flex-1 flex flex-col overflow-hidden"
       >
         <div className="grow shrink-0 bg-gray-100 dark:bg-gray-900">
           <Outlet context={layoutContext} />
