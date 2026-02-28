@@ -9,7 +9,7 @@
 
 import { AnimatePresence, motion } from "framer-motion";
 import type { AppView } from "@/shared/types";
-import { APP_VIEW_TABS, APP_VIEW_LABELS, Z_LAYER } from "@/shared/constants";
+import { APP_VIEW_TABS, APP_VIEW_CONFIG, Z_LAYER } from "@/shared/constants";
 import { buildNavId, NAV_ID_PREFIX } from "@/modules/navigation";
 import { MENU_CLOSED, MENU_OPEN, MENU_TRANSITION } from "./mobileMenu.constants";
 
@@ -59,7 +59,7 @@ export function MobileMenu({ isOpen, activeView, focusedMenuIndex, onTabClick }:
                     }
                   `}
               >
-                {APP_VIEW_LABELS[view]}
+                {APP_VIEW_CONFIG[view].label}
               </button>
             ))}
           </div>

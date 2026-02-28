@@ -6,18 +6,19 @@
  */
 
 export const APP_VIEW = {
-  POPULAR: 'popular',
-  NOW_PLAYING: 'now_playing',
-  FAVORITES: 'favorites',
+  POPULAR: "popular",
+  NOW_PLAYING: "now_playing",
+  FAVORITES: "favorites"
 } as const;
 
 /**
- * Display labels for each view tab
+ * Per-view display config: tab label + page title.
+ * Single source of truth — add new fields here as needed.
  */
-export const APP_VIEW_LABELS = {
-  [APP_VIEW.POPULAR]: 'Popular',
-  [APP_VIEW.NOW_PLAYING]: 'Airing Now',
-  [APP_VIEW.FAVORITES]: 'My Favorites',
+export const APP_VIEW_CONFIG = {
+  [APP_VIEW.POPULAR]: { label: "Popular", title: "Popular Movies" },
+  [APP_VIEW.NOW_PLAYING]: { label: "Airing Now", title: "Movies Airing Now" },
+  [APP_VIEW.FAVORITES]: { label: "My Favorites", title: "My Favorite Movies" }
 } as const;
 
 /**
@@ -28,8 +29,4 @@ export const APP_VIEW_DEFAULT = APP_VIEW.POPULAR;
 /**
  * Tabs shown in the header
  */
-export const APP_VIEW_TABS = [
-  APP_VIEW.POPULAR,
-  APP_VIEW.NOW_PLAYING,
-  APP_VIEW.FAVORITES,
-] as const;
+export const APP_VIEW_TABS = [APP_VIEW.POPULAR, APP_VIEW.NOW_PLAYING, APP_VIEW.FAVORITES] as const;

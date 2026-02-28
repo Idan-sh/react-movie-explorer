@@ -5,10 +5,10 @@
  * Purely presentational - receives state and handlers via props.
  */
 
-import type { AppView } from '@/shared/types';
-import { APP_VIEW_TABS, APP_VIEW_LABELS } from '@/shared/constants';
-import { buildNavId, NAV_ID_PREFIX } from '@/modules/navigation';
-import { CategoryTab } from './CategoryTab';
+import type { AppView } from "@/shared/types";
+import { APP_VIEW_TABS, APP_VIEW_CONFIG } from "@/shared/constants";
+import { buildNavId, NAV_ID_PREFIX } from "@/modules/navigation";
+import { CategoryTab } from "./CategoryTab";
 
 export interface CategoryTabsProps {
   activeView: AppView;
@@ -23,7 +23,7 @@ export function CategoryTabs({
   focusedTabIndex,
   onTabClick,
   onTabFocus,
-  onTabBlur,
+  onTabBlur
 }: CategoryTabsProps): React.JSX.Element {
   return (
     <nav role="tablist" aria-label="Category tabs" className="flex h-full items-stretch gap-1">
@@ -31,7 +31,7 @@ export function CategoryTabs({
         <CategoryTab
           key={view}
           view={view}
-          label={APP_VIEW_LABELS[view]}
+          label={APP_VIEW_CONFIG[view].label}
           isActive={activeView === view}
           isFocused={index === focusedTabIndex}
           navId={buildNavId(NAV_ID_PREFIX.TAB, index)}

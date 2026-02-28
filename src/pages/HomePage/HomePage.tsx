@@ -16,7 +16,13 @@ import { useEffect, useMemo, useCallback } from "react";
 import { useNavigate, useOutletContext } from "react-router-dom";
 import { AnimatePresence, motion } from "framer-motion";
 import type { LayoutContext } from "@/shared/components";
-import { APP_VIEW, APP_VIEW_TABS, VIEW_CROSSFADE, ROUTES } from "@/shared/constants";
+import {
+  APP_VIEW,
+  APP_VIEW_CONFIG,
+  APP_VIEW_TABS,
+  VIEW_CROSSFADE,
+  ROUTES
+} from "@/shared/constants";
 import { useLoadMore } from "@/shared/hooks";
 import { useAppSelector, useAppDispatch } from "@/core/store";
 import {
@@ -153,6 +159,12 @@ export function HomePage(): React.JSX.Element {
           exit={VIEW_CROSSFADE.exit}
           transition={VIEW_CROSSFADE.transition}
         >
+          <h2 className="mb-6 text-2xl font-bold text-gray-900 dark:text-white">
+            {isSearchActive
+              ? "Search Results"
+              : APP_VIEW_CONFIG[activeView as keyof typeof APP_VIEW_CONFIG].title}
+          </h2>
+
           {isSearchActive ? (
             <MovieGridLayout
               {...searchGrid}
