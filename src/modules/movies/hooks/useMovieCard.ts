@@ -18,7 +18,7 @@ import {
 export interface MovieCardData {
   posterUrl: string | null;
   releaseYear: string;
-  rating: string | null;
+  rating: number | null;
   title: string;
   ariaLabel: string;
   handleClick: () => void;

@@ -9,9 +9,9 @@ import { memo } from 'react';
 import type { TmdbMovie } from '../../types';
 import { useMovieCard } from '../../hooks';
 import { MoviePoster } from './MoviePoster';
-import { MovieRating } from './MovieRating';
 import { MovieInfo } from './MovieInfo';
 import { FavoriteButton } from './FavoriteButton';
+import { CircularMovieRating } from '../CircularMovieRating';
 
 export interface MovieCardProps {
   movie: TmdbMovie;
@@ -59,7 +59,11 @@ function MovieCardComponent({
       {/* Poster with Rating + Favorite Overlay */}
       <div className="relative">
         <MoviePoster url={posterUrl} title={title} />
-        <MovieRating rating={rating} />
+        {rating !== null && (
+          <div className="absolute -bottom-4 left-2 z-10" aria-hidden="true">
+            <CircularMovieRating rating={rating} size="sm" />
+          </div>
+        )}
         {onToggleFavorite !== undefined && (
           <FavoriteButton
             isFavorited={isFavorited}

@@ -5,8 +5,8 @@
  * Visible on hover, always visible when favorited or card is focused.
  */
 
-import { HeartIcon as HeartSolid } from '@heroicons/react/24/solid';
-import { HeartIcon as HeartOutline } from '@heroicons/react/24/outline';
+import { HeartIcon as HeartSolid } from "@heroicons/react/24/solid";
+import { HeartIcon as HeartOutline } from "@heroicons/react/24/outline";
 
 export interface FavoriteButtonProps {
   isFavorited: boolean;
@@ -17,12 +17,12 @@ export interface FavoriteButtonProps {
 export function FavoriteButton({
   isFavorited,
   isFocused,
-  onClick,
+  onClick
 }: FavoriteButtonProps): React.JSX.Element {
   return (
     <button
       tabIndex={-1}
-      aria-label={isFavorited ? 'Remove from favorites' : 'Add to favorites'}
+      aria-label={isFavorited ? "Remove from favorites" : "Add to favorites"}
       onClick={onClick}
       className={`
         absolute top-2 left-2 z-10
@@ -31,16 +31,12 @@ export function FavoriteButton({
         hover:scale-110
         ${
           isFavorited
-            ? 'bg-red-500 text-white opacity-100'
-            : `bg-black/50 text-white opacity-0 group-hover:opacity-100 ${isFocused ? 'opacity-100' : ''}`
+            ? "bg-red-500 text-white opacity-100"
+            : `bg-black/50 text-white opacity-0 group-hover:opacity-100 ${isFocused ? "opacity-100" : ""}`
         }
       `}
     >
-      {isFavorited ? (
-        <HeartSolid className="h-4 w-4" />
-      ) : (
-        <HeartOutline className="h-4 w-4" />
-      )}
+      {isFavorited ? <HeartSolid className="h-4 w-4" /> : <HeartOutline className="h-4 w-4" />}
     </button>
   );
 }
