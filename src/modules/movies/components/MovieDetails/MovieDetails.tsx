@@ -150,13 +150,15 @@ export function MovieDetails({
             <MovieDetailsPoster movie={details} />
 
             <div className="flex min-w-0 flex-1 flex-col gap-3">
-              <h1 className="text-2xl font-bold leading-snug text-gray-900 dark:text-white">
-                {details.title}
-              </h1>
+              <div className="flex items-start justify-between gap-3">
+                <h1 className="text-2xl font-bold leading-snug text-gray-900 dark:text-white">
+                  {details.title}
+                </h1>
+                <FavoriteToggleButton isFavorited={isFavorited} onClick={onToggleFavorite} />
+              </div>
 
               <MovieDetailsMeta details={details} />
               <MovieDetailsGenres details={details} />
-              <FavoriteToggleButton isFavorited={isFavorited} onClick={onToggleFavorite} />
               <MovieDetailsOverview details={details} />
             </div>
           </div>
