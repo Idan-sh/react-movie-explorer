@@ -15,6 +15,7 @@
 
 import { call, put, select, takeEvery } from 'redux-saga/effects';
 import type { PayloadAction } from '@reduxjs/toolkit';
+import type { AxiosResponse } from 'axios';
 import { tmdbClient } from '@/core/api';
 import type {
   FetchMoviesPayload,
@@ -42,7 +43,7 @@ function* fetchPageFromApi(list: MovieList, pageNumber: number): Generator {
   const response = yield call(tmdbClient.get<TmdbMovieListResponse>, endpoint, {
     params: { page: pageNumber },
   });
-  return toMoviesPage((response as { data: TmdbMovieListResponse }).data);
+  return toMoviesPage((response as AxiosResponse<TmdbMovieListResponse>).data);
 }
 
 /**

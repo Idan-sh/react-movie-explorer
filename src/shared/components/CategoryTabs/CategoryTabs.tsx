@@ -30,12 +30,13 @@ export function CategoryTabs({
       {APP_VIEW_TABS.map((view, index) => (
         <CategoryTab
           key={view}
+          view={view}
           label={APP_VIEW_LABELS[view]}
           isActive={activeView === view}
           isFocused={index === focusedTabIndex}
           navId={buildNavId(NAV_ID_PREFIX.TAB, index)}
-          onClick={() => onTabClick(view)}
-          onFocus={() => onTabFocus(view)}
+          onTabClick={onTabClick}
+          onTabFocus={onTabFocus}
           onBlur={onTabBlur}
         />
       ))}

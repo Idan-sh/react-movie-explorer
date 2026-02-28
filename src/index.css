@@ -28,7 +28,7 @@ button,
 /* Custom scrollbar styling */
 * {
   scrollbar-width: thin;
-  scrollbar-color: #122848 transparent;
+  scrollbar-color: var(--color-gray-600) transparent;
 }
 
 *::-webkit-scrollbar {
@@ -40,12 +40,12 @@ button,
 }
 
 *::-webkit-scrollbar-thumb {
-  background-color: #4b5563;
+  background-color: var(--color-gray-600);
   border-radius: 9999px;
 }
 
 *::-webkit-scrollbar-thumb:hover {
-  background-color: #8b5cf6;
+  background-color: var(--color-primary);
 }
 
 @theme {

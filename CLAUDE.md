@@ -28,18 +28,19 @@ src/
 ├── modules/                 # Feature modules (self-contained)
 │   ├── movies/              # Movie listing, details, pagination
 │   │   ├── components/
-│   │   │   ├── MovieCard/       # MovieCard, FavoriteButton, MoviePoster, MovieRating, MovieInfo
-│   │   │   ├── MovieGrid/       # MovieGrid, LoadMoreButton, MovieGridEmpty, MovieGridError, MovieGridSkeleton
-│   │   │   └── MovieDetails/    # MovieDetails, MovieDetailsPoster, MovieDetailsGenres, MovieDetailsMeta, MovieDetailsOverview
-│   │   ├── hooks/           # useMoviesInit, useMovieGrid, useMovieCard, useLoadMore, useMovieDetails
+│   │   │   ├── CircularMovieRating/  # CircularMovieRating (SVG ring with IntersectionObserver animation)
+│   │   │   ├── MovieCard/       # MovieCard, FavoriteButton, MoviePoster, MovieInfo
+│   │   │   ├── MovieGrid/       # MovieGrid, MovieGridLayout, LoadMoreButton, MovieGridEmpty, MovieGridError, MovieGridSkeleton
+│   │   │   └── MovieDetails/    # MovieDetails, FavoriteToggleButton, MovieDetailsPoster, MovieDetailsGenres, MovieDetailsMeta, MovieDetailsOverview
+│   │   ├── hooks/           # useMoviesInit, useMovieGrid, useMovieCard, useMovieDetails
 │   │   ├── store/           # movies.slice/saga/selectors + movieDetails.slice/saga/selectors
 │   │   ├── types/           # movie.types, movies.store.types
-│   │   ├── utils/           # movieCard.utils, movies.utils
+│   │   ├── utils/           # movieCard.utils, movies.utils, confetti.utils
 │   │   └── constants.ts     # MOVIE_LIST, TMDB_IMAGE, PAGINATION
 │   ├── navigation/          # Keyboard navigation system
 │   │   ├── hooks/           # useKeyboardNav, usePageNavigation, useGridColumns
-│   │   ├── types/           # navigation.types (NavState, NavZone, etc.)
-│   │   ├── utils/           # navigation.utils (resolveNavigation, grid math)
+│   │   ├── types/           # navigation.types (NavState, NavZone, NavConfig, etc.)
+│   │   ├── utils/           # navigation.utils (resolveNavigation, grid math, focus utils)
 │   │   └── constants.ts     # NAV_KEY, NAV_ZONE, NAV_ID_PREFIX
 │   ├── favorites/           # Favorites with localStorage persistence
 │   │   ├── components/
@@ -48,14 +49,25 @@ src/
 │   │   ├── services/        # favorites.storage (localStorage)
 │   │   ├── store/           # favorites.slice, favorites.selectors
 │   │   └── types/           # favorites.types
-│   └── search/              # (SCAFFOLDED - not yet implemented)
+│   └── search/              # Movie search via TMDB API
+│       ├── components/
+│       │   └── SearchBar/       # SearchBar (controlled input, debounced dispatch)
+│       ├── hooks/           # useSearch (input control), useSearchGrid (grid state + load more)
+│       ├── store/           # search.slice/saga/selectors
+│       ├── types/           # search.types
+│       └── constants.ts     # SEARCH (MIN_QUERY_LENGTH, DEBOUNCE_MS, rate limit config)
 │
 ├── shared/                  # Reusable across modules
 │   ├── components/
+│   │   ├── AppLayout/       # AppLayout (route shell, outlet context, scroll ref)
 │   │   ├── AppHeader/       # AppHeader, HamburgerButton, MobileMenu
-│   │   └── CategoryTabs/    # CategoryTabs, CategoryTab
-│   ├── hooks/               # useCategoryTabs, useHamburgerMenu
+│   │   ├── AppFooter/       # AppFooter
+│   │   ├── CategoryTabs/    # CategoryTabs, CategoryTab
+│   │   ├── ScrollToTopButton/   # ScrollToTopButton (with useScrollToTop hook)
+│   │   └── Theme/           # ThemeToggle component + useTheme hook
+│   ├── hooks/               # useCategoryTabs, useHamburgerMenu, useLoadMore, useIsMobile
 │   ├── types/               # request.types, views.types (derived from constants)
+│   ├── utils/               # rateLimit.utils (sliding-window rate limiter)
 │   └── constants/           # Shared constants (organized by responsibility)
 │       ├── request.constants.ts    # REQUEST_STATUS (idle, loading, success, error)
 │       ├── slices.constants.ts     # SLICE_NAMES (movies, search, favorites)
@@ -409,7 +421,7 @@ Four tabs: **Home** | **Popular** | **Airing Now** | **My Favorites**
 - **Focus after 2 seconds** → auto-switch (keyboard navigation, non-Home tabs only)
 - **Blur** → cancel pending auto-switch timer
 - Popular & Airing Now → TMDB API
-- My Favorites → localStorage (separate data source, not yet implemented)
+- My Favorites → localStorage (separate data source, no API needed)
 
 ---
 
@@ -417,7 +429,7 @@ Four tabs: **Home** | **Popular** | **Airing Now** | **My Favorites**
 
 - All navigation via Arrow keys, Enter, Escape
 - **Tab key DISABLED** (per requirements - always prevented)
-- **Mouse scroll DISABLED** (CSS overflow: hidden on html/body)
+- **Mouse scroll DISABLED** — `overflow: hidden` on `html/body/#root` + `overflow-hidden` on the `<main>` scroll container. Programmatic scrolling via `element.scrollIntoView()` still works (browsers allow setting `scrollTop` on `overflow:hidden` containers).
 - Focus management is critical for UX
 
 ### Navigation Zones (implemented)
@@ -440,20 +452,28 @@ Two mutually exclusive zones — only one has focus at a time:
 
 ---
 
-## Search Requirements
+## Search
 
 - Minimum 2 characters to trigger search
-- 500ms debounce before request
-- Rate limit: max 5 requests per 10 seconds
-- Implement in saga with proper cancellation
+- 500ms debounce via `sagaDebounce` in `search.saga.ts`
+- Rate limit: max 5 requests per 10 seconds (sliding-window, `shared/utils/rateLimit.utils.ts`)
+- `useSearch` — input control only: `{ query, handleChange, handleClear }`
+- `useSearchGrid` — grid state for `MovieGridLayout`: reads Redux, calls shared `useLoadMore`
+- State managed in Redux (`search.slice`) — results, page, totalPages, status, error, query
 
 ---
 
 ## Design System
 
+### Theme System
+- `shared/components/Theme/ThemeToggle.tsx` — icon button that toggles dark class on `<html>`
+- `shared/components/Theme/useTheme.ts` — manages `isDark` state + `toggleTheme` handler
+- Dark class applied to `<html>` element; Tailwind picks it up via the `dark:` variant
+- `@custom-variant dark (&:where(.dark, .dark *))` defined in `index.css`
+
 ### Color Mode
-- **System preference**: Follows user's OS dark/light setting
-- Tailwind 4: Automatic via `prefers-color-scheme` media query
+- **User-togglable**: ThemeToggle button in AppHeader (overrides OS preference)
+- Tailwind 4: `dark:` variant activated by `.dark` class on `<html>`
 - Use `dark:` variant for dark mode styles
 
 ### Color Palette (Tailwind 4 @theme)
