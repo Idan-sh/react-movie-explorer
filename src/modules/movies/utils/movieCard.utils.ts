@@ -28,6 +28,19 @@ export function getReleaseYear(releaseDate: string): string {
 }
 
 /**
+ * Formats TMDB date string to "MMM DD, YYYY" (e.g., "Jan 28, 2026")
+ * @param releaseDate - TMDB date format (YYYY-MM-DD)
+ * @returns Formatted date string or 'N/A' if invalid
+ */
+export function formatReleaseDate(releaseDate: string): string {
+  if (!releaseDate) return 'N/A';
+  const [year, month, day] = releaseDate.split('-');
+  if (!year || !month || !day) return 'N/A';
+  const date = new Date(Number(year), Number(month) - 1, Number(day));
+  return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+}
+
+/**
  * Converts TMDB vote average (0–10) to a percentage (0–100)
  * @param voteAverage - Raw vote average (0-10)
  * @returns Percentage number or null for unrated movies

@@ -10,14 +10,14 @@
 import type { TmdbMovie } from '../types';
 import {
   getPosterUrl,
-  getReleaseYear,
+  formatReleaseDate,
   formatRating,
   buildMovieAriaLabel,
 } from '../utils';
 
 export interface MovieCardData {
   posterUrl: string | null;
-  releaseYear: string;
+  releaseDate: string;
   rating: number | null;
   title: string;
   ariaLabel: string;
@@ -36,9 +36,9 @@ export function useMovieCard(
   onToggleFavorite?: (movie: TmdbMovie) => void,
 ): MovieCardData {
   const posterUrl = getPosterUrl(movie.poster_path);
-  const releaseYear = getReleaseYear(movie.release_date);
+  const releaseDate = formatReleaseDate(movie.release_date);
   const rating = formatRating(movie.vote_average);
-  const ariaLabel = buildMovieAriaLabel(movie.title, releaseYear, rating);
+  const ariaLabel = buildMovieAriaLabel(movie.title, releaseDate, rating);
 
   const handleClick = (): void => { onSelect?.(movie); };
 
@@ -50,7 +50,7 @@ export function useMovieCard(
 
   return {
     posterUrl,
-    releaseYear,
+    releaseDate,
     rating,
     title: movie.title,
     ariaLabel,

@@ -32,7 +32,7 @@ function MovieCardComponent({
 }: MovieCardProps): React.JSX.Element {
   const {
     posterUrl,
-    releaseYear,
+    releaseDate,
     rating,
     title,
     ariaLabel,
@@ -74,7 +74,7 @@ function MovieCardComponent({
       </div>
 
       {/* Movie Details */}
-      <MovieInfo title={title} releaseYear={releaseYear} />
+      <MovieInfo title={title} releaseDate={releaseDate} />
     </article>
   );
 }
