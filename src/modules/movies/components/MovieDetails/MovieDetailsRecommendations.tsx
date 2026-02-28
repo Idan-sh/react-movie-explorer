@@ -37,9 +37,9 @@ export function MovieDetailsRecommendations({ movies }: MovieDetailsRecommendati
         More Like This
       </h2>
 
-      <ScrollRow>
+      <ScrollRow className="items-stretch">
         {displayMovies.map((movie) => (
-          <div key={movie.id} className="w-36 shrink-0">
+          <div key={movie.id} className="w-36 shrink-0 [&_h3]:text-xs [&_h3]:line-clamp-1">
             <MovieCard movie={movie} onSelect={handleSelect} />
           </div>
         ))}
