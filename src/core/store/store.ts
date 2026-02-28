@@ -35,7 +35,6 @@ import createSagaMiddleware from 'redux-saga';
 import { rootReducer } from './rootReducer';
 import { rootSaga } from './rootSaga';
 import { listenerMiddleware } from './listenerMiddleware';
-import { SAGA_IGNORED_ACTIONS } from './store.constants';
 import '@/modules/favorites/store/favorites.listener';
 
 const sagaMiddleware = createSagaMiddleware();
@@ -43,11 +42,9 @@ const sagaMiddleware = createSagaMiddleware();
 export const store = configureStore({
   reducer: rootReducer,
   middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware({
-      serializableCheck: {
-        ignoredActions: SAGA_IGNORED_ACTIONS,
-      },
-    }).prepend(listenerMiddleware.middleware).concat(sagaMiddleware),
+    getDefaultMiddleware()
+      .prepend(listenerMiddleware.middleware)
+      .concat(sagaMiddleware),
   devTools: import.meta.env.DEV,
 });
 
