@@ -9,6 +9,7 @@ import { useNavigate } from 'react-router-dom';
 import { useCallback } from 'react';
 import type { TmdbMovie } from '../../types';
 import { MovieCard } from '../MovieCard';
+import { ScrollRow } from '@/shared/components';
 
 interface MovieDetailsRecommendationsProps {
   movies: TmdbMovie[];
@@ -36,13 +37,13 @@ export function MovieDetailsRecommendations({ movies }: MovieDetailsRecommendati
         More Like This
       </h2>
 
-      <div className="flex gap-4 overflow-x-auto pb-2 scrollbar-thin">
+      <ScrollRow>
         {displayMovies.map((movie) => (
           <div key={movie.id} className="w-36 shrink-0">
             <MovieCard movie={movie} onSelect={handleSelect} />
           </div>
         ))}
-      </div>
+      </ScrollRow>
     </div>
   );
 }

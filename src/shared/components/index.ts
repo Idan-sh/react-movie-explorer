@@ -1,4 +1,5 @@
 export { AppHeader } from './AppHeader';
+export { ScrollRow } from './ScrollRow';
 export { AppFooter } from './AppFooter';
 export { AppLayout } from './AppLayout';
 export type { LayoutContext } from './AppLayout';
