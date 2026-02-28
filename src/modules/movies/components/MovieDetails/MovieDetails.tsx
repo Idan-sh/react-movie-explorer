@@ -77,11 +77,14 @@ function LoadingSkeleton(): React.JSX.Element {
           {/* Title: text-2xl font-bold ≈ h-8 */}
           <div className="h-8 w-3/4 rounded bg-gray-200 dark:bg-gray-700" />
 
-          {/* Meta: CircularMovieRating lg (h-14 w-14) + year + runtime inline */}
-          <div className="flex items-center gap-3">
-            <div className="h-14 w-14 shrink-0 rounded-full bg-gray-200 dark:bg-gray-700" />
-            <div className="h-4 w-12 rounded bg-gray-200 dark:bg-gray-700" />
-            <div className="h-4 w-16 rounded bg-gray-200 dark:bg-gray-700" />
+          {/* Meta row: rating + year + runtime + favorite button */}
+          <div className="flex items-center justify-between gap-3">
+            <div className="flex items-center gap-3">
+              <div className="h-14 w-14 shrink-0 rounded-full bg-gray-200 dark:bg-gray-700" />
+              <div className="h-4 w-12 rounded bg-gray-200 dark:bg-gray-700" />
+              <div className="h-4 w-16 rounded bg-gray-200 dark:bg-gray-700" />
+            </div>
+            <div className="h-8 w-36 rounded-full bg-gray-200 dark:bg-gray-700" />
           </div>
 
           {/* Genres: rounded-full py-0.5 text-xs ≈ h-5 */}
@@ -90,9 +93,6 @@ function LoadingSkeleton(): React.JSX.Element {
             <div className="h-5 w-20 rounded-full bg-gray-200 dark:bg-gray-700" />
             <div className="h-5 w-14 rounded-full bg-gray-200 dark:bg-gray-700" />
           </div>
-
-          {/* FavoriteToggleButton: rounded-full px-4 py-1.5 text-sm ≈ h-8 */}
-          <div className="h-8 w-36 rounded-full bg-gray-200 dark:bg-gray-700" />
 
           {/* Overview: tagline (italic) + overview lines */}
           <div className="flex flex-col gap-2">
@@ -173,14 +173,16 @@ export function MovieDetails({
             <MovieDetailsPoster movie={details} />
 
             <div className="flex min-w-0 flex-1 flex-col gap-3">
-              <div className="flex items-start justify-between gap-3">
-                <h1 className="text-2xl font-bold leading-snug text-gray-900 dark:text-white">
-                  {details.title}
-                </h1>
-                <FavoriteToggleButton isFavorited={isFavorited} onClick={onToggleFavorite} />
-              </div>
+              <h1 className="text-2xl font-bold leading-snug text-gray-900 dark:text-white">
+                {details.title}
+              </h1>
 
-              <MovieDetailsMeta details={details} />
+              <MovieDetailsMeta
+                details={details}
+                actionSlot={
+                  <FavoriteToggleButton isFavorited={isFavorited} onClick={onToggleFavorite} />
+                }
+              />
               <MovieDetailsGenres details={details} />
               <MovieDetailsOverview details={details} />
             </div>
@@ -188,10 +190,7 @@ export function MovieDetails({
 
           {details.credits && (
             <div className="mt-8">
-              <MovieDetailsCast
-                cast={details.credits.cast}
-                crew={details.credits.crew}
-              />
+              <MovieDetailsCast cast={details.credits.cast} crew={details.credits.crew} />
             </div>
           )}
 

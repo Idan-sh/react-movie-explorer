@@ -26,9 +26,9 @@ export function FavoriteToggleButton({
   };
 
   return (
-    <div className="relative self-start">
+    <div className="relative">
       {/* Invisible sizer — always reserves space for the longer label */}
-      <span className="invisible flex items-center gap-2 px-4 py-1.5 text-sm font-medium" aria-hidden="true">
+      <span className="invisible flex items-center gap-1.5 px-3 py-1 text-xs sm:gap-2 sm:px-4 sm:py-1.5 sm:text-sm font-medium" aria-hidden="true">
         Add to Favorites
         <HeartOutline className="h-4 w-4 shrink-0" />
       </span>
@@ -37,7 +37,7 @@ export function FavoriteToggleButton({
         type="button"
         onClick={handleClick}
         className={`
-          absolute inset-y-0 right-0 flex items-center gap-2 rounded-full px-4 py-1.5 text-sm font-medium
+          absolute inset-y-0 right-0 flex items-center gap-1.5 rounded-full px-3 py-1 text-xs sm:gap-2 sm:px-4 sm:py-1.5 sm:text-sm font-medium
           transition-colors duration-150
           ${
             isFavorited

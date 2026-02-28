@@ -27,6 +27,7 @@ export const Z_LAYER = {
   SCROLL_TO_TOP: 15,
   HEADER: 20,
   MOBILE_MENU: 25,
+  DROPDOWN: 28,
   MODAL: 30,
   TOAST: 40,
 } as const;

@@ -62,9 +62,10 @@ export function AppLayout(): React.JSX.Element {
     scrollRef
   };
 
-  const rightSlot = (
+  const searchSlot = <SearchBar onFocus={handleSearchFocus} onBlur={handleSearchBlur} />;
+
+  const actionsSlot = (
     <>
-      <SearchBar onFocus={handleSearchFocus} onBlur={handleSearchBlur} />
       <ThemeToggle isDark={isDark} onToggle={toggleTheme} />
       <SettingsButton isScrollEnabled={isScrollEnabled} onToggleScroll={toggleScroll} />
     </>
@@ -78,7 +79,8 @@ export function AppLayout(): React.JSX.Element {
         onTabClick={handleTabClickWithNav}
         onTabFocus={handleTabFocus}
         onTabBlur={handleTabBlur}
-        rightSlot={rightSlot}
+        searchSlot={searchSlot}
+        actionsSlot={actionsSlot}
       />
 
       {/*
@@ -89,7 +91,7 @@ export function AppLayout(): React.JSX.Element {
       <main
         ref={scrollRef}
         style={{ zIndex: Z_LAYER.CONTENT }}
-        className={`relative flex-1 flex flex-col ${isScrollEnabled ? 'overflow-y-auto' : 'overflow-hidden'}`}
+        className={`relative flex-1 flex flex-col ${isScrollEnabled ? "overflow-y-auto" : "overflow-hidden"}`}
       >
         <div className="grow shrink-0 bg-gray-100 dark:bg-gray-900">
           <Outlet context={layoutContext} />

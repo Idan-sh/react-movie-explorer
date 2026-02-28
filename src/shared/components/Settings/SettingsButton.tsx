@@ -8,6 +8,7 @@
 import { useState, useRef, useEffect, useCallback } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { Cog6ToothIcon } from "@heroicons/react/24/outline";
+import { Z_LAYER } from "@/shared/constants";
 import { ToggleSwitch } from "./ToggleSwitch";
 
 interface SettingsButtonProps {
@@ -66,6 +67,7 @@ export function SettingsButton({
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: -4 }}
             transition={{ duration: 0.15, ease: "easeOut" }}
+            style={{ zIndex: Z_LAYER.DROPDOWN }}
             className="absolute right-0 top-full mt-2 w-48 origin-top-right rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-3 shadow-lg"
           >
             <ToggleSwitch
