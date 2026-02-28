@@ -10,6 +10,7 @@
  * - Success → full details layout
  */
 
+import { ChevronLeftIcon } from '@heroicons/react/24/outline';
 import type { TmdbMovieDetails } from '../../types';
 import { getBackdropUrl } from '../../utils';
 import { MovieDetailsPoster } from './MovieDetailsPoster';
@@ -34,9 +35,7 @@ function BackButton({ onClick }: { onClick: () => void }): React.JSX.Element {
       onClick={onClick}
       className="flex items-center gap-1.5 text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors"
     >
-      <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
-        <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
-      </svg>
+      <ChevronLeftIcon className="h-4 w-4" aria-hidden="true" />
       Back
     </button>
   );

@@ -7,6 +7,7 @@
  */
 
 import { AnimatePresence, motion } from "framer-motion";
+import { ChevronUpIcon } from '@heroicons/react/24/outline';
 import { Z_LAYER } from "@/shared/constants";
 
 const VISIBLE = { opacity: 1, y: 0 };
@@ -49,15 +50,7 @@ export function ScrollToTopButton({
             dark:hover:bg-primary dark:hover:border-primary dark:hover:text-white
           "
         >
-          <svg
-            className="h-4 w-4"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-            strokeWidth={2.5}
-          >
-            <path strokeLinecap="round" strokeLinejoin="round" d="M5 15l7-7 7 7" />
-          </svg>
+          <ChevronUpIcon className="h-4 w-4" aria-hidden="true" />
           Back to top
         </motion.button>
       )}
