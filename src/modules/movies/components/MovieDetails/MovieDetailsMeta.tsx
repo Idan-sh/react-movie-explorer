@@ -1,12 +1,12 @@
 /**
  * MovieDetailsMeta Component
  *
- * Rating, release year, and runtime row.
+ * Rating, release year, runtime, budget, and revenue row.
  */
 
 import { CircularMovieRating } from '../CircularMovieRating';
 import type { TmdbMovieDetails } from '../../types';
-import { formatRating, getReleaseYear, formatRuntime } from '../../utils';
+import { formatRating, getReleaseYear, formatRuntime, formatMoney } from '../../utils';
 
 interface MovieDetailsMetaProps {
   details: TmdbMovieDetails;
@@ -16,16 +16,27 @@ export function MovieDetailsMeta({ details }: MovieDetailsMetaProps): React.JSX.
   const rating = formatRating(details.vote_average);
   const year = getReleaseYear(details.release_date);
   const runtime = formatRuntime(details.runtime);
+  const budget = formatMoney(details.budget);
+  const revenue = formatMoney(details.revenue);
 
   return (
-    <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-gray-600 dark:text-gray-400">
-      {rating !== null ? (
-        <CircularMovieRating rating={rating} size="lg" />
-      ) : (
-        <span className="italic">No rating available yet</span>
+    <div className="flex flex-col gap-2">
+      <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-gray-600 dark:text-gray-400">
+        {rating !== null ? (
+          <CircularMovieRating rating={rating} size="lg" />
+        ) : (
+          <span className="italic">No rating available yet</span>
+        )}
+        <span>{year}</span>
+        {runtime && <span>{runtime}</span>}
+      </div>
+
+      {(budget || revenue) && (
+        <div className="flex flex-wrap gap-x-3 text-xs text-gray-500 dark:text-gray-400">
+          {budget && <span>Budget: {budget}</span>}
+          {revenue && <span>Revenue: {revenue}</span>}
+        </div>
       )}
-      <span>{year}</span>
-      {runtime && <span>{runtime}</span>}
     </div>
   );
 }

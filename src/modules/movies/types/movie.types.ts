@@ -34,8 +34,43 @@ export interface TmdbMovie {
 }
 
 /**
+ * Cast member from TMDB /movie/{id}/credits
+ */
+export interface TmdbCastMember {
+  id: number;
+  name: string;
+  character: string;
+  profile_path: string | null;
+  order: number;
+}
+
+/**
+ * Crew member from TMDB /movie/{id}/credits
+ */
+export interface TmdbCrewMember {
+  id: number;
+  name: string;
+  job: string;
+  department: string;
+  profile_path: string | null;
+}
+
+/**
+ * Video object from TMDB /movie/{id}/videos
+ */
+export interface TmdbVideo {
+  id: string;
+  key: string;
+  site: string;
+  type: string;
+  name: string;
+  official: boolean;
+}
+
+/**
  * Full movie detail response from TMDB /movie/{id}
- * Extends TmdbMovie — adds genres (as objects), runtime, tagline, status.
+ * Extends TmdbMovie — adds genres, runtime, tagline, status, budget, revenue,
+ * and append_to_response data (credits, videos, recommendations).
  * Because it extends TmdbMovie it can be passed anywhere TmdbMovie is expected
  * (e.g. toggleFavorite), without any mapping.
  */
@@ -44,6 +79,18 @@ export interface TmdbMovieDetails extends TmdbMovie {
   runtime: number | null;
   genres: Array<{ id: number; name: string }>;
   status: string;
+  budget: number;
+  revenue: number;
+  homepage: string;
+  imdb_id: string | null;
+  credits?: {
+    cast: TmdbCastMember[];
+    crew: TmdbCrewMember[];
+  };
+  videos?: {
+    results: TmdbVideo[];
+  };
+  recommendations?: TmdbPaginatedResponse<TmdbMovie>;
 }
 
 /**

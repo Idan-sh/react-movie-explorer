@@ -37,7 +37,26 @@ export const TMDB_IMAGE = {
     LARGE: 'w1280',
     ORIGINAL: 'original',
   },
+
+  PROFILE_SIZES: {
+    SMALL: 'w45',
+    MEDIUM: 'w185',
+    LARGE: 'h632',
+    ORIGINAL: 'original',
+  },
 } as const;
+
+/**
+ * Cast display configuration
+ */
+export const CAST = {
+  MAX_DISPLAY: 8,
+} as const;
+
+/**
+ * Extra data appended to the movie details API call via append_to_response
+ */
+export const MOVIE_DETAILS_APPEND = 'credits,videos,recommendations';
 
 /**
  * Pagination defaults
