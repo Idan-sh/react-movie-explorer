@@ -41,7 +41,7 @@ export function CategoryTab({
       className={`
         relative flex items-center px-4 text-base font-medium
         transition-colors duration-200
-        outline-none cursor-pointer
+        outline-none
         ${isFocused
           ? 'bg-primary/10 dark:bg-primary/15 text-primary'
           : ''

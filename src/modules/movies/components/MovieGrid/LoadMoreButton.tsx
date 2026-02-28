@@ -38,7 +38,7 @@ export function LoadMoreButton({
           border border-gray-300 dark:border-gray-600
           px-8 py-2.5 text-sm font-medium
           text-gray-700 dark:text-gray-200
-          outline-none cursor-pointer
+          outline-none
           transition-all duration-300
           hover:bg-primary hover:border-primary hover:text-white dark:hover:bg-primary dark:hover:border-primary dark:hover:text-white
           ${

@@ -43,7 +43,7 @@ export function ScrollToTopButton({
             bg-white/80 dark:bg-gray-800/80 backdrop-blur-md
             px-5 py-2 text-sm font-medium
             text-gray-600 dark:text-gray-300
-            shadow-lg cursor-pointer
+            shadow-lg
             transition-colors duration-200
             hover:bg-primary hover:border-primary hover:text-white
             dark:hover:bg-primary dark:hover:border-primary dark:hover:text-white

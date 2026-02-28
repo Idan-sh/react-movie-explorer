@@ -25,7 +25,7 @@ export function HamburgerButton({
       aria-label={isOpen ? 'Close menu' : 'Open menu'}
       className={`
         ml-auto md:hidden
-        p-2.5 rounded-lg cursor-pointer
+        p-2.5 rounded-lg
         text-gray-600 dark:text-gray-400
         hover:bg-gray-100 dark:hover:bg-gray-800/60
         transition-colors duration-200

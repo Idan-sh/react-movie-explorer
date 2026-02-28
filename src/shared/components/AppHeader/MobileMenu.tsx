@@ -48,7 +48,7 @@ export function MobileMenu({ isOpen, activeView, focusedMenuIndex, onTabClick }:
                 onClick={() => onTabClick(view)}
                 className={`
                     w-full text-left rounded-lg px-4 py-3
-                    text-sm font-medium cursor-pointer
+                    text-sm font-medium
                     transition-colors duration-200
                     outline-none
                     ${index === focusedMenuIndex ? "ring-2 ring-primary rounded-lg" : ""}
