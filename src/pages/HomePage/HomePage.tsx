@@ -151,7 +151,7 @@ export function HomePage(): React.JSX.Element {
 
   return (
     <div className="mx-auto max-w-7xl px-4 pt-8 pb-10 sm:px-8 md:px-10 lg:px-20">
-      <AnimatePresence mode="wait">
+      <AnimatePresence mode="wait" initial={false}>
         <motion.div
           key={isSearchActive ? "search" : activeView}
           initial={VIEW_CROSSFADE.initial}
