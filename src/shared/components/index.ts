@@ -3,6 +3,7 @@ export { AppFooter } from "./AppFooter";
 export { AppLayout } from "./AppLayout";
 export type { LayoutContext } from "./AppLayout";
 
+export { FilmPlaceholder } from "./FilmPlaceholder";
 export { ScrollRow } from "./ScrollRow";
 
 export { CategoryTabs } from "./CategoryTabs";

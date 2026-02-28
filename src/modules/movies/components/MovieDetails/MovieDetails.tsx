@@ -13,6 +13,7 @@
 import { ChevronLeftIcon } from "@heroicons/react/24/outline";
 import type { TmdbMovieDetails } from "../../types";
 import { getBackdropUrl } from "../../utils";
+import { MovieDetailsBackdrop } from "./MovieDetailsBackdrop";
 import { MovieDetailsPoster } from "./MovieDetailsPoster";
 import { MovieDetailsMeta } from "./MovieDetailsMeta";
 import { MovieDetailsGenres } from "./MovieDetailsGenres";
@@ -157,17 +158,7 @@ export function MovieDetails({
         </div>
       ) : details ? (
         <>
-          {backdropUrl && (
-            <div className="relative mb-6 h-48 sm:h-64 overflow-hidden rounded-lg">
-              <img
-                src={backdropUrl}
-                alt=""
-                aria-hidden="true"
-                className="h-full w-full object-cover"
-              />
-              <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-white dark:to-gray-900" />
-            </div>
-          )}
+          <MovieDetailsBackdrop url={backdropUrl} />
 
           <div className="flex items-start gap-6">
             <MovieDetailsPoster movie={details} />
