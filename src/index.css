@@ -60,7 +60,8 @@ button,
   --color-warning: #f59e0b;
 
   /* Font families */
-  --font-heading: 'Rajdhani', sans-serif;
+  --font-sans: "Inter", sans-serif;
+  --font-heading: "Rajdhani", sans-serif;
 
   /* Border radius - Sharp, easily swappable */
   --radius-sm: 2px;
