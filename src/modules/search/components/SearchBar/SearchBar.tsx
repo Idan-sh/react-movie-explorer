@@ -2,11 +2,11 @@
  * SearchBar Component
  *
  * Search input for the app header.
- * Expands on focus (w-48 → w-64) via CSS transition.
+ * Expands on focus via CSS transition.
  * Receives onFocus/onBlur from the layout to pause keyboard nav while typing.
  */
 
-import { useSearch } from '../../hooks';
+import { useSearch } from "../../hooks";
 
 export interface SearchBarProps {
   onFocus?: () => void;
@@ -49,12 +49,13 @@ export function SearchBar({ onFocus, onBlur }: SearchBarProps): React.JSX.Elemen
         placeholder="Search movies..."
         aria-label="Search movies"
         className="
-          h-9 w-48 rounded-full
-          bg-gray-100 dark:bg-gray-800
+          h-9 w-56 rounded-lg
+          bg-white/10 dark:bg-white/5
+          border border-gray-300/40 dark:border-gray-600/40
           pl-9 pr-8
-          text-sm text-gray-900 dark:text-white placeholder-gray-400
-          outline-none focus:ring-2 focus:ring-primary
-          transition-[width] duration-200 focus:w-64
+          text-sm text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500
+          outline-none focus:ring-2 focus:ring-primary focus:border-transparent
+          transition-[width] duration-200 focus:w-72
           [&::-webkit-search-cancel-button]:hidden
         "
       />
