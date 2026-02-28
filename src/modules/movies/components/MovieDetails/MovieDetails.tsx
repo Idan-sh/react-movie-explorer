@@ -157,9 +157,7 @@ export function MovieDetails({
               <MovieDetailsMeta details={details} />
               <MovieDetailsGenres details={details} />
               <FavoriteToggleButton isFavorited={isFavorited} onClick={onToggleFavorite} />
-              {Array.from({ length: 30 }).map(() => {
-                return <MovieDetailsOverview details={details} />;
-              })}
+              <MovieDetailsOverview details={details} />
             </div>
           </div>
         </>

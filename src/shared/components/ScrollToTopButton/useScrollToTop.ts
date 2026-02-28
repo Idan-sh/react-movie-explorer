@@ -10,6 +10,7 @@
  */
 
 import { useState, useEffect, useRef, useCallback } from "react";
+import { useLocation } from "react-router-dom";
 
 const SCROLL_THRESHOLD_PX = 600;
 const IDLE_DELAY_MS = 800;
@@ -24,6 +25,14 @@ export function useScrollToTop(): UseScrollToTopReturn {
   const scrollRef = useRef<HTMLElement | null>(null);
   const [isVisible, setIsVisible] = useState(false);
   const idleTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const { pathname } = useLocation();
+
+  useEffect(() => {
+    // Reset scroll position when route changes
+    if (scrollRef.current) {
+      scrollRef.current.scrollTop = 0;
+    }
+  }, [pathname, scrollRef]);
 
   useEffect(() => {
     const el = scrollRef.current;

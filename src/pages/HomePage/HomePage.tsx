@@ -25,7 +25,7 @@ import {
   useMoviesInit,
   getListSelectors,
   fetchMovies,
-  showNextPage,
+  showNextPage
 } from "@/modules/movies";
 import type { TmdbMovie } from "@/modules/movies";
 import { FavoritesGrid, useFavoriteToggle, selectFavorites } from "@/modules/favorites";
@@ -34,7 +34,8 @@ import { useSearchGrid } from "@/modules/search";
 
 // Stable fallback selectors — used when activeList is null (e.g. Favorites tab).
 // Defined at module level so their references never change between renders.
-const selectNoMovies = (): TmdbMovie[] => [];
+const EMPTY_MOVIES: TmdbMovie[] = [];
+const selectNoMovies = (): TmdbMovie[] => EMPTY_MOVIES;
 const selectFalse = (): boolean => false;
 const selectZero = (): number => 0;
 
@@ -60,10 +61,10 @@ export function HomePage(): React.JSX.Element {
   // getListSelectors returns stable references per list type (built once at module load),
   // so activeSelectors is stable as long as activeList doesn't change.
   const activeSelectors = activeList ? getListSelectors(activeList) : null;
-  const movies       = useAppSelector(activeSelectors?.selectMovies       ?? selectNoMovies);
+  const movies = useAppSelector(activeSelectors?.selectMovies ?? selectNoMovies);
   const hasMorePages = useAppSelector(activeSelectors?.selectHasMorePages ?? selectFalse);
-  const hasNextPage  = useAppSelector(activeSelectors?.selectHasNextPage  ?? selectFalse);
-  const pageNumber   = useAppSelector(activeSelectors?.selectPageNumber   ?? selectZero);
+  const hasNextPage = useAppSelector(activeSelectors?.selectHasNextPage ?? selectFalse);
+  const pageNumber = useAppSelector(activeSelectors?.selectPageNumber ?? selectZero);
 
   // Favorites data (always read — used for heart state and keyboard nav)
   const favorites = useAppSelector(selectFavorites);
@@ -79,9 +80,9 @@ export function HomePage(): React.JSX.Element {
   // selectMovieCount / selectCanLoad are stable references from getListSelectors.
   const movieLoadMore = useLoadMore({
     itemCountSelector: activeSelectors?.selectMovieCount ?? selectZero,
-    canLoadSelector:   activeSelectors?.selectCanLoad    ?? selectFalse,
-    onLoad:            onMovieLoad,
-    sectionIndex:      0,
+    canLoadSelector: activeSelectors?.selectCanLoad ?? selectFalse,
+    onLoad: onMovieLoad,
+    sectionIndex: 0
   });
 
   const {
@@ -89,7 +90,7 @@ export function HomePage(): React.JSX.Element {
     handleLoadMore: searchLoadMore,
     movies: searchMovies,
     hasMorePages: searchHasMorePages,
-    query: searchQuery,
+    query: searchQuery
   } = searchGrid;
 
   const handleFooterActivate = useCallback((): void => {
@@ -126,7 +127,7 @@ export function HomePage(): React.JSX.Element {
     sectionHasFooter,
     onFooterActivate: handleFooterActivate,
     activeTabIndex: APP_VIEW_TABS.indexOf(activeView),
-    enabled: !isSearchFocused,
+    enabled: !isSearchFocused
   });
 
   useEffect(() => {
@@ -138,9 +139,7 @@ export function HomePage(): React.JSX.Element {
 
   const searchEmptyNode = (
     <div className="py-16 text-center">
-      <p className="text-gray-500 dark:text-gray-400">
-        No results for &ldquo;{searchQuery}&rdquo;
-      </p>
+      <p className="text-gray-500 dark:text-gray-400">No results for &ldquo;{searchQuery}&rdquo;</p>
     </div>
   );
 

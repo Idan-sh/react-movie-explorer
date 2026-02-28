@@ -57,7 +57,7 @@ export function AppLayout(): React.JSX.Element {
     handleTabClick: handleTabClickWithNav,
     setFocusedTabIndex,
     isSearchFocused,
-    scrollRef,
+    scrollRef
   };
 
   const rightSlot = (
@@ -94,7 +94,9 @@ export function AppLayout(): React.JSX.Element {
         <AppFooter />
       </main>
 
-      <ScrollToTopButton isVisible={isScrollTopVisible} onClick={scrollToTop} />
+      {location.pathname === ROUTES.HOME && (
+        <ScrollToTopButton isVisible={isScrollTopVisible} onClick={scrollToTop} />
+      )}
     </div>
   );
 }
