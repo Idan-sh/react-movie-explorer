@@ -34,7 +34,9 @@ import { configureStore } from '@reduxjs/toolkit';
 import createSagaMiddleware from 'redux-saga';
 import { rootReducer } from './rootReducer';
 import { rootSaga } from './rootSaga';
+import { listenerMiddleware } from './listenerMiddleware';
 import { SAGA_IGNORED_ACTIONS } from './store.constants';
+import '@/modules/favorites/store/favorites.listener';
 
 const sagaMiddleware = createSagaMiddleware();
 
@@ -45,7 +47,7 @@ export const store = configureStore({
       serializableCheck: {
         ignoredActions: SAGA_IGNORED_ACTIONS,
       },
-    }).concat(sagaMiddleware),
+    }).prepend(listenerMiddleware.middleware).concat(sagaMiddleware),
   devTools: import.meta.env.DEV,
 });
 
