@@ -1,5 +1,7 @@
 @import "tailwindcss";
 
+@custom-variant dark (&:where(.dark, .dark *));
+
 /* Full height layout */
 html,
 body,
@@ -14,10 +16,8 @@ html {
   background-color: white;
 }
 
-@media (prefers-color-scheme: dark) {
-  html {
-    background-color: var(--color-gray-900);
-  }
+html.dark {
+  background-color: var(--color-gray-900);
 }
 
 /* Custom scrollbar styling */

@@ -21,6 +21,7 @@ import { AppHeader } from "../AppHeader";
 import { AppFooter } from "../AppFooter";
 import { ScrollToTopButton } from "../ScrollToTopButton";
 import { useScrollToTop } from "../ScrollToTopButton";
+import { ThemeToggle, useTheme } from "../Theme";
 import type { AppView } from "@/shared/types";
 import type { LayoutContext } from "./layout.types";
 
@@ -28,6 +29,7 @@ export function AppLayout(): React.JSX.Element {
   const { activeView, handleTabClick, handleTabFocus, handleTabBlur } = useCategoryTabs();
   const [focusedTabIndex, setFocusedTabIndex] = useState(-1);
   const [isSearchFocused, setIsSearchFocused] = useState(false);
+  const { isDark, toggleTheme } = useTheme();
   const { scrollRef, isVisible: isScrollTopVisible, scrollToTop } = useScrollToTop();
   const location = useLocation();
   const navigate = useNavigate();
@@ -57,8 +59,11 @@ export function AppLayout(): React.JSX.Element {
     isSearchFocused,
   };
 
-  const searchBar = (
-    <SearchBar onFocus={handleSearchFocus} onBlur={handleSearchBlur} />
+  const rightSlot = (
+    <>
+      <SearchBar onFocus={handleSearchFocus} onBlur={handleSearchBlur} />
+      <ThemeToggle isDark={isDark} onToggle={toggleTheme} />
+    </>
   );
 
   return (
@@ -69,7 +74,7 @@ export function AppLayout(): React.JSX.Element {
         onTabClick={handleTabClickWithNav}
         onTabFocus={handleTabFocus}
         onTabBlur={handleTabBlur}
-        rightSlot={searchBar}
+        rightSlot={rightSlot}
       />
 
       <main

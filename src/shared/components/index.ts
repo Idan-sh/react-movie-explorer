@@ -5,3 +5,5 @@ export type { LayoutContext } from './AppLayout';
 export { CategoryTabs } from './CategoryTabs';
 export type { CategoryTabsProps } from './CategoryTabs';
 export { ScrollToTopButton, useScrollToTop } from './ScrollToTopButton';
+export { ThemeToggle, useTheme } from './Theme';
+export type { ThemeToggleProps, UseThemeReturn, Theme } from './Theme';
