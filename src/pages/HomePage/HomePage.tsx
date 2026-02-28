@@ -159,11 +159,19 @@ export function HomePage(): React.JSX.Element {
           exit={VIEW_CROSSFADE.exit}
           transition={VIEW_CROSSFADE.transition}
         >
-          <h2 className="mb-6 text-2xl font-bold text-gray-900 dark:text-white">
-            {isSearchActive
-              ? "Search Results"
-              : APP_VIEW_CONFIG[activeView as keyof typeof APP_VIEW_CONFIG].title}
-          </h2>
+          <div className="mb-6 inline-block">
+            <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
+              {isSearchActive
+                ? "Search Results"
+                : APP_VIEW_CONFIG[activeView as keyof typeof APP_VIEW_CONFIG].title}
+            </h2>
+            <motion.div
+              className="mt-[-3px] h-0.5 rounded-full bg-primary"
+              initial={{ width: 0 }}
+              animate={{ width: "100%" }}
+              transition={{ duration: 0.4, ease: "easeOut", delay: 0.2 }}
+            />
+          </div>
 
           {isSearchActive ? (
             <MovieGridLayout
