@@ -1,7 +1,13 @@
 import { all, fork } from 'redux-saga/effects';
 import { moviesSaga, movieDetailsSaga } from '@/modules/movies/store';
 import { searchSagaRoot } from '@/modules/search/store';
+import { favoritesSaga } from '@/modules/favorites/store';
 
 export function* rootSaga(): Generator {
-  yield all([fork(moviesSaga), fork(movieDetailsSaga), fork(searchSagaRoot)]);
+  yield all([
+    fork(moviesSaga),
+    fork(movieDetailsSaga),
+    fork(searchSagaRoot),
+    fork(favoritesSaga),
+  ]);
 }

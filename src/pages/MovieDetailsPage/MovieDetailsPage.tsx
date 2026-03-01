@@ -3,7 +3,7 @@
  *
  * Route: /movie/:id
  *
- * Full-page layout for movie details. Uses useMovieDetailsPage() for data and nav.
+ * Netflix-style navigation: Back, Favorite, Cast, Trailer, Recommendations all navigable.
  * STATES: Loading → skeleton; Error → message + back; Success → full details layout.
  */
 
@@ -37,7 +37,14 @@ export function MovieDetailsPage(): React.JSX.Element {
     isFavorited,
     onBack,
     onToggleFavorite,
-    focusedItemIndex = -1,
+    focus,
+    trailer,
+    isTrailerPlaying,
+    onPlayTrailer,
+    recommendations,
+    castSectionIndex,
+    trailerSectionIndex,
+    recsSectionIndex,
   } = useMovieDetailsPage();
 
   const navigate = useNavigate();
@@ -64,7 +71,7 @@ export function MovieDetailsPage(): React.JSX.Element {
           <BackButton
             onClick={onBack}
             navId={buildNavId(NAV_ID_PREFIX.ITEM, 0, 0)}
-            isFocused={focusedItemIndex === 0}
+            isFocused={focus.controlsFocusedIndex === 0}
           />
         </div>
         <MovieDetailsSkeleton />
@@ -78,7 +85,7 @@ export function MovieDetailsPage(): React.JSX.Element {
         <BackButton
           onClick={onBack}
           navId={buildNavId(NAV_ID_PREFIX.ITEM, 0, 0)}
-          isFocused={focusedItemIndex === 0}
+          isFocused={focus.controlsFocusedIndex === 0}
         />
       </div>
 
@@ -100,6 +107,8 @@ export function MovieDetailsPage(): React.JSX.Element {
                 <FavoriteToggleButton
                   isFavorited={isFavorited}
                   onClick={onToggleFavorite}
+                  navId={buildNavId(NAV_ID_PREFIX.ITEM, 0, 1)}
+                  isFocused={focus.controlsFocusedIndex === 1}
                 />
               }
             />
@@ -114,22 +123,37 @@ export function MovieDetailsPage(): React.JSX.Element {
           <MovieDetailsCast
             director={display.cast.director}
             cast={display.cast.cast}
+            sectionIndex={castSectionIndex}
+            focusedIndex={focus.castFocusedIndex}
           />
         </div>
       )}
 
-      {details.videos && (
+      {trailer && (
         <div className="mt-8">
-          <MovieTrailer videos={details.videos.results} />
+          <MovieTrailer
+            trailer={trailer}
+            isPlaying={isTrailerPlaying}
+            onPlay={onPlayTrailer}
+            navId={
+              trailerSectionIndex >= 0
+                ? buildNavId(NAV_ID_PREFIX.ITEM, trailerSectionIndex, 0)
+                : undefined
+            }
+            isFocused={focus.trailerFocused}
+          />
         </div>
       )}
 
-      {details.recommendations &&
-        details.recommendations.results.length > 0 && (
-          <div className="mt-8">
-            <MovieRecommendations movies={details.recommendations.results} />
-          </div>
-        )}
+      {recommendations.length > 0 && (
+        <div className="mt-8">
+          <MovieRecommendations
+            movies={recommendations}
+            sectionIndex={recsSectionIndex}
+            focusedIndex={focus.recsFocusedIndex}
+          />
+        </div>
+      )}
     </div>
   );
 }

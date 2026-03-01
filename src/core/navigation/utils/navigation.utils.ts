@@ -108,44 +108,6 @@ function resolveFooterNavigation(
   return state;
 }
 
-// ── Scroll controller ───────────────────────────────────────────
-
-export interface ScrollController {
-  scrollTo(el: HTMLElement, target: number): void;
-  cancel(): void;
-}
-
-/** 12% of remaining delta per frame at 60fps ≈ natural ease-out curve. */
-export function createScrollController(): ScrollController {
-  let target = 0;
-  let rafId: number | null = null;
-
-  function step(el: HTMLElement): void {
-    const delta = target - el.scrollTop;
-    if (Math.abs(delta) < 0.5) {
-      el.scrollTop = target;
-      rafId = null;
-      return;
-    }
-    el.scrollTop = el.scrollTop + delta * 0.12;
-    rafId = requestAnimationFrame(() => step(el));
-  }
-
-  return {
-    scrollTo(el: HTMLElement, newTarget: number): void {
-      target = newTarget;
-      if (rafId !== null) cancelAnimationFrame(rafId);
-      rafId = requestAnimationFrame(() => step(el));
-    },
-    cancel(): void {
-      if (rafId !== null) {
-        cancelAnimationFrame(rafId);
-        rafId = null;
-      }
-    },
-  };
-}
-
 // ── Nav ID from state ────────────────────────────────────────────
 
 export function getNavIdFromState(state: NavState): string {

@@ -5,12 +5,25 @@ import type { NavState } from '../types';
  * Moves DOM focus to the element matching a data-nav-id.
  * Returns true if the element was found and received focus.
  */
-export function focusNavElement(navId: string): boolean {
+export interface FocusNavOptions {
+  block?: ScrollLogicalPosition;
+  inline?: ScrollLogicalPosition;
+  behavior?: ScrollBehavior;
+}
+
+export function focusNavElement(
+  navId: string,
+  {
+    block = 'center',
+    inline = 'center',
+    behavior = 'smooth',
+  }: FocusNavOptions = {},
+): boolean {
   const element = document.querySelector(`[data-nav-id="${navId}"]`);
   if (element instanceof HTMLElement) {
     element.focus({ preventScroll: true });
     if (document.activeElement === element) {
-      element.scrollIntoView({ block: 'center', behavior: 'smooth' });
+      element.scrollIntoView({ block, inline, behavior });
       return true;
     }
   }

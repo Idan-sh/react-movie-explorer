@@ -2,8 +2,7 @@ import { useCallback, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ROUTES } from '@/shared/constants';
 import type { TmdbMovie } from '../../types';
-
-const MAX_RECOMMENDATIONS = 10;
+import { RECOMMENDATIONS } from '../../constants';
 
 interface UseMovieRecommendationsReturn {
   displayMovies: TmdbMovie[];
@@ -23,7 +22,7 @@ export function useMovieRecommendations(
   );
 
   const displayMovies = useMemo(
-    () => movies.slice(0, MAX_RECOMMENDATIONS),
+    () => movies.slice(0, RECOMMENDATIONS.MAX_DISPLAY),
     [movies],
   );
 

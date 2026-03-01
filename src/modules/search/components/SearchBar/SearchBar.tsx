@@ -14,6 +14,9 @@ export interface SearchBarProps {
   onClear: () => void;
   onFocus?: () => void;
   onBlur?: () => void;
+  onKeyDown?: (e: React.KeyboardEvent<HTMLInputElement>) => void;
+  navId?: string;
+  isFocused?: boolean;
 }
 
 export function SearchBar({
@@ -22,9 +25,19 @@ export function SearchBar({
   onClear,
   onFocus,
   onBlur,
+  onKeyDown,
+  navId,
+  isFocused = false,
 }: SearchBarProps): React.JSX.Element {
   return (
-    <div className="relative flex items-center">
+    <div
+      data-nav-id={navId}
+      tabIndex={-1}
+      className={`
+        relative flex items-center rounded-lg outline-none
+        ${isFocused ? 'ring-2 ring-primary' : ''}
+      `}
+    >
       <MagnifyingGlassIcon
         className="pointer-events-none absolute left-3 h-4 w-4 text-gray-400 dark:text-gray-500"
         aria-hidden="true"
@@ -36,6 +49,7 @@ export function SearchBar({
         onChange={onInputChange}
         onFocus={onFocus}
         onBlur={onBlur}
+        onKeyDown={onKeyDown}
         placeholder="Search movies..."
         aria-label="Search movies"
         className="

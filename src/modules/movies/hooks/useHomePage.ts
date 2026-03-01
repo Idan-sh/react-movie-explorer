@@ -5,14 +5,22 @@
  * Returns props for the home content so the page component stays thin.
  */
 
-import { useEffect, useMemo, useCallback } from 'react';
+import { useState, useEffect, useMemo, useCallback, useRef } from 'react';
 import { useNavigate, useOutletContext } from 'react-router-dom';
 import type { LayoutContext } from '@/shared/components';
 import {
   APP_VIEW,
   APP_VIEW_TABS,
+  HEADER_NAV_COUNT,
   ROUTES,
+  STORAGE_KEY,
 } from '@/shared/constants';
+import {
+  getSessionItem,
+  setSessionItem,
+  removeSessionItem,
+} from '@/shared/utils';
+import { NAV_ZONE } from '@/core/navigation';
 import { useLoadMore } from '@/shared/hooks';
 import { useAppSelector, useAppDispatch } from '@/core/store';
 import {
@@ -22,7 +30,11 @@ import {
   showNextPage,
 } from '@/modules/movies';
 import type { TmdbMovie, MovieList } from '@/modules/movies';
-import { useFavoriteToggle, selectFavorites } from '@/modules/favorites';
+import {
+  useFavoriteToggle,
+  selectFavorites,
+  selectFavoriteIds,
+} from '@/modules/favorites';
 import { usePageNavigation, useGridColumns } from '@/core/navigation';
 import { useSearchGrid } from '@/modules/search';
 import type { UseSearchGridReturn } from '@/modules/search';
@@ -49,15 +61,34 @@ export interface UseHomePageReturn {
 export function useHomePage(): UseHomePageReturn {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
-  const { activeView, handleTabClick, setFocusedTabIndex, isSearchFocused } =
-    useOutletContext<LayoutContext>();
+  const {
+    activeView,
+    handleTabClick,
+    setFocusedTabIndex,
+    onHeaderActivate,
+    isNavDisabled,
+    enterContentRef,
+  } = useOutletContext<LayoutContext>();
   const { activeList } = useMoviesInit(activeView);
   const handleToggleFavorite = useFavoriteToggle();
 
   const searchGrid = useSearchGrid(0);
 
+  // Restore focused card position after returning from movie details
+  const [returnIndex] = useState(() => {
+    const stored = getSessionItem(STORAGE_KEY.NAV.FOCUSED_INDEX);
+    removeSessionItem(STORAGE_KEY.NAV.FOCUSED_INDEX);
+    return stored !== null ? parseInt(stored, 10) : -1;
+  });
+
+  const focusedIndexRef = useRef(-1);
+
   const handleSelectMovie = useCallback(
     (movie: TmdbMovie): void => {
+      setSessionItem(
+        STORAGE_KEY.NAV.FOCUSED_INDEX,
+        String(focusedIndexRef.current),
+      );
       navigate(ROUTES.movieDetails(movie.id), { viewTransition: true });
     },
     [navigate],
@@ -78,10 +109,8 @@ export function useHomePage(): UseHomePageReturn {
   );
 
   const favorites = useAppSelector(selectFavorites);
-  const favoriteIds = useMemo(
-    () => new Set(favorites.map((m) => m.id)),
-    [favorites],
-  );
+  const favoriteIdList = useAppSelector(selectFavoriteIds);
+  const favoriteIds = useMemo(() => new Set(favoriteIdList), [favoriteIdList]);
 
   const onMovieLoad = useCallback((): void => {
     if (!activeList) return;
@@ -136,23 +165,41 @@ export function useHomePage(): UseHomePageReturn {
   const gridColumns = useGridColumns();
 
   const handleTabActivate = useCallback(
-    (index: number): void => { handleTabClick(APP_VIEW_TABS[index]); },
-    [handleTabClick]
+    (index: number): void => {
+      if (index < APP_VIEW_TABS.length) {
+        handleTabClick(APP_VIEW_TABS[index]);
+      } else {
+        onHeaderActivate(index);
+      }
+    },
+    [handleTabClick, onHeaderActivate],
   );
 
-  const { focusedTabIndex, focusedSectionIndex, focusedItemIndex } =
-    usePageNavigation({
-      tabCount: APP_VIEW_TABS.length,
-      sectionItems,
-      columns: gridColumns,
-      contentKey: isSearchActive ? 'search' : activeView,
-      onTabActivate: handleTabActivate,
-      onItemActivate: handleSelectMovie,
-      sectionHasFooter,
-      onFooterActivate: handleFooterActivate,
-      activeTabIndex: APP_VIEW_TABS.indexOf(activeView),
-      enabled: !isSearchFocused,
-    });
+  const {
+    focusedTabIndex,
+    focusedSectionIndex,
+    focusedItemIndex,
+    enterContent,
+  } = usePageNavigation({
+    tabCount: HEADER_NAV_COUNT,
+    sectionItems,
+    columns: gridColumns,
+    contentKey: isSearchActive ? 'search' : activeView,
+    onTabActivate: handleTabActivate,
+    onItemActivate: handleSelectMovie,
+    sectionHasFooter,
+    onFooterActivate: handleFooterActivate,
+    activeTabIndex: APP_VIEW_TABS.indexOf(activeView),
+    enabled: !isNavDisabled,
+    enterContentTabCount: APP_VIEW_TABS.length,
+    initialZone: returnIndex >= 0 ? NAV_ZONE.CONTENT : undefined,
+    initialItemIndex: returnIndex >= 0 ? returnIndex : undefined,
+    initialScrollBehavior: returnIndex >= 0 ? 'instant' : undefined,
+  });
+
+  useEffect(() => {
+    enterContentRef.current = enterContent;
+  }, [enterContentRef, enterContent]);
 
   useEffect(() => {
     setFocusedTabIndex(focusedTabIndex);
@@ -160,6 +207,10 @@ export function useHomePage(): UseHomePageReturn {
   }, [focusedTabIndex, setFocusedTabIndex]);
 
   const focusedIndex = focusedSectionIndex === 0 ? focusedItemIndex : -1;
+
+  useEffect(() => {
+    focusedIndexRef.current = focusedIndex;
+  }, [focusedIndex]);
 
   return {
     isSearchActive,

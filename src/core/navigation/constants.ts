@@ -17,6 +17,3 @@ export const NAV_ID_PREFIX = {
   TAB: 'nav-tab',
   ITEM: 'nav-item',
 } as const;
-
-/** px per arrow key press; lerp animates toward target each rAF frame. */
-export const NAV_SCROLL_STEP = 120;

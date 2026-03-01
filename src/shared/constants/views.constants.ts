@@ -34,3 +34,6 @@ export const APP_VIEW_TABS = [
   APP_VIEW.NOW_PLAYING,
   APP_VIEW.FAVORITES,
 ] as const;
+
+/** Total navigable elements in the header (category tabs + search + theme + settings) */
+export const HEADER_NAV_COUNT = APP_VIEW_TABS.length + 3;

@@ -51,7 +51,7 @@ function MovieCardComponent({
         bg-white dark:bg-gray-800
         shadow-md hover:shadow-lg
         transition-all duration-150 ease-in-out
-        outline-none
+        outline-none scroll-mt-1
         ${isFocused ? 'ring-2 ring-primary scale-105' : ''}
       `}
     >

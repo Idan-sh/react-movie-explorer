@@ -1,27 +1,26 @@
 /**
  * Favorites Storage Service
  *
- * Handles reading and writing favorites to localStorage.
- * Wraps in try/catch to handle private browsing or storage full errors.
+ * Persists only movie IDs to localStorage (not full objects).
+ * Movie data is fetched from the API on load.
  */
 
-import type { TmdbMovie } from '@/modules/movies';
 import { STORAGE_KEY } from '@/shared/constants';
 
-export function loadFavorites(): TmdbMovie[] {
+export function loadFavoriteIds(): number[] {
   try {
     const raw = localStorage.getItem(STORAGE_KEY.MOVIES.FAVORITES);
     if (!raw) return [];
     const parsed: unknown = JSON.parse(raw);
-    return Array.isArray(parsed) ? (parsed as TmdbMovie[]) : [];
+    return Array.isArray(parsed) ? (parsed as number[]) : [];
   } catch {
     return [];
   }
 }
 
-export function saveFavorites(movies: TmdbMovie[]): void {
+export function saveFavoriteIds(ids: number[]): void {
   try {
-    localStorage.setItem(STORAGE_KEY.MOVIES.FAVORITES, JSON.stringify(movies));
+    localStorage.setItem(STORAGE_KEY.MOVIES.FAVORITES, JSON.stringify(ids));
   } catch {
     // Silent fail — private browsing or storage quota exceeded
   }

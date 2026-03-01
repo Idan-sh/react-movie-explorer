@@ -29,7 +29,7 @@ export function ScrollRow({
       <div
         ref={scrollRef}
         onScroll={handleScroll}
-        className={`flex gap-4 overflow-x-auto pb-2 pt-2 scrollbar-thin ${className}`}
+        className={`flex gap-4 overflow-x-auto py-4 px-3 scrollbar-thin ${className}`}
       >
         {children}
       </div>

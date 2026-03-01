@@ -2,6 +2,7 @@
  * useCategoryTabs Hook
  *
  * Manages category tab state and interaction handlers.
+ * Persists active view to sessionStorage so it survives page refresh.
  *
  * BEHAVIOR (per requirements):
  * - Click → switch view immediately
@@ -10,10 +11,19 @@
  */
 
 import { useState, useCallback, useRef } from 'react';
-import { APP_VIEW_DEFAULT } from '@/shared/constants';
+import { APP_VIEW_DEFAULT, APP_VIEW_TABS, STORAGE_KEY } from '@/shared/constants';
+import { getSessionItem, setSessionItem } from '@/shared/utils';
 import type { AppView } from '@/shared/types';
 
 const FOCUS_DELAY_MS = 2000;
+
+function loadActiveView(): AppView {
+  const stored = getSessionItem(STORAGE_KEY.NAV.ACTIVE_VIEW);
+  if (stored && APP_VIEW_TABS.includes(stored as AppView)) {
+    return stored as AppView;
+  }
+  return APP_VIEW_DEFAULT;
+}
 
 export interface UseCategoryTabsReturn {
   activeView: AppView;
@@ -25,7 +35,7 @@ export interface UseCategoryTabsReturn {
 export function useCategoryTabs(
   scrollRef: React.RefObject<HTMLElement | null>,
 ): UseCategoryTabsReturn {
-  const [activeView, setActiveView] = useState<AppView>(APP_VIEW_DEFAULT);
+  const [activeView, setActiveView] = useState<AppView>(loadActiveView);
   const focusTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const clearFocusTimer = (): void => {
@@ -40,20 +50,20 @@ export function useCategoryTabs(
       clearFocusTimer();
       const isSameView = view === activeView;
       setActiveView(view);
+      setSessionItem(STORAGE_KEY.NAV.ACTIVE_VIEW, view);
       scrollRef.current?.scrollTo({ top: 0, behavior: isSameView ? 'smooth' : 'instant' });
     },
     [activeView, scrollRef],
   );
 
-  // Focus → switch view after delay
   const handleTabFocus = useCallback((view: AppView): void => {
     clearFocusTimer();
     focusTimerRef.current = setTimeout(() => {
       setActiveView(view);
+      setSessionItem(STORAGE_KEY.NAV.ACTIVE_VIEW, view);
     }, FOCUS_DELAY_MS);
   }, []);
 
-  // Blur → cancel pending timer
   const handleTabBlur = useCallback((): void => {
     clearFocusTimer();
   }, []);

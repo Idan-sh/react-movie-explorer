@@ -9,8 +9,8 @@ export type { FavoritesGridProps } from './components';
 // Hooks
 export { useFavoriteToggle } from './hooks';
 
-// Store: reducer for root store
-export { favoritesReducer } from './store';
+// Store: reducer + saga for root store
+export { favoritesReducer, favoritesSaga } from './store';
 
 // Store: selectors
-export { selectFavorites } from './store';
+export { selectFavorites, selectFavoriteIds } from './store';
