@@ -34,7 +34,7 @@ export function HomePage(): React.JSX.Element {
   );
 
   return (
-    <div className="mx-auto max-w-7xl px-4 pt-8 pb-10 sm:px-8 md:px-10 lg:px-20">
+    <div className="mx-auto max-w-7xl px-4 pt-6 sm:pt-8 pb-10 sm:px-8 md:px-10 lg:px-20">
       <AnimatePresence mode="wait" initial={false}>
         <motion.div
           key={isSearchActive ? 'search' : activeView}
@@ -44,7 +44,7 @@ export function HomePage(): React.JSX.Element {
           transition={VIEW_CROSSFADE.transition}
         >
           <div className="mb-6 inline-block">
-            <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
+            <h2 className="text-lg sm:text-2xl font-bold text-gray-900 dark:text-white">
               {isSearchActive
                 ? 'Search Results'
                 : APP_VIEW_CONFIG[activeView as keyof typeof APP_VIEW_CONFIG]
