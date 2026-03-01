@@ -44,7 +44,7 @@ export function AppHeader({
   return (
     <header
       style={{ zIndex: Z_LAYER.HEADER }}
-      className="sticky top-0 shrink-0 border-b border-gray-200/60 dark:border-gray-700/60 bg-white/80 dark:bg-gray-900/80 backdrop-blur-lg pt-[env(safe-area-inset-top)]"
+      className="sticky top-0 shrink-0 border-b border-gray-200/60 dark:border-gray-700/60 bg-white/80 dark:bg-gray-900/80 backdrop-blur-lg"
     >
       <div className="mx-auto max-w-7xl px-4 md:px-6">
         <div className="flex h-14 md:h-20 items-center gap-4 md:gap-10">

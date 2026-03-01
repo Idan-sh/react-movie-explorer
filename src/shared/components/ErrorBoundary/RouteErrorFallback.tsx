@@ -13,7 +13,7 @@ export function RouteErrorFallback(): React.JSX.Element {
   };
 
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center gap-4 bg-gray-100 dark:bg-gray-900 px-4 text-center">
+    <div className="flex min-h-screen flex-col items-center justify-center gap-4 bg-gray-100 dark:bg-gray-900 px-4 pt-[env(safe-area-inset-top)] pb-[env(safe-area-inset-bottom)] text-center">
       <ExclamationTriangleIcon className="h-12 w-12 text-warning" />
       <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
         Something went wrong

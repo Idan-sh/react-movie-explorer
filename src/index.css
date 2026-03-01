@@ -11,6 +11,14 @@ body,
   overflow: hidden;
 }
 
+/* Safe area insets for notch/Dynamic Island (viewport-fit=cover) */
+@supports (padding-top: env(safe-area-inset-top)) {
+  #root {
+    padding-top: env(safe-area-inset-top);
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+}
+
 /* Match header/footer bg so overscroll bounce blends seamlessly */
 html {
   background-color: white;
