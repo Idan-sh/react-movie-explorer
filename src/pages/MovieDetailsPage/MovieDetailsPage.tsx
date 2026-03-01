@@ -10,6 +10,7 @@
 import {
   useMovieDetailsPage,
   getBackdropUrl,
+  getPosterUrl,
   MovieDetailsBackdrop,
   MovieDetailsPoster,
   MovieDetailsMeta,
@@ -74,7 +75,7 @@ export function MovieDetailsPage(): React.JSX.Element {
       <MovieDetailsBackdrop url={getBackdropUrl(details.backdrop_path)} />
 
       <div className="flex items-start gap-6">
-        <MovieDetailsPoster movie={details} />
+        <MovieDetailsPoster url={getPosterUrl(details.poster_path)} title={details.title} />
         <div className="flex min-w-0 flex-1 flex-col gap-3">
           <h1 className="text-2xl font-bold leading-snug text-gray-900 dark:text-white">
             {details.title}

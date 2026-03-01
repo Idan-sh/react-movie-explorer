@@ -4,6 +4,7 @@ export { AppLayout } from "./AppLayout";
 export type { LayoutContext } from "./AppLayout";
 
 export { FilmPlaceholder } from "./FilmPlaceholder";
+export { ImageWithFallback } from "./ImageWithFallback";
 export { ScrollRow } from "./ScrollRow";
 
 export { CategoryTabs } from "./CategoryTabs";

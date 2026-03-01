@@ -9,6 +9,3 @@ export type { UseMoviesInitReturn } from './useMoviesInit';
 export { useMovieDetailsPage } from './useMovieDetailsPage';
 export type { MovieDetailsDisplay, MovieDetailsMetaDisplay, MovieDetailsCastDisplay } from '../types';
 export { useHomePage } from './useHomePage';
-
-export { usePosterImage } from './usePosterImage';
-export type { UsePosterImageReturn } from './usePosterImage';

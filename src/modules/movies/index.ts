@@ -39,7 +39,7 @@ export type {
 } from "./hooks";
 
 // Utils: public for pages (e.g. getBackdropUrl for MovieDetailsPage)
-export { getBackdropUrl } from "./utils";
+export { getBackdropUrl, getPosterUrl } from "./utils";
 
 // Store: reducers and sagas for root store
 export { moviesReducer, moviesSaga, movieDetailsReducer, movieDetailsSaga } from "./store";

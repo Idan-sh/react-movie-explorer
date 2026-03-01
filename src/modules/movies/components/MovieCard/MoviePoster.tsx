@@ -5,30 +5,29 @@
  * Shows placeholder when no image available or when load fails.
  */
 
-import { FilmPlaceholder } from "@/shared/components";
-import { usePosterImage } from "../../hooks";
+import { FilmPlaceholder, ImageWithFallback } from "@/shared/components";
 
 export interface MoviePosterProps {
   url: string | null;
   title: string;
 }
 
-export function MoviePoster({ url, title }: MoviePosterProps): React.JSX.Element {
-  const { showPlaceholder, handleError } = usePosterImage(url);
+function PosterPlaceholder(): React.JSX.Element {
+  return <FilmPlaceholder iconSize="h-32 w-32" />;
+}
 
+const posterFallback = <PosterPlaceholder />;
+
+export function MoviePoster({ url, title }: MoviePosterProps): React.JSX.Element {
   return (
     <div className="relative aspect-[2/3] w-full overflow-hidden bg-gray-200 dark:bg-gray-700">
-      {showPlaceholder ? (
-        <FilmPlaceholder iconSize="h-32 w-32" />
-      ) : (
-        <img
-          src={url!}
-          alt={`${title} poster`}
-          loading="lazy"
-          className="h-full w-full object-cover transition-transform duration-150 group-hover:scale-105"
-          onError={handleError}
-        />
-      )}
+      <ImageWithFallback
+        src={url ?? undefined}
+        alt={`${title} poster`}
+        loading="lazy"
+        className="h-full w-full object-cover transition-transform duration-150 group-hover:scale-105"
+        fallback={posterFallback}
+      />
     </div>
   );
 }
