@@ -46,6 +46,8 @@ export interface UsePageNavigationOptions<T> {
   enterContentTabCount?: number;
   /** Per-section column overrides (falls back to `columns` if not provided) */
   sectionColumns?: number[];
+  /** Optional 2D row layout for tabs — see UseKeyboardNavOptions.tabRows */
+  tabRows?: number[][];
 }
 
 /**
@@ -69,6 +71,7 @@ export function usePageNavigation<T>({
   enabled = true,
   enterContentTabCount,
   sectionColumns,
+  tabRows,
 }: UsePageNavigationOptions<T>): UseKeyboardNavReturn {
   // Derive section definitions from item arrays
   const sections = useMemo(
@@ -104,5 +107,6 @@ export function usePageNavigation<T>({
     activeTabIndex,
     enabled,
     enterContentTabCount,
+    tabRows,
   });
 }

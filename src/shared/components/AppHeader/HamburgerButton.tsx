@@ -12,16 +12,20 @@ export interface HamburgerButtonProps {
   isOpen: boolean;
   isFocused: boolean;
   onClick: () => void;
+  navId?: string;
 }
 
 export function HamburgerButton({
   isOpen,
   isFocused,
   onClick,
+  navId,
 }: HamburgerButtonProps): React.JSX.Element {
   return (
     <button
       type="button"
+      tabIndex={-1}
+      data-nav-id={navId}
       onClick={onClick}
       aria-expanded={isOpen}
       aria-controls="mobile-menu"

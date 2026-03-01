@@ -143,6 +143,7 @@ export function useMovieDetailsPage(): UseMovieDetailsPageReturn {
     onHeaderActivate,
     isNavDisabled,
     enterContentRef,
+    headerTabRows,
   } = useOutletContext<LayoutContext>();
 
   const toggleFavorite = useFavoriteToggle();
@@ -294,6 +295,7 @@ export function useMovieDetailsPage(): UseMovieDetailsPageReturn {
     activeTabIndex: APP_VIEW_TABS.indexOf(activeView),
     enterContentTabCount: APP_VIEW_TABS.length,
     enabled: !isNavDisabled,
+    tabRows: headerTabRows,
   });
 
   useEffect(() => {

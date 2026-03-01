@@ -9,4 +9,10 @@ export {
   getNavIdFromState,
 } from './navigation.utils';
 
-export { focusNavElement, resolveClickTarget } from './dom.utils';
+export {
+  focusNavElement,
+  canFocusNavElement,
+  skipToFocusableTab,
+  focusNextAvailableTab,
+  resolveClickTarget,
+} from './dom.utils';

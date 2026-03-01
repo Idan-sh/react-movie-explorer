@@ -68,6 +68,7 @@ export function useHomePage(): UseHomePageReturn {
     onHeaderActivate,
     isNavDisabled,
     enterContentRef,
+    headerTabRows,
   } = useOutletContext<LayoutContext>();
   const { activeList } = useMoviesInit(activeView);
   const handleToggleFavorite = useFavoriteToggle();
@@ -195,6 +196,7 @@ export function useHomePage(): UseHomePageReturn {
     initialZone: returnIndex >= 0 ? NAV_ZONE.CONTENT : undefined,
     initialItemIndex: returnIndex >= 0 ? returnIndex : undefined,
     initialScrollBehavior: returnIndex >= 0 ? 'instant' : undefined,
+    tabRows: headerTabRows,
   });
 
   useEffect(() => {

@@ -11,4 +11,6 @@ export interface LayoutContext {
   isNavDisabled: boolean;
   /** Ref that page hooks write their enterContent function to. Called on search submit. */
   enterContentRef: React.RefObject<(() => void) | null>;
+  /** 2D row layout for header tabs on mobile (undefined on desktop = flat navigation) */
+  headerTabRows?: number[][];
 }

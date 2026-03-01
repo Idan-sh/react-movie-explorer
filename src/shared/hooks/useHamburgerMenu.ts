@@ -4,8 +4,8 @@
  * Manages mobile hamburger menu open/close state and keyboard navigation.
  * Only active on mobile viewports (below lg breakpoint) via useIsMobile.
  *
- * KEYBOARD BEHAVIOR (mobile, menu closed, TABS zone active):
- * - Enter: open the menu, pre-focused on the current tab index
+ * KEYBOARD BEHAVIOR (mobile, menu closed, hamburger tab focused):
+ * - Enter: open the menu, pre-focused on the first item
  *
  * KEYBOARD BEHAVIOR (mobile, menu open):
  * - ArrowUp/Left: focus previous item (wraps)
@@ -38,6 +38,7 @@ export interface UseHamburgerMenuReturn {
 export function useHamburgerMenu(
   onTabClick: (view: AppView) => void,
   focusedTabIndex: number,
+  hamburgerTabIndex?: number,
 ): UseHamburgerMenuReturn {
   const isMobile = useIsMobile();
   const [isMenuOpenRaw, setIsMenuOpenRaw] = useState(false);
@@ -51,17 +52,9 @@ export function useHamburgerMenu(
     focusedMenuIndexRef.current = focusedMenuIndex;
   }, [focusedMenuIndex]);
 
-  const focusedTabIndexRef = useRef(focusedTabIndex);
-  useEffect(() => {
-    focusedTabIndexRef.current = focusedTabIndex;
-  }, [focusedTabIndex]);
-
-  // Opens menu and pre-focuses the item matching the current global tab index
   const toggleMenu = useCallback((): void => {
     setIsMenuOpenRaw((prev) => {
-      if (!prev) {
-        setFocusedMenuIndex(Math.max(0, focusedTabIndexRef.current));
-      }
+      if (!prev) setFocusedMenuIndex(0);
       return !prev;
     });
   }, []);
@@ -85,24 +78,31 @@ export function useHamburgerMenu(
     focusNavElement(buildNavId(NAV_ID_PREFIX.TAB, focusedMenuIndex));
   }, [isMenuOpen, focusedMenuIndex]);
 
-  // ── Capture Enter when menu is CLOSED + TABS zone is active (mobile only) ──
+  // ── Capture Enter when hamburger is focused + menu is CLOSED (mobile only) ──
   // Opens the menu; stopImmediatePropagation prevents global nav from also
   // firing onTabActivate for the same Enter press.
-  // On desktop, this effect is skipped — Enter falls through to global nav.
+  // Only intercepts when the hamburger's own tab index is focused — other header
+  // elements (search, theme, settings) let Enter through to the global nav.
+  const isHamburgerFocused =
+    isMobile &&
+    !isMenuOpen &&
+    hamburgerTabIndex !== undefined &&
+    focusedTabIndex === hamburgerTabIndex;
+
   useEffect(() => {
-    if (!isMobile || isMenuOpen || focusedTabIndex === -1) return;
+    if (!isHamburgerFocused) return;
 
     function handleKeyDown(e: KeyboardEvent): void {
       if (e.key !== 'Enter') return;
       e.preventDefault();
       e.stopImmediatePropagation();
-      setFocusedMenuIndex(Math.max(0, focusedTabIndexRef.current));
+      setFocusedMenuIndex(0);
       setIsMenuOpenRaw(true);
     }
 
     document.addEventListener('keydown', handleKeyDown, true);
     return () => document.removeEventListener('keydown', handleKeyDown, true);
-  }, [isMobile, isMenuOpen, focusedTabIndex]);
+  }, [isHamburgerFocused]);
 
   // ── Navigate within menu when it is OPEN (mobile only) ─────────────────────
   useEffect(() => {

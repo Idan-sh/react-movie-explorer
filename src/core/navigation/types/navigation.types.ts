@@ -55,6 +55,13 @@ export interface UseKeyboardNavOptions {
    * Tabs at or above this index only fire onTabActivate (e.g., search, theme, settings).
    */
   enterContentTabCount?: number;
+  /**
+   * Optional 2D row layout for tabs (e.g., mobile header with two rows).
+   * Each inner array lists tab indices in visual left-to-right order.
+   * When set, ArrowUp/Down navigates between rows; ArrowLeft/Right within a row.
+   * ArrowDown from the last row enters the content zone.
+   */
+  tabRows?: number[][];
 }
 
 /**
@@ -93,4 +100,6 @@ export interface NavConfig {
   /** Index of the currently active (displayed) tab — used by Escape to snap back to it */
   activeTabIndex?: number;
   enterContentTabCount?: number;
+  /** Optional 2D row layout for tabs — see UseKeyboardNavOptions.tabRows */
+  tabRows?: number[][];
 }

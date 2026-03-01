@@ -27,6 +27,9 @@ export interface AppHeaderProps {
   onTabBlur: () => void;
   searchSlot?: React.ReactNode;
   actionsSlot?: React.ReactNode;
+  hamburgerNavId?: string;
+  hamburgerFocused?: boolean;
+  hamburgerTabIndex?: number;
 }
 
 export function AppHeader({
@@ -37,9 +40,12 @@ export function AppHeader({
   onTabBlur,
   searchSlot,
   actionsSlot,
+  hamburgerNavId,
+  hamburgerFocused = false,
+  hamburgerTabIndex,
 }: AppHeaderProps): React.JSX.Element {
   const { isMenuOpen, focusedMenuIndex, toggleMenu, handleMobileTabClick } =
-    useHamburgerMenu(onTabClick, focusedTabIndex);
+    useHamburgerMenu(onTabClick, focusedTabIndex, hamburgerTabIndex);
 
   return (
     <header
@@ -82,8 +88,9 @@ export function AppHeader({
             {actionsSlot}
             <HamburgerButton
               isOpen={isMenuOpen}
-              isFocused={focusedTabIndex !== -1 && !isMenuOpen}
+              isFocused={hamburgerFocused && !isMenuOpen}
               onClick={toggleMenu}
+              navId={hamburgerNavId}
             />
           </div>
         </div>

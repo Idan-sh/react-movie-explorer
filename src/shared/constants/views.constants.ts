@@ -35,5 +35,8 @@ export const APP_VIEW_TABS = [
   APP_VIEW.FAVORITES,
 ] as const;
 
-/** Total navigable elements in the header (category tabs + search + theme + settings) */
-export const HEADER_NAV_COUNT = APP_VIEW_TABS.length + 3;
+/** Tab index for the hamburger button (hidden on desktop, auto-skipped by nav) */
+export const HAMBURGER_TAB_INDEX = APP_VIEW_TABS.length + 3;
+
+/** Total navigable tab slots in the header (category tabs + search + theme + settings + hamburger) */
+export const HEADER_NAV_COUNT = HAMBURGER_TAB_INDEX + 1;

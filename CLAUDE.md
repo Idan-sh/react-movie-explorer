@@ -82,10 +82,10 @@ src/
 │   └── constants/           # Shared constants (organized by responsibility)
 │       ├── request.constants.ts    # REQUEST_STATUS (idle, loading, success, error)
 │       ├── slices.constants.ts     # SLICE_NAMES (movies, search, favorites)
-│       ├── views.constants.ts      # APP_VIEW, APP_VIEW_CONFIG, APP_VIEW_DEFAULT, APP_VIEW_TABS
+│       ├── views.constants.ts      # APP_VIEW, APP_VIEW_CONFIG, APP_VIEW_DEFAULT, APP_VIEW_TABS, HAMBURGER_TAB_INDEX, HEADER_NAV_COUNT
 │       ├── routes.constants.ts     # Route path constants + URL builders
 │       ├── storage.constants.ts    # STORAGE_KEY registry (all localStorage keys)
-│       ├── layout.constants.ts     # Z_LAYER, VIEW_CROSSFADE
+│       ├── layout.constants.ts     # BREAKPOINT, MOBILE_QUERY, Z_LAYER
 │       └── animation.constants.ts  # Animation timing/easing constants
 │
 └── pages/                   # Route-level components (thin, no hooks)
@@ -258,12 +258,43 @@ Three tabs: **Popular** | **Airing Now** | **My Favorites**
 - **Tab key DISABLED** (per requirements)
 - **Mouse scroll toggleable** — defaults to disabled. User can enable via Settings.
 - Navigation module lives in `core/navigation/` (cross-cutting infrastructure)
+- **Mobile/desktop breakpoint**: `lg` (1024px). Below this, the header uses the compact mobile layout.
 
 ### Navigation Zones
 Two mutually exclusive zones:
 - **TABS zone**: Arrow Left/Right to move between tabs, Enter to activate
 - **CONTENT zone**: Arrow keys to navigate grid, Enter to activate item
 - Arrow Down from tabs → enter content; Escape from content → return to tabs
+
+### Header Tab Indices
+All header elements share a single `tabCount` with these indices:
+- **0–2**: Category tabs (hidden on mobile via `display:none`)
+- **3**: Search bar
+- **4**: Theme toggle
+- **5**: Settings button
+- **6** (`HAMBURGER_TAB_INDEX`): Hamburger button (hidden on desktop via `lg:hidden`)
+
+Total: `HEADER_NAV_COUNT = 7` (defined in `views.constants.ts`)
+
+### Desktop Tab Navigation (flat)
+Arrow Left/Right cycles all indices. Hidden elements (hamburger at index 6) are auto-skipped by `skipToFocusableTab` in `dom.utils.ts`, which checks `offsetParent` to detect `display:none` elements.
+
+### Mobile Tab Navigation (row-based)
+On mobile, `tabRows` defines a 2D layout passed via `LayoutContext`:
+- **Row 0**: Theme (4), Settings (5), Hamburger (6)
+- **Row 1**: Search (3)
+
+Arrow Left/Right navigates within a row (wrapping). Arrow Up/Down moves between rows. Arrow Down from the last row enters the content zone. Hidden category tabs (0–2) are never in the rows and are unreachable.
+
+### Hamburger Button
+- Has `data-nav-id` (index 6) and `tabIndex={-1}` — a proper navigable element
+- Enter captured in `useHamburgerMenu` (capture phase) only when `focusedTabIndex === hamburgerTabIndex`
+- Other header elements (search, theme, settings) let Enter through to the global nav
+
+### Focus Sync & Skip Logic
+- `focusNavElement` uses `querySelectorAll` + `offsetParent` check to find the first **visible** element with a matching `data-nav-id`. Handles duplicate nav-ids (e.g., desktop/mobile SearchBar instances).
+- `skipToFocusableTab` — advances past hidden tabs in the arrow-key direction (desktop flat nav)
+- `focusNextAvailableTab` — fallback in focus sync effect: searches forward for any focusable tab (handles Escape returning to a hidden index, initial load)
 
 ### Hook Layering
 - `useKeyboardNav` — core keyboard logic (global keydown listener, state + DOM sync)

@@ -40,6 +40,8 @@ import {
   resolveNavigation,
   resolveClickTarget,
   focusNavElement,
+  skipToFocusableTab,
+  focusNextAvailableTab,
   getNavIdFromState,
 } from '../utils';
 
@@ -113,6 +115,7 @@ export function useKeyboardNav({
   enabled = true,
   enterContentTabCount,
   initialScrollBehavior = 'smooth',
+  tabRows,
 }: UseKeyboardNavOptions): UseKeyboardNavReturn {
   const [state, setState] = useState<NavState>({
     ...INITIAL_STATE,
@@ -127,6 +130,7 @@ export function useKeyboardNav({
     sections,
     activeTabIndex,
     enterContentTabCount,
+    tabRows,
   });
   const callbacksRef = useRef<NavCallbacks>({
     onTabActivate,
@@ -142,6 +146,7 @@ export function useKeyboardNav({
       sections,
       activeTabIndex,
       enterContentTabCount,
+      tabRows,
     };
     callbacksRef.current = {
       onTabActivate,
@@ -195,7 +200,21 @@ export function useKeyboardNav({
         callbacksRef.current.onEscape?.();
       }
 
-      setState(resolveNavigation(stateRef.current, key, configRef.current));
+      let newState = resolveNavigation(stateRef.current, key, configRef.current);
+
+      if (
+        newState.activeZone === NAV_ZONE.TABS &&
+        (key === NAV_KEY.ARROW_LEFT || key === NAV_KEY.ARROW_RIGHT) &&
+        !configRef.current.tabRows
+      ) {
+        newState = skipToFocusableTab(
+          newState,
+          key,
+          configRef.current.tabCount,
+        );
+      }
+
+      setState(newState);
     }
 
     function handleClick(event: MouseEvent): void {
@@ -221,7 +240,19 @@ export function useKeyboardNav({
       ? initialScrollBehavior
       : 'smooth';
 
-    const focused = focusNavElement(getNavIdFromState(state), { behavior });
+    let focused = focusNavElement(getNavIdFromState(state), { behavior });
+
+    if (!focused && state.activeZone === NAV_ZONE.TABS) {
+      const nextIndex = focusNextAvailableTab(
+        state.tabIndex,
+        configRef.current.tabCount,
+        { behavior },
+      );
+      if (nextIndex !== null) {
+        focused = true;
+        setState((prev) => ({ ...prev, tabIndex: nextIndex }));
+      }
+    }
 
     if (!focused) {
       (document.activeElement as HTMLElement)?.blur();

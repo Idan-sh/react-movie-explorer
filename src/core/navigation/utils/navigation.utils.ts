@@ -116,6 +116,80 @@ export function getNavIdFromState(state: NavState): string {
     : buildNavId(NAV_ID_PREFIX.ITEM, state.sectionIndex, state.itemIndex);
 }
 
+// ── Enter content zone helper ────────────────────────────────────
+
+function enterContentZone(state: NavState, config: NavConfig): NavState {
+  const firstSection = config.sections[0];
+  if (firstSection && firstSection.itemCount > 0) {
+    return {
+      ...state,
+      activeZone: NAV_ZONE.CONTENT,
+      sectionIndex: 0,
+      itemIndex: 0,
+    };
+  }
+  return state;
+}
+
+// ── Tab row helpers ──────────────────────────────────────────────
+
+function findTabRowPosition(
+  tabIndex: number,
+  tabRows: number[][],
+): { row: number; col: number } | null {
+  for (let r = 0; r < tabRows.length; r++) {
+    const col = tabRows[r].indexOf(tabIndex);
+    if (col !== -1) return { row: r, col };
+  }
+  return null;
+}
+
+function resolveTabRowNavigation(
+  state: NavState,
+  key: string,
+  config: NavConfig,
+): NavState {
+  const { tabRows } = config;
+  if (!tabRows) return state;
+
+  const pos = findTabRowPosition(state.tabIndex, tabRows);
+  if (!pos) return state;
+
+  const row = tabRows[pos.row];
+
+  switch (key) {
+    case NAV_KEY.ARROW_LEFT:
+      return {
+        ...state,
+        tabIndex: row[(pos.col - 1 + row.length) % row.length],
+      };
+    case NAV_KEY.ARROW_RIGHT:
+      return { ...state, tabIndex: row[(pos.col + 1) % row.length] };
+    case NAV_KEY.ARROW_DOWN: {
+      if (pos.row < tabRows.length - 1) {
+        const nextRow = tabRows[pos.row + 1];
+        return {
+          ...state,
+          tabIndex: nextRow[Math.min(pos.col, nextRow.length - 1)],
+        };
+      }
+      return enterContentZone(state, config);
+    }
+    case NAV_KEY.ARROW_UP: {
+      if (pos.row > 0) {
+        const prevRow = tabRows[pos.row - 1];
+        return {
+          ...state,
+          tabIndex: prevRow[Math.min(pos.col, prevRow.length - 1)],
+        };
+      }
+      return state;
+    }
+    default:
+      return state;
+  }
+}
+
 // ── High-level navigation resolvers ────────────────────────────
 
 function resolveTabsNavigation(
@@ -123,6 +197,10 @@ function resolveTabsNavigation(
   key: string,
   config: NavConfig,
 ): NavState {
+  if (config.tabRows) {
+    return resolveTabRowNavigation(state, key, config);
+  }
+
   if (key === NAV_KEY.ARROW_LEFT || key === NAV_KEY.ARROW_RIGHT) {
     return {
       ...state,
@@ -131,15 +209,7 @@ function resolveTabsNavigation(
   }
 
   if (key === NAV_KEY.ARROW_DOWN) {
-    const firstSection = config.sections[0];
-    if (firstSection && firstSection.itemCount > 0) {
-      return {
-        ...state,
-        activeZone: NAV_ZONE.CONTENT,
-        sectionIndex: 0,
-        itemIndex: 0,
-      };
-    }
+    return enterContentZone(state, config);
   }
 
   // Arrow Up in tabs → no-op

@@ -14,8 +14,8 @@
 
 import { useState, useCallback, useRef } from 'react';
 import { Outlet, useLocation, useNavigate } from 'react-router-dom';
-import { useCategoryTabs } from '@/shared/hooks';
-import { ROUTES, Z_LAYER, APP_VIEW_TABS } from '@/shared/constants';
+import { useCategoryTabs, useIsMobile } from '@/shared/hooks';
+import { ROUTES, Z_LAYER, APP_VIEW_TABS, HAMBURGER_TAB_INDEX } from '@/shared/constants';
 import { SearchBar, useSearch } from '@/modules/search';
 import { buildNavId, NAV_ID_PREFIX } from '@/core/navigation';
 import { AppHeader } from '../AppHeader';
@@ -28,6 +28,7 @@ import type { AppView } from '@/shared/types';
 import type { LayoutContext } from './layout.types';
 
 export function AppLayout(): React.JSX.Element {
+  const isMobile = useIsMobile();
   const [focusedTabIndex, setFocusedTabIndex] = useState(-1);
   const [isSearchFocused, setIsSearchFocused] = useState(false);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
@@ -82,16 +83,30 @@ export function AppLayout(): React.JSX.Element {
 
   const handleHeaderActivate = useCallback((tabIndex: number): void => {
     const navId = buildNavId(NAV_ID_PREFIX.TAB, tabIndex);
-    const el = document.querySelector(`[data-nav-id="${navId}"]`);
-    if (!el || !(el instanceof HTMLElement)) return;
-
-    const input = el.querySelector('input') as HTMLInputElement | null;
-    if (input) {
-      input.focus();
+    const elements = document.querySelectorAll(`[data-nav-id="${navId}"]`);
+    for (const candidate of elements) {
+      if (!(candidate instanceof HTMLElement) || candidate.offsetParent === null)
+        continue;
+      const input = candidate.querySelector('input') as HTMLInputElement | null;
+      if (input) {
+        input.focus();
+        return;
+      }
+      candidate.click();
       return;
     }
-    el.click();
   }, []);
+
+  const searchTabIndex = APP_VIEW_TABS.length;
+  const themeTabIndex = APP_VIEW_TABS.length + 1;
+  const settingsTabIndex = APP_VIEW_TABS.length + 2;
+
+  const headerTabRows = isMobile
+    ? [
+        [themeTabIndex, settingsTabIndex, HAMBURGER_TAB_INDEX],
+        [searchTabIndex],
+      ]
+    : undefined;
 
   const layoutContext: LayoutContext = {
     activeView,
@@ -100,11 +115,8 @@ export function AppLayout(): React.JSX.Element {
     onHeaderActivate: handleHeaderActivate,
     isNavDisabled: isSearchFocused || isSettingsOpen,
     enterContentRef,
+    headerTabRows,
   };
-
-  const searchTabIndex = APP_VIEW_TABS.length;
-  const themeTabIndex = APP_VIEW_TABS.length + 1;
-  const settingsTabIndex = APP_VIEW_TABS.length + 2;
 
   const searchSlot = (
     <SearchBar
@@ -147,6 +159,9 @@ export function AppLayout(): React.JSX.Element {
         onTabBlur={handleTabBlur}
         searchSlot={searchSlot}
         actionsSlot={actionsSlot}
+        hamburgerNavId={buildNavId(NAV_ID_PREFIX.TAB, HAMBURGER_TAB_INDEX)}
+        hamburgerFocused={isMobile && focusedTabIndex === HAMBURGER_TAB_INDEX}
+        hamburgerTabIndex={isMobile ? HAMBURGER_TAB_INDEX : undefined}
       />
 
       {/*
