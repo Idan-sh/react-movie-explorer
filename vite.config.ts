@@ -7,6 +7,10 @@ import path from 'path';
 export default defineConfig({
   plugins: [react(), tailwindcss()],
 
+  build: {
+    chunkSizeWarningLimit: 600,
+  },
+
   // Path aliases - must match tsconfig.app.json
   resolve: {
     alias: {
