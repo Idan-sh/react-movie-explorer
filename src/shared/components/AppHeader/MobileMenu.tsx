@@ -34,6 +34,7 @@ export function MobileMenu({
     <AnimatePresence initial={false}>
       {isOpen && (
         <motion.nav
+          id="mobile-menu"
           key="mobile-menu"
           aria-label="Category tabs"
           initial={MENU_CLOSED}

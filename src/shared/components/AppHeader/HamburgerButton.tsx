@@ -24,6 +24,7 @@ export function HamburgerButton({
       type="button"
       onClick={onClick}
       aria-expanded={isOpen}
+      aria-controls="mobile-menu"
       aria-label={isOpen ? 'Close menu' : 'Open menu'}
       className={`
         ml-auto md:hidden

@@ -6,7 +6,7 @@ import { TMDB_ENDPOINTS } from '@/core/api';
 import { APP_VIEW } from '@/shared/constants';
 import type { AppView } from '@/shared/types';
 import { MOVIE_LIST } from '../constants';
-import type { MovieList, TmdbMovieListResponse, MoviesPage } from '../types';
+import type { MovieList, TmdbMovie, TmdbMovieListResponse, MoviesPage } from '../types';
 
 /**
  * Maps an app view to its movie list type.
@@ -21,18 +21,23 @@ export function getViewList(view: AppView): MovieList | null {
 /**
  * Maps movie list type to its API endpoint
  */
-export const getListEndpoint = (list: MovieList): string => {
+export function getListEndpoint(list: MovieList): string {
   switch (list) {
     case MOVIE_LIST.POPULAR:
       return TMDB_ENDPOINTS.MOVIES.POPULAR;
     case MOVIE_LIST.NOW_PLAYING:
       return TMDB_ENDPOINTS.MOVIES.NOW_PLAYING;
   }
-};
+}
 
 /**
  * Maps a TMDB API response to a MoviesPage domain object
  */
+export function mergeMovies(existing: TmdbMovie[], incoming: TmdbMovie[]): TmdbMovie[] {
+  const ids = new Set(existing.map((m) => m.id));
+  return [...existing, ...incoming.filter((m) => !ids.has(m.id))];
+}
+
 export function toMoviesPage(response: TmdbMovieListResponse): MoviesPage {
   return {
     movies: response.results,

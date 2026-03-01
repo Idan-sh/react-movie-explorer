@@ -114,11 +114,9 @@ export function useHomePage(): UseHomePageReturn {
     if (isSearchActive) {
       return searchMovies.length > 0 ? [searchMovies] : [];
     }
-    const active = activeList
-      ? movies
-      : activeView === APP_VIEW.FAVORITES
-        ? favorites
-        : [];
+    let active: TmdbMovie[] = [];
+    if (activeList) active = movies;
+    else if (activeView === APP_VIEW.FAVORITES) active = favorites;
     return active.length > 0 ? [active] : [];
   }, [isSearchActive, searchMovies, activeList, movies, activeView, favorites]);
 

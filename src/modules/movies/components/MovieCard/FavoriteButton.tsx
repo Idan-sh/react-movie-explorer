@@ -32,7 +32,7 @@ export function FavoriteButton({
         ${
           isFavorited
             ? 'bg-red-500 text-white opacity-100'
-            : `bg-black/50 text-white opacity-0 group-hover:opacity-100 ${isFocused ? 'opacity-100' : ''}`
+            : `bg-black/50 text-white ${isFocused ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'}`
         }
       `}
     >

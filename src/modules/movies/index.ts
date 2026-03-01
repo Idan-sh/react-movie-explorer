@@ -31,12 +31,13 @@ export type {
 
 // Hooks: public hooks for pages
 export { useMoviesInit, useMovieDetailsPage, useHomePage } from './hooks';
+export type { UseMoviesInitReturn, UseMovieDetailsPageReturn, UseHomePageReturn } from './hooks';
+
 export type {
-  UseMoviesInitReturn,
   MovieDetailsDisplay,
   MovieDetailsMetaDisplay,
   MovieDetailsCastDisplay,
-} from './hooks';
+} from './types';
 
 // Utils: public for pages (e.g. getBackdropUrl for MovieDetailsPage)
 export { getBackdropUrl, getPosterUrl } from './utils';

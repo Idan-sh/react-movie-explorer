@@ -42,7 +42,6 @@ function MovieCardComponent({
 
   return (
     <article
-      role="button"
       tabIndex={-1}
       data-nav-id={navId}
       onClick={handleClick}

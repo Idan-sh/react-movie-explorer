@@ -29,6 +29,7 @@ import type {
   PrefetchSuccessPayload,
   ShowNextPagePayload,
 } from '../types';
+import { mergeMovies } from '../utils';
 
 /**
  * Default page state
@@ -91,13 +92,9 @@ const moviesSlice = createSlice({
         state[key].page = page;
         state[key].nextPage = null;
       } else {
-        const existingIds = new Set(state[key].page.movies.map((m) => m.id));
         state[key].page = {
           ...page,
-          movies: [
-            ...state[key].page.movies,
-            ...page.movies.filter((m) => !existingIds.has(m.id)),
-          ],
+          movies: mergeMovies(state[key].page.movies, page.movies),
         };
       }
     },
@@ -132,13 +129,9 @@ const moviesSlice = createSlice({
       const { nextPage } = state[key];
       if (!nextPage) return;
 
-      const existingIds = new Set(state[key].page.movies.map((m) => m.id));
       state[key].page = {
         ...nextPage,
-        movies: [
-          ...state[key].page.movies,
-          ...nextPage.movies.filter((m) => !existingIds.has(m.id)),
-        ],
+        movies: mergeMovies(state[key].page.movies, nextPage.movies),
       };
       state[key].nextPage = null;
     },

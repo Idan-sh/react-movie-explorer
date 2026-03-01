@@ -30,6 +30,11 @@ export function CircularMovieRating({
   return (
     <div
       ref={containerRef}
+      role="meter"
+      aria-valuenow={rating}
+      aria-valuemin={0}
+      aria-valuemax={100}
+      aria-label={`Rating: ${rating}%`}
       className={`${config.container} relative flex items-center justify-center rounded-full bg-gray-900`}
     >
       <svg className="h-full w-full -rotate-90" viewBox="0 0 36 36">

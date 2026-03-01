@@ -50,7 +50,7 @@ export function formatReleaseDate(releaseDate: string): string {
  * @returns Percentage number or null for unrated movies
  */
 export function formatRating(voteAverage: number, voteCount: number): number | null {
-  if (!voteAverage || voteCount < RATING.MIN_VOTE_COUNT) return null;
+  if (voteAverage <= 0 || voteCount < RATING.MIN_VOTE_COUNT) return null;
   return Math.round(voteAverage * 10);
 }
 
