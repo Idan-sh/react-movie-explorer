@@ -173,3 +173,9 @@ https://github.com/user-attachments/assets/5fc653d9-6575-4fa7-9b7c-d3a69ce9f993
 Switch between dark and light mode.
 
 https://github.com/user-attachments/assets/d9092b4e-625e-4f05-956c-2e0ee830d130
+
+### Mobile Support
+
+Responsive layout with hamburger menu, adaptive grid, and touch-friendly navigation. 
+
+https://github.com/user-attachments/assets/afd2700b-e285-4a1d-8a9e-a74b1ea2fc59
