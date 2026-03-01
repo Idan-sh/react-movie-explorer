@@ -16,6 +16,7 @@ import {
   selectDetailsError,
 } from '../store';
 import type {
+  TmdbMovieDetails,
   MovieDetailsDisplay,
   MovieDetailsMetaDisplay,
   MovieDetailsCastDisplay,
@@ -35,7 +36,18 @@ import { usePageNavigation } from '@/core/navigation';
 import type { LayoutContext } from '@/shared/components';
 import { APP_VIEW_TABS } from '@/shared/constants';
 
-export function useMovieDetailsPage() {
+export interface UseMovieDetailsPageReturn {
+  details: TmdbMovieDetails | null;
+  isLoading: boolean;
+  error: string | null;
+  display: MovieDetailsDisplay | null;
+  isFavorited: boolean;
+  onBack: () => void;
+  onToggleFavorite: (e: React.MouseEvent<HTMLButtonElement>) => void;
+  focusedItemIndex: number;
+}
+
+export function useMovieDetailsPage(): UseMovieDetailsPageReturn {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const movieId = Number(id);

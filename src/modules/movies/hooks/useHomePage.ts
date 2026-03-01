@@ -21,17 +21,32 @@ import {
   fetchMovies,
   showNextPage,
 } from '@/modules/movies';
-import type { TmdbMovie } from '@/modules/movies';
+import type { TmdbMovie, MovieList } from '@/modules/movies';
 import { useFavoriteToggle, selectFavorites } from '@/modules/favorites';
 import { usePageNavigation, useGridColumns } from '@/core/navigation';
 import { useSearchGrid } from '@/modules/search';
+import type { UseSearchGridReturn } from '@/modules/search';
+import type { AppView } from '@/shared/types';
 
 const EMPTY_MOVIES: TmdbMovie[] = [];
 const selectNoMovies = (): TmdbMovie[] => EMPTY_MOVIES;
 const selectFalse = (): boolean => false;
 const selectZero = (): number => 0;
 
-export function useHomePage() {
+export interface UseHomePageReturn {
+  isSearchActive: boolean;
+  activeView: AppView;
+  searchGrid: UseSearchGridReturn;
+  searchQuery: string;
+  handleSelectMovie: (movie: TmdbMovie) => void;
+  handleToggleFavorite: (movie: TmdbMovie) => void;
+  favoriteIds: Set<number>;
+  activeList: MovieList | null;
+  favorites: TmdbMovie[];
+  focusedIndex: number;
+}
+
+export function useHomePage(): UseHomePageReturn {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const { activeView, handleTabClick, setFocusedTabIndex, isSearchFocused } =
