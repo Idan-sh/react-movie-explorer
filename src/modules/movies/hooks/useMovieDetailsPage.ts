@@ -38,7 +38,7 @@ import {
   fireFavoriteConfetti,
 } from '../utils';
 import { CAST } from '../constants';
-import { useFavoriteToggle, selectFavorites } from '@/modules/favorites';
+import { useFavoriteToggle, selectFavoriteIds } from '@/modules/favorites';
 import { usePageNavigation, buildNavId, NAV_ID_PREFIX } from '@/core/navigation';
 import type { LayoutContext } from '@/shared/components';
 import { APP_VIEW_TABS, HEADER_NAV_COUNT, ROUTES } from '@/shared/constants';
@@ -143,8 +143,8 @@ export function useMovieDetailsPage(): UseMovieDetailsPageReturn {
   } = useOutletContext<LayoutContext>();
 
   const toggleFavorite = useFavoriteToggle();
-  const favorites = useAppSelector(selectFavorites);
-  const isFavorited = favorites.some((f) => f.id === movieId);
+  const favoriteIds = useAppSelector(selectFavoriteIds);
+  const isFavorited = favoriteIds.includes(movieId);
 
   // ── Trailer state (lifted from MovieTrailer) ────────────────────
   const trailer = useMemo(

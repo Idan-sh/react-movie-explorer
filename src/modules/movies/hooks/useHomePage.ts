@@ -25,7 +25,7 @@ import {
   showNextPage,
 } from '@/modules/movies';
 import type { TmdbMovie, MovieList } from '@/modules/movies';
-import { useFavoriteToggle, selectFavorites } from '@/modules/favorites';
+import { useFavoriteToggle, selectFavorites, selectFavoriteIds } from '@/modules/favorites';
 import { usePageNavigation, useGridColumns } from '@/core/navigation';
 import { useSearchGrid } from '@/modules/search';
 import type { UseSearchGridReturn } from '@/modules/search';
@@ -100,9 +100,10 @@ export function useHomePage(): UseHomePageReturn {
   );
 
   const favorites = useAppSelector(selectFavorites);
+  const favoriteIdList = useAppSelector(selectFavoriteIds);
   const favoriteIds = useMemo(
-    () => new Set(favorites.map((m) => m.id)),
-    [favorites],
+    () => new Set(favoriteIdList),
+    [favoriteIdList],
   );
 
   const onMovieLoad = useCallback((): void => {
