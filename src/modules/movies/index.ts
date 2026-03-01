@@ -17,7 +17,7 @@ export {
   MovieDetailsOverview,
   MovieDetailsCast,
   MovieTrailer,
-  MovieDetailsRecommendations,
+  MovieRecommendations,
   FavoriteToggleButton,
   MovieDetailsSkeleton
 } from "./components";

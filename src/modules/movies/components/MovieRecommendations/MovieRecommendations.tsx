@@ -1,37 +1,24 @@
 /**
- * MovieDetailsRecommendations Component
+ * MovieRecommendations Component
  *
  * Horizontal scrollable row of recommended movies using MovieCard.
- * Click navigates to that movie's detail page.
  */
 
-import { useNavigate } from "react-router-dom";
-import { useCallback } from "react";
 import type { TmdbMovie } from "../../types";
 import { MovieCard } from "../MovieCard";
 import { ScrollRow } from "@/shared/components";
+import { useMovieRecommendations } from "./useMovieRecommendations";
 
-interface MovieDetailsRecommendationsProps {
+interface MovieRecommendationsProps {
   movies: TmdbMovie[];
 }
 
-const MAX_RECOMMENDATIONS = 10;
-
-export function MovieDetailsRecommendations({
+export function MovieRecommendations({
   movies
-}: MovieDetailsRecommendationsProps): React.JSX.Element | null {
-  const navigate = useNavigate();
+}: MovieRecommendationsProps): React.JSX.Element | null {
+  const { displayMovies, handleSelect } = useMovieRecommendations(movies);
 
-  const handleSelect = useCallback(
-    (movie: TmdbMovie): void => {
-      navigate(`/movie/${movie.id}`, { viewTransition: true });
-    },
-    [navigate]
-  );
-
-  if (movies.length === 0) return null;
-
-  const displayMovies = movies.slice(0, MAX_RECOMMENDATIONS);
+  if (displayMovies.length === 0) return null;
 
   return (
     <div className="flex flex-col gap-3">

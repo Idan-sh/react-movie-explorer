@@ -17,7 +17,7 @@ import {
   MovieDetailsOverview,
   MovieDetailsCast,
   MovieTrailer,
-  MovieDetailsRecommendations,
+  MovieRecommendations,
   MovieDetailsSkeleton,
   FavoriteToggleButton,
 } from "@/modules/movies";
@@ -106,7 +106,7 @@ export function MovieDetailsPage(): React.JSX.Element {
 
       {details.recommendations && details.recommendations.results.length > 0 && (
         <div className="mt-8">
-          <MovieDetailsRecommendations movies={details.recommendations.results} />
+          <MovieRecommendations movies={details.recommendations.results} />
         </div>
       )}
     </div>
