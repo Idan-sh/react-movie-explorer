@@ -20,6 +20,7 @@ export function useMovieGrid(
   const selectors = getListSelectors(list);
 
   const movies = useAppSelector(selectors.selectMovies);
+  const isIdle = useAppSelector(selectors.selectIsIdle);
   const isLoading = useAppSelector(selectors.selectIsLoading);
   const hasError = useAppSelector(selectors.selectHasError);
   const error = useAppSelector(selectors.selectError);
@@ -41,11 +42,11 @@ export function useMovieGrid(
 
   return {
     movies,
-    isLoading,
+    isLoading: isLoading || isIdle,
     isLoadingMore: isLoading && movies.length > 0,
     hasError,
     error,
-    isEmpty: !isLoading && !hasError && movies.length === 0,
+    isEmpty: !isLoading && !isIdle && !hasError && movies.length === 0,
     hasMorePages,
     handleLoadMore,
   };
