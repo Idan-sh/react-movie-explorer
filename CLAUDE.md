@@ -38,19 +38,19 @@ src/
 │   │   │   ├── MovieCard/       # MovieCard (memo), FavoriteButton, MoviePoster, MovieInfo
 │   │   │   ├── MovieGrid/       # MovieGrid, MovieGridLayout, LoadMoreButton, MovieGridEmpty, MovieGridError, MovieGridSkeleton
 │   │   │   ├── MovieDetails/    # MovieDetailsPoster, MovieDetailsGenres, MovieDetailsMeta, MovieDetailsOverview, MovieDetailsCast, MovieDetailsBackdrop, MovieDetailsSkeleton, FavoriteToggleButton
-│   │   │   ├── MovieTrailer/    # MovieTrailer + useMovieTrailer (self-contained widget)
+│   │   │   ├── MovieTrailer/    # MovieTrailer (presentational, state lifted to useMovieDetailsPage)
 │   │   │   └── MovieRecommendations/  # MovieRecommendations + useMovieRecommendations (self-contained widget)
 │   │   ├── hooks/           # useMoviesInit, useMovieGrid, useMovieCard, useMovieDetailsPage, useHomePage
 │   │   ├── store/           # movies.slice/saga/selectors + movieDetails.slice/saga/selectors
 │   │   ├── types/           # movie.types, movies.store.types
 │   │   ├── utils/           # movieCard.utils, movieDetails.utils, movies.utils, confetti.utils
-│   │   └── constants.ts     # MOVIE_LIST, TMDB_IMAGE, RATING, PAGINATION, CAST, MOVIE_DETAILS_APPEND
-│   ├── favorites/           # Favorites with localStorage persistence
+│   │   └── constants.ts     # MOVIE_LIST, TMDB_IMAGE, RATING, PAGINATION, CAST, RECOMMENDATIONS, MOVIE_DETAILS_APPEND
+│   ├── favorites/           # Favorites with localStorage persistence (IDs only)
 │   │   ├── components/
 │   │   │   └── FavoritesGrid/   # FavoritesGrid, FavoritesEmpty
 │   │   ├── hooks/           # useFavoriteToggle
-│   │   ├── services/        # favorites.storage (localStorage with validation)
-│   │   ├── store/           # favorites.slice, favorites.selectors, favorites.listener
+│   │   ├── services/        # favorites.storage (localStorage — saves IDs only, not full objects)
+│   │   ├── store/           # favorites.slice, favorites.saga, favorites.selectors, favorites.listener
 │   │   └── types/           # favorites.types
 │   └── search/              # Movie search via TMDB API
 │       ├── components/
@@ -78,7 +78,7 @@ src/
 │   │   └── Theme/           # ThemeToggle + useTheme + theme constants/types
 │   ├── hooks/               # useCategoryTabs, useDropdown, useHamburgerMenu, useLoadMore, useIsMobile
 │   ├── types/               # request.types, views.types (derived from constants)
-│   ├── utils/               # rateLimit.utils (sliding-window rate limiter)
+│   ├── utils/               # rateLimit.utils (sliding-window rate limiter), sessionStorage.utils
 │   └── constants/           # Shared constants (organized by responsibility)
 │       ├── request.constants.ts    # REQUEST_STATUS (idle, loading, success, error)
 │       ├── slices.constants.ts     # SLICE_NAMES (movies, search, favorites)
@@ -132,12 +132,14 @@ src/
 ### Self-Contained Widget Pattern
 Widgets that encapsulate their own behavior co-locate everything in one folder:
 ```
-MovieTrailer/
-├── MovieTrailer.tsx          # Component
-├── useMovieTrailer.ts        # Widget-specific hook
+MovieRecommendations/
+├── MovieRecommendations.tsx  # Component
+├── useMovieRecommendations.ts  # Widget-specific hook
 └── index.ts
 ```
-Used for: `CircularMovieRating`, `MovieTrailer`, `MovieRecommendations`
+Used for: `CircularMovieRating`, `MovieRecommendations`
+
+**Exception:** `MovieTrailer` state is lifted to `useMovieDetailsPage` for keyboard nav integration (trailer section appears/disappears based on play state).
 
 ### Hooks (Business Logic + Handlers)
 - State management, side effects, Redux integration
@@ -316,8 +318,11 @@ STORAGE_KEY = {
   THEME: "theme",
   MOVIES: { FAVORITES: "movies:favorites" },
   SETTINGS: { SCROLL_ENABLED: "settings:scroll-enabled" },
+  NAV: { FOCUSED_INDEX: "nav:focused-index", ACTIVE_VIEW: "nav:active-view" },
 }
 ```
+
+Note: `NAV` keys use `sessionStorage` (via `shared/utils/sessionStorage.utils.ts`), not `localStorage`.
 
 ---
 

@@ -7,6 +7,6 @@ export { useMoviesInit } from './useMoviesInit';
 export type { UseMoviesInitReturn } from './useMoviesInit';
 
 export { useMovieDetailsPage } from './useMovieDetailsPage';
-export type { UseMovieDetailsPageReturn, DetailsNavFocus } from './useMovieDetailsPage';
+export type { UseMovieDetailsPageReturn } from './useMovieDetailsPage';
 export { useHomePage } from './useHomePage';
 export type { UseHomePageReturn } from './useHomePage';

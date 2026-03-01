@@ -63,13 +63,22 @@ export function AppLayout(): React.JSX.Element {
     setIsSearchFocused(false);
   }, []);
 
-  const handleSearchSubmit = useCallback((): void => {
-    enterContentRef.current?.();
-  }, []);
-
-  const handleSearchEscape = useCallback((): void => {
-    handleClear();
-  }, [handleClear]);
+  const handleSearchKeyDown = useCallback(
+    (e: React.KeyboardEvent<HTMLInputElement>): void => {
+      if (e.key === 'Enter' && query) {
+        e.nativeEvent.stopImmediatePropagation();
+        enterContentRef.current?.();
+        e.currentTarget.blur();
+        return;
+      }
+      if (e.key === 'Escape') {
+        e.nativeEvent.stopImmediatePropagation();
+        handleClear();
+        e.currentTarget.blur();
+      }
+    },
+    [query, handleClear],
+  );
 
   const handleHeaderActivate = useCallback((tabIndex: number): void => {
     const navId = buildNavId(NAV_ID_PREFIX.TAB, tabIndex);
@@ -104,8 +113,7 @@ export function AppLayout(): React.JSX.Element {
       onClear={handleClear}
       onFocus={handleSearchFocus}
       onBlur={handleSearchBlur}
-      onSubmit={handleSearchSubmit}
-      onEscapeInput={handleSearchEscape}
+      onKeyDown={handleSearchKeyDown}
       navId={buildNavId(NAV_ID_PREFIX.TAB, searchTabIndex)}
       isFocused={focusedTabIndex === searchTabIndex}
     />

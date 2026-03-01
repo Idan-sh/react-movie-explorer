@@ -41,6 +41,10 @@ export const CAST = {
   MAX_DISPLAY: 8,
 } as const;
 
+export const RECOMMENDATIONS = {
+  MAX_DISPLAY: 10,
+} as const;
+
 /** Extra data appended to the movie details API call via append_to_response. */
 export const MOVIE_DETAILS_APPEND = 'credits,videos,recommendations';
 

@@ -37,13 +37,11 @@ import {
   getTrailer,
   fireFavoriteConfetti,
 } from '../utils';
-import { CAST } from '../constants';
+import { CAST, RECOMMENDATIONS } from '../constants';
 import { useFavoriteToggle, selectFavoriteIds } from '@/modules/favorites';
 import { usePageNavigation, buildNavId, NAV_ID_PREFIX } from '@/core/navigation';
 import type { LayoutContext } from '@/shared/components';
 import { APP_VIEW_TABS, HEADER_NAV_COUNT, ROUTES } from '@/shared/constants';
-
-const MAX_RECOMMENDATIONS = 10;
 
 // ── Nav item types ────────────────────────────────────────────────
 
@@ -158,7 +156,7 @@ export function useMovieDetailsPage(): UseMovieDetailsPageReturn {
 
   // ── Recommendations ─────────────────────────────────────────────
   const recommendations = useMemo(
-    () => details?.recommendations?.results.slice(0, MAX_RECOMMENDATIONS) ?? [],
+    () => details?.recommendations?.results.slice(0, RECOMMENDATIONS.MAX_DISPLAY) ?? [],
     [details],
   );
 
