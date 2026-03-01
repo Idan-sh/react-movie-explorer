@@ -38,7 +38,7 @@ export function ScrollToTopButton({
           transition={TRANSITION}
           style={{ zIndex: Z_LAYER.SCROLL_TO_TOP }}
           className="
-            fixed top-22 left-1/2 -translate-x-1/2
+            fixed top-28 md:top-22 left-1/2 -translate-x-1/2
             flex items-center gap-2 rounded-full
             border border-gray-300/60 dark:border-gray-600/60
             bg-white/80 dark:bg-gray-800/80 backdrop-blur-md
