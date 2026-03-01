@@ -46,7 +46,6 @@ export function useHamburgerMenu(
   // Menu can only be open on mobile — derived value, no effect needed
   const isMenuOpen = isMenuOpenRaw && isMobile;
 
-  // Refs so handlers always read the latest values without re-registering
   const focusedMenuIndexRef = useRef(focusedMenuIndex);
   useEffect(() => {
     focusedMenuIndexRef.current = focusedMenuIndex;

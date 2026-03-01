@@ -34,7 +34,7 @@ export function useMovieCard(
 ): MovieCardData {
   const posterUrl = getPosterUrl(movie.poster_path);
   const releaseDate = formatReleaseDate(movie.release_date);
-  const rating = formatRating(movie.vote_average);
+  const rating = formatRating(movie.vote_average, movie.vote_count);
   const ariaLabel = buildMovieAriaLabel(movie.title, releaseDate, rating);
 
   const handleClick = (): void => {

@@ -57,11 +57,8 @@ export const selectSearchIsActive = createSelector(
   (query) => query.trim().length >= SEARCH.MIN_QUERY_LENGTH,
 );
 
-/** Result count for use with shared useLoadMore */
-export const selectSearchResultCount = createSelector(
-  [selectSearchResults],
-  (results) => results.length,
-);
+export const selectSearchResultCount = (state: RootState): number =>
+  selectSearchResults(state).length;
 
 /** True when a next page can be fetched */
 export const selectSearchCanLoad = createSelector(

@@ -5,7 +5,7 @@
  * No React dependencies - easily testable in isolation.
  */
 
-import { TMDB_IMAGE } from '../constants';
+import { TMDB_IMAGE, RATING } from '../constants';
 
 /**
  * Constructs the full poster URL from TMDB path
@@ -49,8 +49,8 @@ export function formatReleaseDate(releaseDate: string): string {
  * @param voteAverage - Raw vote average (0-10)
  * @returns Percentage number or null for unrated movies
  */
-export function formatRating(voteAverage: number): number | null {
-  if (!voteAverage) return null;
+export function formatRating(voteAverage: number, voteCount: number): number | null {
+  if (!voteAverage || voteCount < RATING.MIN_VOTE_COUNT) return null;
   return Math.round(voteAverage * 10);
 }
 

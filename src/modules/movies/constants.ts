@@ -47,6 +47,13 @@ export const TMDB_IMAGE = {
 } as const;
 
 /**
+ * Rating display configuration
+ */
+export const RATING = {
+  MIN_VOTE_COUNT: 10,
+} as const;
+
+/**
  * Cast display configuration
  */
 export const CAST = {

@@ -55,7 +55,7 @@ export function useMovieDetailsPage() {
   const display = useMemo((): MovieDetailsDisplay | null => {
     if (!details) return null;
     const meta: MovieDetailsMetaDisplay = {
-      rating: formatRating(details.vote_average),
+      rating: formatRating(details.vote_average, details.vote_count),
       year: getReleaseYear(details.release_date),
       runtime: formatRuntime(details.runtime),
       budget: formatMoney(details.budget),

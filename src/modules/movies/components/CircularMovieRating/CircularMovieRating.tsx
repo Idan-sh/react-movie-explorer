@@ -3,7 +3,7 @@
  *
  * Animated circular progress donut displaying a percentage score.
  * Color-coded: green (≥70), yellow (≥50), red (<50).
- * Animates the arc fill and number count-up when entering the viewport.
+ * Animates via direct DOM updates (no React re-renders during animation).
  *
  * Two sizes:
  *   - sm (40px) — card poster overlay
@@ -22,7 +22,7 @@ export function CircularMovieRating({
   rating,
   size = 'sm',
 }: CircularMovieRatingProps): React.JSX.Element {
-  const { containerRef, animatedValue, offset, color, trackColor } =
+  const { containerRef, numberRef, arcRef, color, trackColor } =
     useCircularMovieRating(rating);
 
   const config = CIRCULAR_RATING.SIZE[size];
@@ -42,6 +42,7 @@ export function CircularMovieRating({
           strokeWidth={config.strokeWidth}
         />
         <circle
+          ref={arcRef}
           cx="18"
           cy="18"
           r={CIRCULAR_RATING.RADIUS}
@@ -50,11 +51,11 @@ export function CircularMovieRating({
           strokeWidth={config.strokeWidth}
           strokeLinecap="round"
           strokeDasharray={CIRCULAR_RATING.CIRCUMFERENCE}
-          strokeDashoffset={offset}
+          strokeDashoffset={CIRCULAR_RATING.CIRCUMFERENCE}
         />
       </svg>
       <span className={`absolute ${config.text} font-bold text-white`}>
-        {animatedValue}
+        <span ref={numberRef}>0</span>
         <span className={`${config.percent} font-bold align-super`}>%</span>
       </span>
     </div>
