@@ -47,7 +47,7 @@ function MovieCardComponent({
       onClick={handleClick}
       aria-label={ariaLabel}
       className={`
-        group relative flex flex-col overflow-hidden rounded-md
+        group relative flex flex-col overflow-hidden rounded-md cursor-pointer
         bg-white dark:bg-gray-800
         shadow-md hover:shadow-lg
         transition-all duration-150 ease-in-out
