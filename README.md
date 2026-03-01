@@ -3,7 +3,9 @@
 A modern movie discovery app built with React 19, powered by the TMDB API. Browse popular and now-playing movies, search with real-time results, manage favorites, and explore detailed movie pages — all with full keyboard navigation support.
 
 **Live Demo:** [movie-explorer.idansh.dev](https://movie-explorer.idansh.dev/)  
-Deployed on Vercel as a static Vite SPA.
+Deployed on Vercel as a static Vite SPA.   
+
+<img width="1300" height="940" alt="Screenshot" src="https://github.com/user-attachments/assets/61514b4b-c4d7-4d70-ac19-a41334597b80" />
 
 ---
 
@@ -127,24 +129,35 @@ npm run lint       # ESLint
 
 ### Keyboard Navigation
 Arrow-key navigation through the movie grid, tab switching with auto-focus, and zone transitions.
-<!-- Add video -->
+
+https://github.com/user-attachments/assets/474802d5-a522-42c7-91ab-3173b6f52776
+
 
 ### Movie Grid
 Browse movies with Load More pagination and scroll-to-top.
-<!-- Add video -->
+
+https://github.com/user-attachments/assets/d8c8c808-85ea-4bd5-abf4-9671ecc2f0cd
+
 
 ### Search & Movie Details
 Real-time debounced search with full movie details page — backdrop, cast, trailer, and recommendations.
-<!-- Add video -->
+
+https://github.com/user-attachments/assets/795fb27e-ad55-42d2-bed8-c74aed2f5909
+
 
 ### Favorite a Movie
 Add a movie to favorites with a confetti burst.
-<!-- Add video -->
+
+https://github.com/user-attachments/assets/c31e9c77-6a55-4322-8d30-6a9740c2440e
+
 
 ### Unfavorite a Movie
 Remove a movie from favorites.
-<!-- Add video -->
+
+https://github.com/user-attachments/assets/5fc653d9-6575-4fa7-9b7c-d3a69ce9f993
+
 
 ### Theme Toggle
 Switch between dark and light mode.
-<!-- Add video -->
+
+https://github.com/user-attachments/assets/d9092b4e-625e-4f05-956c-2e0ee830d130
