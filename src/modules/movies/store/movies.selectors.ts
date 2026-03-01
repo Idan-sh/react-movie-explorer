@@ -42,11 +42,6 @@ function buildListSelectors(list: MovieList) {
     (listState) => listState.page.pageNumber
   );
 
-  const selectNumberOfPages = createSelector(
-    [selectState],
-    (listState) => listState.page.numberOfPages
-  );
-
   const selectHasNextPage = createSelector(
     [selectState],
     (listState) => listState.nextPage !== null
@@ -93,7 +88,6 @@ function buildListSelectors(list: MovieList) {
     selectState,
     selectMovies,
     selectPageNumber,
-    selectNumberOfPages,
     selectHasNextPage,
     selectError,
     selectIsIdle,

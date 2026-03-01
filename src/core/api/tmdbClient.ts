@@ -53,9 +53,7 @@ tmdbClient.interceptors.request.use(
  * - On error: rejects with an Error so sagas can use error.message for user-facing text.
  */
 tmdbClient.interceptors.response.use(
-  (response) => {
-    return response;
-  },
+  undefined,
   (error: AxiosError) => {
     if (env.isDev) {
       console.error('[API Error]', error.message);

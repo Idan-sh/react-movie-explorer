@@ -12,6 +12,7 @@ import {
   fetchMovieDetails,
   clearMovieDetails,
   selectMovieDetails,
+  selectDetailsIsLoading,
   selectDetailsError,
 } from '../store';
 import type { MovieDetailsDisplay, MovieDetailsMetaDisplay, MovieDetailsCastDisplay } from '../types';
@@ -29,6 +30,7 @@ export function useMovieDetailsPage() {
 
   const dispatch = useAppDispatch();
   const details = useAppSelector(selectMovieDetails);
+  const isLoading = useAppSelector(selectDetailsIsLoading);
   const error = useAppSelector(selectDetailsError);
 
   useEffect(() => {
@@ -101,6 +103,7 @@ export function useMovieDetailsPage() {
 
   return {
     details,
+    isLoading,
     error,
     display,
     isFavorited,

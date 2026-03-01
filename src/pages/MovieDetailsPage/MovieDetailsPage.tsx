@@ -28,6 +28,7 @@ import { BackButton } from "@/shared/components/BackButton";
 export function MovieDetailsPage(): React.JSX.Element {
   const {
     details,
+    isLoading,
     error,
     display,
     isFavorited,
@@ -47,7 +48,7 @@ export function MovieDetailsPage(): React.JSX.Element {
     );
   }
 
-  if (!details) {
+  if (isLoading || !details) {
     return (
       <div className="mx-auto max-w-3xl px-4 pt-6 pb-16">
         <div className="mb-4">

@@ -1,4 +1,4 @@
-export { searchReducer, setSearchQuery, searchMoviesSuccess, clearSearch, loadMoreSearchResults } from './search.slice';
+export { searchReducer, setSearchQuery, clearSearch, loadMoreSearchResults } from './search.slice';
 export { searchSagaRoot } from './search.saga';
 export {
   selectSearchQuery,

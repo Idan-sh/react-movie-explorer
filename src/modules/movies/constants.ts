@@ -63,5 +63,5 @@ export const MOVIE_DETAILS_APPEND = 'credits,videos,recommendations';
  */
 export const PAGINATION = {
   DEFAULT_PAGE: 1,
-  ITEMS_PER_PAGE: 20, // TMDB returns 20 items per page
+  ITEMS_PER_PAGE: 20,
 } as const;
