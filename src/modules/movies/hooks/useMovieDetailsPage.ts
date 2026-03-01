@@ -15,7 +15,7 @@ import {
   selectDetailsError,
 } from '../store';
 import type { MovieDetailsDisplay, MovieDetailsMetaDisplay, MovieDetailsCastDisplay } from '../types';
-import { formatRating, getReleaseYear, formatRuntime, formatMoney, getDirector, getProfileUrl } from '../utils';
+import { formatRating, getReleaseYear, formatRuntime, formatMoney, getDirector, getProfileUrl, fireFavoriteConfetti } from '../utils';
 import { CAST } from '../constants';
 import { useFavoriteToggle, selectFavorites } from '@/modules/favorites';
 import { usePageNavigation } from '@/core/navigation';
@@ -72,9 +72,11 @@ export function useMovieDetailsPage() {
     navigate(-1);
   }, [navigate]);
 
-  const handleToggleFavorite = useCallback((): void => {
-    if (details) toggleFavorite(details);
-  }, [details, toggleFavorite]);
+  const handleToggleFavorite = useCallback((e: React.MouseEvent<HTMLButtonElement>): void => {
+    if (!details) return;
+    fireFavoriteConfetti(e.currentTarget, !isFavorited);
+    toggleFavorite(details);
+  }, [details, toggleFavorite, isFavorited]);
 
   const sectionItems = useMemo(() => [['back']], []);
 

@@ -13,6 +13,7 @@ import {
   formatReleaseDate,
   formatRating,
   buildMovieAriaLabel,
+  fireFavoriteConfetti,
 } from '../utils';
 
 export interface MovieCardData {
@@ -22,18 +23,14 @@ export interface MovieCardData {
   title: string;
   ariaLabel: string;
   handleClick: () => void;
-  handleToggleFavorite: (e: React.MouseEvent) => void;
+  handleToggleFavorite: (e: React.MouseEvent<HTMLButtonElement>) => void;
 }
 
-/**
- * Derives display data and interaction handlers for a movie card.
- * Handlers are plain functions — FavoriteButton is not memoized and
- * DOM elements don't benefit from callback identity stability.
- */
 export function useMovieCard(
   movie: TmdbMovie,
   onSelect?: (movie: TmdbMovie) => void,
   onToggleFavorite?: (movie: TmdbMovie) => void,
+  isFavorited = false,
 ): MovieCardData {
   const posterUrl = getPosterUrl(movie.poster_path);
   const releaseDate = formatReleaseDate(movie.release_date);
@@ -42,9 +39,9 @@ export function useMovieCard(
 
   const handleClick = (): void => { onSelect?.(movie); };
 
-  // Stops propagation so the card's onClick doesn't also fire
-  const handleToggleFavorite = (e: React.MouseEvent): void => {
+  const handleToggleFavorite = (e: React.MouseEvent<HTMLButtonElement>): void => {
     e.stopPropagation();
+    fireFavoriteConfetti(e.currentTarget, !isFavorited);
     onToggleFavorite?.(movie);
   };
 

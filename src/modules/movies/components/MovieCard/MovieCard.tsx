@@ -38,7 +38,7 @@ function MovieCardComponent({
     ariaLabel,
     handleClick,
     handleToggleFavorite,
-  } = useMovieCard(movie, onSelect, onToggleFavorite);
+  } = useMovieCard(movie, onSelect, onToggleFavorite, isFavorited);
 
   return (
     <article
