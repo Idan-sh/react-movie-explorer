@@ -16,7 +16,7 @@ export {
   MovieDetailsGenres,
   MovieDetailsOverview,
   MovieDetailsCast,
-  MovieDetailsTrailer,
+  MovieTrailer,
   MovieDetailsRecommendations,
   FavoriteToggleButton,
   MovieDetailsSkeleton

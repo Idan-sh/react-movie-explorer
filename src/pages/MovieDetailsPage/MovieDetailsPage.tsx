@@ -16,7 +16,7 @@ import {
   MovieDetailsGenres,
   MovieDetailsOverview,
   MovieDetailsCast,
-  MovieDetailsTrailer,
+  MovieTrailer,
   MovieDetailsRecommendations,
   MovieDetailsSkeleton,
   FavoriteToggleButton,
@@ -100,7 +100,7 @@ export function MovieDetailsPage(): React.JSX.Element {
 
       {details.videos && (
         <div className="mt-8">
-          <MovieDetailsTrailer videos={details.videos.results} />
+          <MovieTrailer videos={details.videos.results} />
         </div>
       )}
 

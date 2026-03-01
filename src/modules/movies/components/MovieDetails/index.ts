@@ -6,7 +6,7 @@ export { MovieDetailsGenres } from './MovieDetailsGenres';
 export { MovieDetailsOverview } from './MovieDetailsOverview';
 export { MovieDetailsCast } from './MovieDetailsCast';
 export type { MovieDetailsCastProps } from './MovieDetailsCast';
-export { MovieDetailsTrailer } from './MovieDetailsTrailer';
+export { MovieTrailer } from '../MovieTrailer';
 export { MovieDetailsRecommendations } from './MovieDetailsRecommendations';
 export { FavoriteToggleButton } from './FavoriteToggleButton';
 export { MovieDetailsSkeleton } from './MovieDetailsSkeleton';

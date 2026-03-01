@@ -1,23 +1,23 @@
 /**
- * MovieDetailsTrailer Component
+ * MovieTrailer Component
  *
  * YouTube facade pattern: renders a thumbnail with a play button overlay.
  * On click, swaps in an iframe with autoplay for inline playback.
  * Avoids loading YouTube's heavy JS until the user opts in.
  */
 
-import { useState } from 'react';
-import { PlayIcon } from '@heroicons/react/24/solid';
-import type { TmdbVideo } from '../../types';
-import { getTrailer, getYoutubeThumbnailUrl } from '../../utils';
+import { PlayIcon } from "@heroicons/react/24/solid";
+import type { TmdbVideo } from "../../types";
+import { getYoutubeThumbnailUrl } from "../../utils";
+import { useMovieTrailer } from "./useMovieTrailer";
 
-interface MovieDetailsTrailerProps {
+interface MovieTrailerProps {
   videos: TmdbVideo[];
 }
 
 function TrailerThumbnail({
   trailer,
-  onPlay,
+  onPlay
 }: {
   trailer: TmdbVideo;
   onPlay: () => void;
@@ -58,15 +58,9 @@ function TrailerEmbed({ videoKey }: { videoKey: string }): React.JSX.Element {
   );
 }
 
-export function MovieDetailsTrailer({ videos }: MovieDetailsTrailerProps): React.JSX.Element | null {
-  const [isPlaying, setIsPlaying] = useState(false);
-
-  const trailer = getTrailer(videos);
+export function MovieTrailer({ videos }: MovieTrailerProps): React.JSX.Element | null {
+  const { trailer, isPlaying, handlePlay } = useMovieTrailer(videos);
   if (!trailer) return null;
-
-  const handlePlay = (): void => {
-    setIsPlaying(true);
-  };
 
   return (
     <div className="flex flex-col gap-3">
