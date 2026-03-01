@@ -5,10 +5,10 @@ export {
   getFirstRowTargetIndex,
   getLastRowTargetIndex,
   resolveNavigation,
-  resolveClickTarget,
   buildNavId,
-  focusNavElement,
   createScrollController,
   getNavIdFromState,
 } from './navigation.utils';
 export type { ScrollController } from './navigation.utils';
+
+export { focusNavElement, resolveClickTarget } from './dom.utils';

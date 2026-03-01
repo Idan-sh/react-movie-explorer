@@ -1,8 +1,8 @@
 /**
- * Navigation Utilities
+ * Navigation Utilities — Pure Functions
  *
- * Pure functions for calculating navigation indices
- * and managing DOM focus via data-nav-id attributes.
+ * Stateless calculations for navigation indices and state transitions.
+ * DOM-touching helpers live in dom.utils.ts.
  */
 
 import { NAV_KEY, NAV_ZONE, NAV_ID_PREFIX } from "../constants";
@@ -78,57 +78,6 @@ export function getNextGridIndex(current: number, key: string, section: ContentS
  */
 export function buildNavId(prefix: string, ...indices: number[]): string {
   return `${prefix}-${indices.join("-")}`;
-}
-
-/**
- * Moves DOM focus to the element matching a data-nav-id.
- * Returns true if the element was found and received focus, false otherwise.
- * Callers can use the return value to detect when focus couldn't move
- * (e.g., target is display:none) and explicitly blur the stale element.
- */
-export function focusNavElement(navId: string): boolean {
-  const element = document.querySelector(`[data-nav-id="${navId}"]`);
-  if (element instanceof HTMLElement) {
-    element.focus({ preventScroll: true });
-    if (document.activeElement === element) {
-      element.scrollIntoView({ block: "nearest", behavior: "smooth" });
-      return true;
-    }
-  }
-  return false;
-}
-
-/**
- * Resolves NavState from a clicked element's data-nav-id.
- * Returns null if the click target has no nav ID.
- *
- * Uses closest() to walk up the DOM — handles clicks on child
- * elements (e.g., clicking a poster image inside a MovieCard).
- */
-export function resolveClickTarget(event: MouseEvent): NavState | null {
-  const target = (event.target as HTMLElement).closest("[data-nav-id]");
-  if (!target) return null;
-
-  const navId = target.getAttribute("data-nav-id");
-  if (!navId) return null;
-
-  // Parse "nav-tab-{index}"
-  if (navId.startsWith(NAV_ID_PREFIX.TAB + "-")) {
-    const tabIndex = parseInt(navId.slice(NAV_ID_PREFIX.TAB.length + 1), 10);
-    if (!isNaN(tabIndex)) {
-      return { activeZone: NAV_ZONE.TABS, tabIndex, sectionIndex: 0, itemIndex: 0 };
-    }
-  }
-
-  // Parse "nav-item-{sectionIndex}-{itemIndex}"
-  if (navId.startsWith(NAV_ID_PREFIX.ITEM + "-")) {
-    const parts = navId.slice(NAV_ID_PREFIX.ITEM.length + 1).split("-").map(Number);
-    if (parts.length === 2 && parts.every((n) => !isNaN(n))) {
-      return { activeZone: NAV_ZONE.CONTENT, tabIndex: 0, sectionIndex: parts[0], itemIndex: parts[1] };
-    }
-  }
-
-  return null;
 }
 
 // ── Section transition helpers ─────────────────────────────────
