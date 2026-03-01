@@ -1,15 +1,5 @@
-/**
- * Environment configuration with startup validation
- *
- * WHY A WRAPPER:
- * 1. Fail fast - app crashes immediately if env var missing (not later in API call)
- * 2. Single import - `import { env } from '@/core/config'`
- * 3. Derived values - can compute URLs, add defaults
- *
- * TYPES: Defined in src/vite-env.d.ts (no duplication here)
- */
+/** Validated env vars; fails fast if required vars are missing. */
 
-// Validate required env vars exist at startup
 const requiredVars = [
   'VITE_TMDB_API_KEY',
   'VITE_TMDB_API_READ_ACCESS_TOKEN',
@@ -25,7 +15,6 @@ for (const key of requiredVars) {
   }
 }
 
-// Export validated env vars
 export const env = {
   tmdb: {
     apiKey: import.meta.env.VITE_TMDB_API_KEY,

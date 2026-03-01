@@ -1,37 +1,8 @@
-/**
- * Redux Store Configuration
- *
- * ARCHITECTURE:
- * ┌─────────────────────────────────────────────────────────┐
- * │                      Component                          │
- * │                         │                               │
- * │                    dispatch(action)                     │
- * │                         ▼                               │
- * │  ┌─────────────────────────────────────────────────┐   │
- * │  │                  Redux Store                     │   │
- * │  │                      │                           │   │
- * │  │         ┌────────────┴────────────┐             │   │
- * │  │         ▼                         ▼             │   │
- * │  │    Reducer (sync)           Saga (async)        │   │
- * │  │    updates state            API calls           │   │
- * │  │         │                         │             │   │
- * │  │         ▼                         ▼             │   │
- * │  │    New State              dispatch(result)      │   │
- * │  └─────────────────────────────────────────────────┘   │
- * │                         │                               │
- * │                    useSelector()                        │
- * │                         ▼                               │
- * │                   Re-render                             │
- * └─────────────────────────────────────────────────────────┘
- *
- * WHY REDUX-SAGA:
- * - Complex async flows (debounce, rate limit, cancellation)
- * - Testable side effects (generators are easy to test)
- * - Powerful effects (takeLatest, race, all, etc.)
- */
+/** Redux store with saga middleware for async flows. */
 
 import { configureStore } from '@reduxjs/toolkit';
 import createSagaMiddleware from 'redux-saga';
+import { env } from '../config';
 import { rootReducer } from './rootReducer';
 import { rootSaga } from './rootSaga';
 import { listenerMiddleware } from './listenerMiddleware';
@@ -45,12 +16,10 @@ export const store = configureStore({
     getDefaultMiddleware()
       .prepend(listenerMiddleware.middleware)
       .concat(sagaMiddleware),
-  devTools: import.meta.env.DEV,
+  devTools: env.isDev,
 });
 
-// Run the root saga
 sagaMiddleware.run(rootSaga);
 
-// Infer types from store
 export type RootState = ReturnType<typeof store.getState>;
 export type AppDispatch = typeof store.dispatch;

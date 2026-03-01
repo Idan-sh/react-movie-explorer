@@ -1,24 +1,9 @@
-/**
- * TMDB API Client
- *
- * Single axios instance for all TMDB API calls.
- *
- * FEATURES:
- * - Base URL pre-configured
- * - API key auto-appended to all requests
- * - Response interceptor for error handling
- * - Request interceptor for logging (dev only)
- *
- * USAGE:
- * import { tmdbClient } from '@/core/api';
- * const response = await tmdbClient.get('/movie/popular');
- */
+/** Single axios instance for TMDB API calls. */
 
 import axios from 'axios';
 import type { AxiosError, InternalAxiosRequestConfig } from 'axios';
 import { env } from '../config';
 
-// Create axios instance with TMDB base config
 export const tmdbClient = axios.create({
   baseURL: env.tmdb.baseUrl,
   timeout: 10_000,
@@ -34,11 +19,6 @@ tmdbClient.interceptors.request.use((config: InternalAxiosRequestConfig) => {
   return config;
 });
 
-/**
- * Response interceptor
- * - On success: returns the full response (call sites use response.data).
- * - On error: rejects with an Error so sagas can use error.message for user-facing text.
- */
 tmdbClient.interceptors.response.use(undefined, (error: AxiosError) => {
   if (env.isDev) {
     console.error('[API Error]', error.message);
@@ -47,9 +27,6 @@ tmdbClient.interceptors.response.use(undefined, (error: AxiosError) => {
   return Promise.reject(new Error(message));
 });
 
-/**
- * Extract user-friendly error message
- */
 function getErrorMessage(error: AxiosError): string {
   if (error.code === 'ECONNABORTED') {
     return 'Request timed out. Please try again.';

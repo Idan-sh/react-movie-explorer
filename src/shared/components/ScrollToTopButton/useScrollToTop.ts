@@ -32,7 +32,7 @@ export function useScrollToTop(): UseScrollToTopReturn {
     if (scrollRef.current) {
       scrollRef.current.scrollTop = 0;
     }
-  }, [pathname, scrollRef]);
+  }, [pathname]);
 
   useEffect(() => {
     const el = scrollRef.current;

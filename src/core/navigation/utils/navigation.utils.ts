@@ -1,6 +1,4 @@
 /**
- * Navigation Utilities — Pure Functions
- *
  * Stateless calculations for navigation indices and state transitions.
  * DOM-touching helpers live in dom.utils.ts.
  */
@@ -8,22 +6,12 @@
 import { NAV_KEY, NAV_ZONE, NAV_ID_PREFIX } from '../constants';
 import type { ContentSection, NavState, NavConfig } from '../types';
 
-/**
- * Set of all navigation key values for fast lookup.
- */
 const NAV_KEY_VALUES: ReadonlySet<string> = new Set(Object.values(NAV_KEY));
 
-/**
- * Checks whether a keyboard key is one of our navigation keys.
- */
 export function isNavKey(key: string): boolean {
   return NAV_KEY_VALUES.has(key);
 }
 
-/**
- * Calculates the next tab index for horizontal navigation.
- * Wraps around at both ends (left from first → last, right from last → first).
- */
 export function getNextTabIndex(
   current: number,
   key: string,
@@ -35,16 +23,7 @@ export function getNextTabIndex(
 }
 
 /**
- * Calculates the next item index within a grid section.
- *
- * Movement rules:
- * - Left/Right: move within the same row, stop at row boundaries
- * - Up: move to same column in previous row
- * - Down: move to same column in next row
- *
- * Returns sentinel values for zone transitions:
- * - -1: navigation should exit the section UPWARD
- * - Infinity: navigation should exit the section DOWNWARD
+ * Returns sentinel values for zone transitions: -1 (exit upward), Infinity (exit downward).
  */
 export function getNextGridIndex(
   current: number,
@@ -78,23 +57,12 @@ export function getNextGridIndex(
   }
 }
 
-/**
- * Builds a data-nav-id value from a prefix and index parts.
- *
- * @example buildNavId('nav-tab', 2) → 'nav-tab-2'
- * @example buildNavId('nav-item', 0, 3) → 'nav-item-0-3'
- */
 export function buildNavId(prefix: string, ...indices: number[]): string {
   return `${prefix}-${indices.join('-')}`;
 }
 
 // ── Section transition helpers ─────────────────────────────────
 
-/**
- * When entering a section from above (moving DOWN into it),
- * land on the same column in the first row.
- * Clamps to last item if the section is shorter than the column.
- */
 export function getFirstRowTargetIndex(
   currentCol: number,
   targetSection: ContentSection,
@@ -102,11 +70,6 @@ export function getFirstRowTargetIndex(
   return Math.min(currentCol, targetSection.itemCount - 1);
 }
 
-/**
- * When entering a section from below (moving UP into it),
- * land on the same column in the last row.
- * Clamps to last item if the last row is shorter than the column.
- */
 export function getLastRowTargetIndex(
   currentCol: number,
   targetSection: ContentSection,
@@ -118,13 +81,6 @@ export function getLastRowTargetIndex(
 
 // ── Footer navigation ───────────────────────────────────────────
 
-/**
- * Resolves navigation when focused on a section's footer element
- * (e.g., Load More button). Footer is at itemIndex === section.itemCount.
- *
- * Up → last grid item. Down → next section or no-op.
- * Left/Right → no-op (footer is a single element).
- */
 function resolveFooterNavigation(
   state: NavState,
   key: string,
@@ -154,23 +110,12 @@ function resolveFooterNavigation(
 
 // ── Scroll controller ───────────────────────────────────────────
 
-/**
- * Encapsulates lerp-based RAF scroll state.
- * Owns its own target position and animation frame id so the hook
- * doesn't need to manage raw refs for these concerns.
- */
 export interface ScrollController {
-  /** Advance the scroll target and start (or continue) the lerp loop. */
   scrollTo(el: HTMLElement, target: number): void;
-  /** Cancel any in-flight animation. */
   cancel(): void;
 }
 
-/**
- * Creates a scroll controller that smoothly lerps scrollTop toward a target.
- * 12% of remaining delta per frame at 60fps ≈ natural ease-out curve.
- * Holding an arrow key keeps advancing the target, producing smooth acceleration.
- */
+/** 12% of remaining delta per frame at 60fps ≈ natural ease-out curve. */
 export function createScrollController(): ScrollController {
   let target = 0;
   let rafId: number | null = null;
@@ -203,10 +148,6 @@ export function createScrollController(): ScrollController {
 
 // ── Nav ID from state ────────────────────────────────────────────
 
-/**
- * Derives the data-nav-id string from the current nav state.
- * Used by the DOM focus sync effect to locate the focused element.
- */
 export function getNavIdFromState(state: NavState): string {
   return state.activeZone === NAV_ZONE.TABS
     ? buildNavId(NAV_ID_PREFIX.TAB, state.tabIndex)
@@ -215,10 +156,6 @@ export function getNavIdFromState(state: NavState): string {
 
 // ── High-level navigation resolvers ────────────────────────────
 
-/**
- * Resolves tabs-zone navigation.
- * Left/Right wraps between tabs. Down enters content zone.
- */
 function resolveTabsNavigation(
   state: NavState,
   key: string,
@@ -247,11 +184,6 @@ function resolveTabsNavigation(
   return state;
 }
 
-/**
- * Resolves content-zone navigation.
- * Moves within the grid, transitions between sections,
- * or exits to tabs zone when navigating above the first section.
- */
 function resolveContentNavigation(
   state: NavState,
   key: string,
@@ -312,13 +244,6 @@ function resolveContentNavigation(
   return state;
 }
 
-/**
- * Pure state transition for keyboard navigation.
- * Given current state + key press, returns the new state.
- *
- * Handles: Escape (snap back to active tab), arrow keys in both zones.
- * Does NOT handle: Enter (side effect), Tab (preventDefault only).
- */
 export function resolveNavigation(
   state: NavState,
   key: string,
