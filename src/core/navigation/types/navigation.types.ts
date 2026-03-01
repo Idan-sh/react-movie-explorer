@@ -70,6 +70,8 @@ export interface UseKeyboardNavReturn {
   focusedSectionIndex: number;
   /** Focused item index within the section, or -1 if not in content zone */
   focusedItemIndex: number;
+  /** Programmatically enter the content zone at the first item */
+  enterContent: () => void;
 }
 
 /**

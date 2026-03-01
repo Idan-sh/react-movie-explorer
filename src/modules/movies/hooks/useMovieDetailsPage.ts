@@ -140,6 +140,7 @@ export function useMovieDetailsPage(): UseMovieDetailsPageReturn {
     onHeaderActivate,
     isSettingsOpen,
     isSearchFocused,
+    enterContentRef,
   } = useOutletContext<LayoutContext>();
 
   const toggleFavorite = useFavoriteToggle();
@@ -274,7 +275,7 @@ export function useMovieDetailsPage(): UseMovieDetailsPageReturn {
     ],
   );
 
-  const { focusedTabIndex, focusedSectionIndex, focusedItemIndex } =
+  const { focusedTabIndex, focusedSectionIndex, focusedItemIndex, enterContent } =
     usePageNavigation<DetailsNavItem>({
       tabCount: HEADER_NAV_COUNT,
       sectionItems,
@@ -288,6 +289,10 @@ export function useMovieDetailsPage(): UseMovieDetailsPageReturn {
       enterContentTabCount: APP_VIEW_TABS.length,
       enabled: !isSearchFocused && !isSettingsOpen,
     });
+
+  useEffect(() => {
+    enterContentRef.current = enterContent;
+  }, [enterContentRef, enterContent]);
 
   useEffect(() => {
     setFocusedTabIndex(focusedTabIndex);

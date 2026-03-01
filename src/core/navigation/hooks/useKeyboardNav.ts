@@ -21,7 +21,7 @@
  * focus/blur events, connecting to existing handlers (e.g., 2s tab auto-switch).
  */
 
-import { useState, useEffect, useLayoutEffect, useRef } from 'react';
+import { useState, useEffect, useLayoutEffect, useRef, useCallback } from 'react';
 import { NAV_KEY, NAV_ZONE, NAV_SCROLL_STEP } from '../constants';
 import type {
   NavState,
@@ -300,11 +300,24 @@ export function useKeyboardNav({
     }
   }, [enabled, state]);
 
+  const enterContent = useCallback((): void => {
+    const firstSection = configRef.current.sections[0];
+    if (firstSection && firstSection.itemCount > 0) {
+      setState((prev) => ({
+        ...prev,
+        activeZone: NAV_ZONE.CONTENT,
+        sectionIndex: 0,
+        itemIndex: 0,
+      }));
+    }
+  }, []);
+
   return {
     focusedTabIndex: state.activeZone === NAV_ZONE.TABS ? state.tabIndex : -1,
     focusedSectionIndex:
       state.activeZone === NAV_ZONE.CONTENT ? state.sectionIndex : -1,
     focusedItemIndex:
       state.activeZone === NAV_ZONE.CONTENT ? state.itemIndex : -1,
+    enterContent,
   };
 }

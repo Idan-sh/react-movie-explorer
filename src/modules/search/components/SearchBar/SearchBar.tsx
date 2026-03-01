@@ -6,6 +6,7 @@
  * Purely presentational — all state and handlers received via props.
  */
 
+import { useCallback } from 'react';
 import { MagnifyingGlassIcon, XMarkIcon } from '@heroicons/react/24/outline';
 
 export interface SearchBarProps {
@@ -14,12 +15,12 @@ export interface SearchBarProps {
   onClear: () => void;
   onFocus?: () => void;
   onBlur?: () => void;
+  /** Called on Enter — parent should enter content zone */
+  onSubmit?: () => void;
+  /** Called on Escape — parent should clear search */
+  onEscapeInput?: () => void;
   navId?: string;
   isFocused?: boolean;
-}
-
-function handleEscapeBlur(e: React.KeyboardEvent<HTMLInputElement>): void {
-  if (e.key === 'Escape') e.currentTarget.blur();
 }
 
 export function SearchBar({
@@ -28,9 +29,28 @@ export function SearchBar({
   onClear,
   onFocus,
   onBlur,
+  onSubmit,
+  onEscapeInput,
   navId,
   isFocused = false,
 }: SearchBarProps): React.JSX.Element {
+  const handleKeyDown = useCallback(
+    (e: React.KeyboardEvent<HTMLInputElement>): void => {
+      if (e.key === 'Enter' && query) {
+        e.nativeEvent.stopImmediatePropagation();
+        onSubmit?.();
+        e.currentTarget.blur();
+        return;
+      }
+      if (e.key === 'Escape') {
+        e.nativeEvent.stopImmediatePropagation();
+        onEscapeInput?.();
+        e.currentTarget.blur();
+      }
+    },
+    [query, onSubmit, onEscapeInput],
+  );
+
   return (
     <div
       data-nav-id={navId}
@@ -51,7 +71,7 @@ export function SearchBar({
         onChange={onInputChange}
         onFocus={onFocus}
         onBlur={onBlur}
-        onKeyDown={handleEscapeBlur}
+        onKeyDown={handleKeyDown}
         placeholder="Search movies..."
         aria-label="Search movies"
         className="

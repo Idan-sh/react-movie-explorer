@@ -13,4 +13,6 @@ export interface LayoutContext {
   onHeaderActivate: (tabIndex: number) => void;
   /** True while the settings dropdown is open — disables keyboard nav */
   isSettingsOpen: boolean;
+  /** Ref that page hooks write their enterContent function to. Called on search submit. */
+  enterContentRef: React.RefObject<(() => void) | null>;
 }

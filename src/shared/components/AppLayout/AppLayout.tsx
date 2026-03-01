@@ -12,7 +12,7 @@
  * to child pages (to pause keyboard nav while the user is typing).
  */
 
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useRef } from 'react';
 import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { useCategoryTabs } from '@/shared/hooks';
 import { ROUTES, Z_LAYER, APP_VIEW_TABS } from '@/shared/constants';
@@ -31,6 +31,7 @@ export function AppLayout(): React.JSX.Element {
   const [focusedTabIndex, setFocusedTabIndex] = useState(-1);
   const [isSearchFocused, setIsSearchFocused] = useState(false);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
+  const enterContentRef = useRef<(() => void) | null>(null);
   const { query, handleInputChange, handleClear } = useSearch();
   const { isDark, toggleTheme } = useTheme();
   const { isScrollEnabled, toggleScroll } = useSettings();
@@ -62,6 +63,14 @@ export function AppLayout(): React.JSX.Element {
     setIsSearchFocused(false);
   }, []);
 
+  const handleSearchSubmit = useCallback((): void => {
+    enterContentRef.current?.();
+  }, []);
+
+  const handleSearchEscape = useCallback((): void => {
+    handleClear();
+  }, [handleClear]);
+
   const handleHeaderActivate = useCallback((tabIndex: number): void => {
     const navId = buildNavId(NAV_ID_PREFIX.TAB, tabIndex);
     const el = document.querySelector(`[data-nav-id="${navId}"]`);
@@ -83,6 +92,7 @@ export function AppLayout(): React.JSX.Element {
     scrollRef,
     onHeaderActivate: handleHeaderActivate,
     isSettingsOpen,
+    enterContentRef,
   };
 
   const searchTabIndex = APP_VIEW_TABS.length;
@@ -96,6 +106,8 @@ export function AppLayout(): React.JSX.Element {
       onClear={handleClear}
       onFocus={handleSearchFocus}
       onBlur={handleSearchBlur}
+      onSubmit={handleSearchSubmit}
+      onEscapeInput={handleSearchEscape}
       navId={buildNavId(NAV_ID_PREFIX.TAB, searchTabIndex)}
       isFocused={focusedTabIndex === searchTabIndex}
     />

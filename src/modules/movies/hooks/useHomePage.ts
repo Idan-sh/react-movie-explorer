@@ -57,6 +57,7 @@ export function useHomePage(): UseHomePageReturn {
     isSearchFocused,
     onHeaderActivate,
     isSettingsOpen,
+    enterContentRef,
   } = useOutletContext<LayoutContext>();
   const { activeList } = useMoviesInit(activeView);
   const handleToggleFavorite = useFavoriteToggle();
@@ -153,7 +154,7 @@ export function useHomePage(): UseHomePageReturn {
     [handleTabClick, onHeaderActivate],
   );
 
-  const { focusedTabIndex, focusedSectionIndex, focusedItemIndex } =
+  const { focusedTabIndex, focusedSectionIndex, focusedItemIndex, enterContent } =
     usePageNavigation({
       tabCount: HEADER_NAV_COUNT,
       sectionItems,
@@ -167,6 +168,10 @@ export function useHomePage(): UseHomePageReturn {
       enabled: !isSearchFocused && !isSettingsOpen,
       enterContentTabCount: APP_VIEW_TABS.length,
     });
+
+  useEffect(() => {
+    enterContentRef.current = enterContent;
+  }, [enterContentRef, enterContent]);
 
   useEffect(() => {
     setFocusedTabIndex(focusedTabIndex);
