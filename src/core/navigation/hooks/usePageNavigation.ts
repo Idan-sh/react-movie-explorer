@@ -40,6 +40,10 @@ export interface UsePageNavigationOptions<T> {
   enabled?: boolean;
   /** When provided, Up/Down in content zone scroll this element instead of navigating */
   scrollContainerRef?: React.RefObject<HTMLElement | null>;
+  /** Tabs below this index also enter content zone on Enter (category tabs) */
+  enterContentTabCount?: number;
+  /** Per-section column overrides (falls back to `columns` if not provided) */
+  sectionColumns?: number[];
 }
 
 /**
@@ -60,16 +64,18 @@ export function usePageNavigation<T>({
   activeTabIndex,
   enabled = true,
   scrollContainerRef,
+  enterContentTabCount,
+  sectionColumns,
 }: UsePageNavigationOptions<T>): UseKeyboardNavReturn {
   // Derive section definitions from item arrays
   const sections = useMemo(
     (): ContentSection[] =>
       sectionItems.map((items, i) => ({
         itemCount: items.length,
-        columns,
+        columns: sectionColumns?.[i] ?? columns,
         hasFooter: sectionHasFooter?.[i] ?? false,
       })),
-    [sectionItems, columns, sectionHasFooter],
+    [sectionItems, columns, sectionColumns, sectionHasFooter],
   );
 
   // Look up the item by section and index, then delegate to caller
@@ -93,5 +99,6 @@ export function usePageNavigation<T>({
     activeTabIndex,
     enabled,
     scrollContainerRef,
+    enterContentTabCount,
   });
 }

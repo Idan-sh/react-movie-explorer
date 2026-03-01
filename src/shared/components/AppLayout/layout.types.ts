@@ -9,4 +9,8 @@ export interface LayoutContext {
   isSearchFocused: boolean;
   /** Ref to the scrollable <main> container — used by pages that need keyboard scroll */
   scrollRef: React.RefObject<HTMLElement | null>;
+  /** Activates a header control by tab index (search, theme, settings) */
+  onHeaderActivate: (tabIndex: number) => void;
+  /** True while the settings dropdown is open — disables keyboard nav */
+  isSettingsOpen: boolean;
 }

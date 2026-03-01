@@ -11,6 +11,7 @@ import type { LayoutContext } from '@/shared/components';
 import {
   APP_VIEW,
   APP_VIEW_TABS,
+  HEADER_NAV_COUNT,
   ROUTES,
 } from '@/shared/constants';
 import { useLoadMore } from '@/shared/hooks';
@@ -49,8 +50,14 @@ export interface UseHomePageReturn {
 export function useHomePage(): UseHomePageReturn {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
-  const { activeView, handleTabClick, setFocusedTabIndex, isSearchFocused } =
-    useOutletContext<LayoutContext>();
+  const {
+    activeView,
+    handleTabClick,
+    setFocusedTabIndex,
+    isSearchFocused,
+    onHeaderActivate,
+    isSettingsOpen,
+  } = useOutletContext<LayoutContext>();
   const { activeList } = useMoviesInit(activeView);
   const handleToggleFavorite = useFavoriteToggle();
 
@@ -136,13 +143,19 @@ export function useHomePage(): UseHomePageReturn {
   const gridColumns = useGridColumns();
 
   const handleTabActivate = useCallback(
-    (index: number): void => { handleTabClick(APP_VIEW_TABS[index]); },
-    [handleTabClick]
+    (index: number): void => {
+      if (index < APP_VIEW_TABS.length) {
+        handleTabClick(APP_VIEW_TABS[index]);
+      } else {
+        onHeaderActivate(index);
+      }
+    },
+    [handleTabClick, onHeaderActivate],
   );
 
   const { focusedTabIndex, focusedSectionIndex, focusedItemIndex } =
     usePageNavigation({
-      tabCount: APP_VIEW_TABS.length,
+      tabCount: HEADER_NAV_COUNT,
       sectionItems,
       columns: gridColumns,
       contentKey: isSearchActive ? 'search' : activeView,
@@ -151,7 +164,8 @@ export function useHomePage(): UseHomePageReturn {
       sectionHasFooter,
       onFooterActivate: handleFooterActivate,
       activeTabIndex: APP_VIEW_TABS.indexOf(activeView),
-      enabled: !isSearchFocused,
+      enabled: !isSearchFocused && !isSettingsOpen,
+      enterContentTabCount: APP_VIEW_TABS.length,
     });
 
   useEffect(() => {

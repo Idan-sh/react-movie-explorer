@@ -3,25 +3,40 @@
  *
  * Horizontal scrollable row of top-billed cast members with profile photos.
  * Shows director credit above the cast row.
- * Receives pre-formatted director and cast with profile URLs — no data transformation.
+ * Supports keyboard navigation via navId/isFocused on each member card.
  */
 
 import { UserIcon } from '@heroicons/react/24/solid';
 import type { CastMemberDisplay } from '../../types';
+import { buildNavId, NAV_ID_PREFIX } from '@/core/navigation';
 import { ScrollRow } from '@/shared/components';
 
 export interface MovieDetailsCastProps {
   director: string | null;
   cast: CastMemberDisplay[];
+  sectionIndex?: number;
+  focusedIndex?: number;
 }
 
 function CastMemberCard({
   member,
+  navId,
+  isFocused = false,
 }: {
   member: CastMemberDisplay;
+  navId?: string;
+  isFocused?: boolean;
 }): React.JSX.Element {
   return (
-    <div className="flex w-24 shrink-0 flex-col items-center gap-1.5 text-center">
+    <div
+      tabIndex={-1}
+      data-nav-id={navId}
+      className={`
+        flex w-24 shrink-0 flex-col items-center gap-1.5 text-center
+        rounded-lg p-1 outline-none transition-all duration-150
+        ${isFocused ? 'ring-2 ring-primary scale-105' : ''}
+      `}
+    >
       {member.profileUrl ? (
         <img
           src={member.profileUrl}
@@ -47,6 +62,8 @@ function CastMemberCard({
 export function MovieDetailsCast({
   director,
   cast,
+  sectionIndex = 0,
+  focusedIndex = -1,
 }: MovieDetailsCastProps): React.JSX.Element | null {
   if (cast.length === 0) return null;
 
@@ -64,8 +81,13 @@ export function MovieDetailsCast({
       </div>
 
       <ScrollRow>
-        {cast.map((member) => (
-          <CastMemberCard key={member.id} member={member} />
+        {cast.map((member, index) => (
+          <CastMemberCard
+            key={member.id}
+            member={member}
+            navId={buildNavId(NAV_ID_PREFIX.ITEM, sectionIndex, index)}
+            isFocused={index === focusedIndex}
+          />
         ))}
       </ScrollRow>
     </div>

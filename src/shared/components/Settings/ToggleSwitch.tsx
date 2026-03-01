@@ -8,21 +8,29 @@ interface ToggleSwitchProps {
   enabled: boolean;
   onToggle: () => void;
   label: string;
+  isFocused?: boolean;
 }
 
 export function ToggleSwitch({
   enabled,
   onToggle,
   label,
+  isFocused = false,
 }: ToggleSwitchProps): React.JSX.Element {
   return (
-    <label className="flex items-center justify-between gap-3 cursor-pointer">
+    <div
+      role="switch"
+      aria-checked={enabled}
+      aria-label={label}
+      onClick={onToggle}
+      className={`
+        flex items-center justify-between gap-3 cursor-pointer rounded-md px-2 py-1.5
+        transition-colors duration-150
+        ${isFocused ? 'bg-primary/10 dark:bg-primary/15 ring-1 ring-primary' : ''}
+      `}
+    >
       <span className="text-sm text-gray-700 dark:text-gray-300">{label}</span>
-      <button
-        type="button"
-        role="switch"
-        aria-checked={enabled}
-        onClick={onToggle}
+      <span
         className={`
           relative inline-flex h-5 w-9 shrink-0 items-center rounded-full
           transition-colors duration-150
@@ -36,7 +44,7 @@ export function ToggleSwitch({
             ${enabled ? 'translate-x-[20px]' : 'translate-x-[2px]'}
           `}
         />
-      </button>
-    </label>
+      </span>
+    </div>
   );
 }

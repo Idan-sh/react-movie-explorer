@@ -11,11 +11,15 @@ import { HeartIcon as HeartOutline } from '@heroicons/react/24/outline';
 export interface FavoriteToggleButtonProps {
   isFavorited: boolean;
   onClick: (e: React.MouseEvent<HTMLButtonElement>) => void;
+  navId?: string;
+  isFocused?: boolean;
 }
 
 export function FavoriteToggleButton({
   isFavorited,
   onClick,
+  navId,
+  isFocused = false,
 }: FavoriteToggleButtonProps): React.JSX.Element {
   const Icon = isFavorited ? HeartSolid : HeartOutline;
 
@@ -32,15 +36,18 @@ export function FavoriteToggleButton({
 
       <button
         type="button"
+        tabIndex={-1}
+        data-nav-id={navId}
         onClick={onClick}
         className={`
           absolute inset-y-0 right-0 flex items-center gap-1.5 rounded-full px-3 py-1 text-xs sm:gap-2 sm:px-4 sm:py-1.5 sm:text-sm font-medium
-          transition-colors duration-150
+          transition-colors duration-150 outline-none
           ${
             isFavorited
               ? 'bg-red-500 text-white hover:bg-red-600'
               : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-600'
           }
+          ${isFocused ? 'ring-2 ring-primary' : ''}
         `}
       >
         {isFavorited ? 'Favorited' : 'Add to Favorites'}

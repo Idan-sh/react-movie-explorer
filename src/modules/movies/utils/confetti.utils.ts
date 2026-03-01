@@ -10,7 +10,7 @@ const FAVORITE_COLORS = ['#ef4444', '#dc2626', '#f87171', '#fb923c'];
 const UNFAVORITE_COLORS = ['#9ca3af', '#6b7280', '#a1a1aa', '#d4d4d8'];
 
 export function fireFavoriteConfetti(
-  button: HTMLButtonElement,
+  button: HTMLElement,
   isFavoriting: boolean,
 ): void {
   const icon = button.querySelector('svg') ?? button;

@@ -58,26 +58,54 @@ interface NavCallbacks {
 // ── Module-level helpers ──────────────────────────────────────────
 // Defined outside the hook so they are not recreated on every render.
 
+import type { NavConfig } from '../types';
+
 /**
  * Handles Enter key: triggers the appropriate activation callback
- * based on the currently focused element (tab, grid item, or section footer).
+ * and optionally returns a new NavState (e.g., entering content zone from a category tab).
  */
-function activateEnterKey(
+function resolveEnterKey(
   state: NavState,
-  sections: ContentSection[],
+  config: NavConfig,
   callbacks: NavCallbacks,
-): void {
+): NavState | null {
   const { activeZone, tabIndex, sectionIndex, itemIndex } = state;
+
   if (activeZone === NAV_ZONE.TABS) {
     callbacks.onTabActivate(tabIndex);
-    return;
+    if (
+      config.enterContentTabCount !== undefined &&
+      tabIndex < config.enterContentTabCount
+    ) {
+      const firstSection = config.sections[0];
+      if (firstSection && firstSection.itemCount > 0) {
+        return {
+          ...state,
+          activeZone: NAV_ZONE.CONTENT,
+          sectionIndex: 0,
+          itemIndex: 0,
+        };
+      }
+    }
+    return null;
   }
-  const section = sections[sectionIndex];
+
+  const section = config.sections[sectionIndex];
   if (section?.hasFooter && itemIndex === section.itemCount) {
     callbacks.onFooterActivate?.(sectionIndex);
   } else {
     callbacks.onItemActivate(sectionIndex, itemIndex);
   }
+  return null;
+}
+
+function isNavStateEqual(a: NavState, b: NavState): boolean {
+  return (
+    a.activeZone === b.activeZone &&
+    a.tabIndex === b.tabIndex &&
+    a.sectionIndex === b.sectionIndex &&
+    a.itemIndex === b.itemIndex
+  );
 }
 
 /**
@@ -131,6 +159,7 @@ export function useKeyboardNav({
   activeTabIndex,
   enabled = true,
   scrollContainerRef,
+  enterContentTabCount,
 }: UseKeyboardNavOptions): UseKeyboardNavReturn {
   const [state, setState] = useState<NavState>({
     ...INITIAL_STATE,
@@ -147,6 +176,7 @@ export function useKeyboardNav({
     sections,
     activeTabIndex,
     scrollContainerRef,
+    enterContentTabCount,
   });
   const callbacksRef = useRef({
     onTabActivate,
@@ -163,6 +193,7 @@ export function useKeyboardNav({
       sections,
       activeTabIndex,
       scrollContainerRef,
+      enterContentTabCount,
     };
     callbacksRef.current = {
       onTabActivate,
@@ -199,34 +230,45 @@ export function useKeyboardNav({
       if (!isNavKey(key)) return;
       event.preventDefault();
 
-      // Enter → trigger activation callback (no state change)
+      // Enter → trigger activation callback, optionally transition zone
       if (key === NAV_KEY.ENTER) {
-        activateEnterKey(
+        const newState = resolveEnterKey(
           stateRef.current,
-          configRef.current.sections,
+          configRef.current,
           callbacksRef.current,
         );
+        if (newState) setState(newState);
         return;
-      }
-
-      // Scroll mode: in CONTENT zone, Up/Down lerp-scroll the container.
-      const scrollEl = configRef.current.scrollContainerRef?.current;
-      if (scrollEl && stateRef.current.activeZone === NAV_ZONE.CONTENT) {
-        const consumed = handleScrollKey(
-          key,
-          scrollEl,
-          scrollController.current,
-          NAV_SCROLL_STEP,
-        );
-        if (consumed) return;
       }
 
       if (key === NAV_KEY.ESCAPE) {
         callbacksRef.current.onEscape?.();
       }
 
-      // Arrow keys + Escape → pure state transition
-      setState(resolveNavigation(stateRef.current, key, configRef.current));
+      // Compute next state. Navigation always takes priority.
+      const nextState = resolveNavigation(
+        stateRef.current,
+        key,
+        configRef.current,
+      );
+
+      // When nav has nowhere to go, scroll the container instead.
+      const scrollEl = configRef.current.scrollContainerRef?.current;
+      if (
+        scrollEl &&
+        stateRef.current.activeZone === NAV_ZONE.CONTENT &&
+        isNavStateEqual(stateRef.current, nextState)
+      ) {
+        handleScrollKey(
+          key,
+          scrollEl,
+          scrollController.current,
+          NAV_SCROLL_STEP,
+        );
+        return;
+      }
+
+      setState(nextState);
     }
 
     // Sync nav state when user clicks a navigable element

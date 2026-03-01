@@ -52,6 +52,11 @@ export interface UseKeyboardNavOptions {
    * allowing the user to exit back to the tabs zone naturally.
    */
   scrollContainerRef?: React.RefObject<HTMLElement | null>;
+  /**
+   * Tabs with index below this threshold also enter the CONTENT zone on Enter.
+   * Tabs at or above this index only fire onTabActivate (e.g., search, theme, settings).
+   */
+  enterContentTabCount?: number;
 }
 
 /**
@@ -87,4 +92,5 @@ export interface NavConfig {
   sections: ContentSection[];
   /** Index of the currently active (displayed) tab — used by Escape to snap back to it */
   activeTabIndex?: number;
+  enterContentTabCount?: number;
 }

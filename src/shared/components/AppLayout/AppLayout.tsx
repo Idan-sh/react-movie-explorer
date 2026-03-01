@@ -15,8 +15,9 @@
 import { useState, useCallback } from 'react';
 import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { useCategoryTabs } from '@/shared/hooks';
-import { ROUTES, Z_LAYER } from '@/shared/constants';
+import { ROUTES, Z_LAYER, APP_VIEW_TABS } from '@/shared/constants';
 import { SearchBar, useSearch } from '@/modules/search';
+import { buildNavId, NAV_ID_PREFIX } from '@/core/navigation';
 import { AppHeader } from '../AppHeader';
 import { AppFooter } from '../AppFooter';
 import { ScrollToTopButton } from '../ScrollToTopButton';
@@ -29,6 +30,7 @@ import type { LayoutContext } from './layout.types';
 export function AppLayout(): React.JSX.Element {
   const [focusedTabIndex, setFocusedTabIndex] = useState(-1);
   const [isSearchFocused, setIsSearchFocused] = useState(false);
+  const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const { query, handleInputChange, handleClear } = useSearch();
   const { isDark, toggleTheme } = useTheme();
   const { isScrollEnabled, toggleScroll } = useSettings();
@@ -60,13 +62,32 @@ export function AppLayout(): React.JSX.Element {
     setIsSearchFocused(false);
   }, []);
 
+  const handleHeaderActivate = useCallback((tabIndex: number): void => {
+    const navId = buildNavId(NAV_ID_PREFIX.TAB, tabIndex);
+    const el = document.querySelector(`[data-nav-id="${navId}"]`);
+    if (!el || !(el instanceof HTMLElement)) return;
+
+    const input = el.querySelector('input') as HTMLInputElement | null;
+    if (input) {
+      input.focus();
+      return;
+    }
+    el.click();
+  }, []);
+
   const layoutContext: LayoutContext = {
     activeView,
     handleTabClick: handleTabClickWithNav,
     setFocusedTabIndex,
     isSearchFocused,
     scrollRef,
+    onHeaderActivate: handleHeaderActivate,
+    isSettingsOpen,
   };
+
+  const searchTabIndex = APP_VIEW_TABS.length;
+  const themeTabIndex = APP_VIEW_TABS.length + 1;
+  const settingsTabIndex = APP_VIEW_TABS.length + 2;
 
   const searchSlot = (
     <SearchBar
@@ -75,15 +96,25 @@ export function AppLayout(): React.JSX.Element {
       onClear={handleClear}
       onFocus={handleSearchFocus}
       onBlur={handleSearchBlur}
+      navId={buildNavId(NAV_ID_PREFIX.TAB, searchTabIndex)}
+      isFocused={focusedTabIndex === searchTabIndex}
     />
   );
 
   const actionsSlot = (
     <>
-      <ThemeToggle isDark={isDark} onToggle={toggleTheme} />
+      <ThemeToggle
+        isDark={isDark}
+        onToggle={toggleTheme}
+        navId={buildNavId(NAV_ID_PREFIX.TAB, themeTabIndex)}
+        isFocused={focusedTabIndex === themeTabIndex}
+      />
       <SettingsButton
         isScrollEnabled={isScrollEnabled}
         onToggleScroll={toggleScroll}
+        navId={buildNavId(NAV_ID_PREFIX.TAB, settingsTabIndex)}
+        isFocused={focusedTabIndex === settingsTabIndex}
+        onOpenChange={setIsSettingsOpen}
       />
     </>
   );

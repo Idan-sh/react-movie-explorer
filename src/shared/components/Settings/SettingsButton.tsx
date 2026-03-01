@@ -2,8 +2,10 @@
  * SettingsButton Component
  *
  * Gear icon that opens a dropdown popover with app settings.
+ * Purely presentational — all state managed by useDropdown hook.
  */
 
+import { useCallback } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { Cog6ToothIcon } from '@heroicons/react/24/outline';
 import { Z_LAYER } from '@/shared/constants';
@@ -18,22 +20,46 @@ import {
 interface SettingsButtonProps {
   isScrollEnabled: boolean;
   onToggleScroll: () => void;
+  navId?: string;
+  isFocused?: boolean;
+  onOpenChange?: (isOpen: boolean) => void;
 }
 
 export function SettingsButton({
   isScrollEnabled,
   onToggleScroll,
+  navId,
+  isFocused = false,
+  onOpenChange,
 }: SettingsButtonProps): React.JSX.Element {
-  const { isOpen, containerRef, handleToggle } = useDropdown();
+  const handleItemActivate = useCallback(
+    (index: number): void => {
+      if (index === 0) onToggleScroll();
+    },
+    [onToggleScroll],
+  );
+
+  const { isOpen, containerRef, handleToggle, focusedIndex } = useDropdown({
+    itemCount: 1,
+    onItemActivate: handleItemActivate,
+    onOpenChange,
+  });
 
   return (
     <div ref={containerRef} className="relative">
       <button
         type="button"
+        tabIndex={-1}
+        data-nav-id={navId}
         onClick={handleToggle}
         aria-label="Settings"
         aria-expanded={isOpen}
-        className="flex h-9 w-9 items-center justify-center rounded-lg text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 hover:bg-gray-200/50 dark:hover:bg-gray-700/50 transition-colors"
+        className={`
+          flex h-9 w-9 items-center justify-center rounded-lg outline-none
+          text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200
+          hover:bg-gray-200/50 dark:hover:bg-gray-700/50 transition-colors
+          ${isFocused ? 'ring-2 ring-primary' : ''}
+        `}
       >
         <Cog6ToothIcon className="h-5 w-5" />
       </button>
@@ -52,6 +78,7 @@ export function SettingsButton({
               enabled={isScrollEnabled}
               onToggle={onToggleScroll}
               label="Mouse Scroll"
+              isFocused={focusedIndex === 0}
             />
           </motion.div>
         )}

@@ -3,30 +3,42 @@
  *
  * YouTube facade pattern: renders a thumbnail with a play button overlay.
  * On click, swaps in an iframe with autoplay for inline playback.
- * Avoids loading YouTube's heavy JS until the user opts in.
+ * State (isPlaying, onPlay) is owned by the parent for keyboard nav integration.
  */
 
 import { PlayIcon } from '@heroicons/react/24/solid';
 import type { TmdbVideo } from '../../types';
 import { getYoutubeThumbnailUrl } from '../../utils';
-import { useMovieTrailer } from './useMovieTrailer';
 
 interface MovieTrailerProps {
-  videos: TmdbVideo[];
+  trailer: TmdbVideo;
+  isPlaying: boolean;
+  onPlay: () => void;
+  navId?: string;
+  isFocused?: boolean;
 }
 
 function TrailerThumbnail({
   trailer,
   onPlay,
+  navId,
+  isFocused = false,
 }: {
   trailer: TmdbVideo;
   onPlay: () => void;
+  navId?: string;
+  isFocused?: boolean;
 }): React.JSX.Element {
   return (
     <button
       type="button"
+      tabIndex={-1}
+      data-nav-id={navId}
       onClick={onPlay}
-      className="group relative aspect-video w-full overflow-hidden rounded-lg"
+      className={`
+        group relative aspect-video w-full overflow-hidden rounded-lg outline-none
+        ${isFocused ? 'ring-2 ring-primary' : ''}
+      `}
       aria-label={`Play trailer: ${trailer.name}`}
     >
       <img
@@ -59,11 +71,12 @@ function TrailerEmbed({ videoKey }: { videoKey: string }): React.JSX.Element {
 }
 
 export function MovieTrailer({
-  videos,
-}: MovieTrailerProps): React.JSX.Element | null {
-  const { trailer, isPlaying, handlePlay } = useMovieTrailer(videos);
-  if (!trailer) return null;
-
+  trailer,
+  isPlaying,
+  onPlay,
+  navId,
+  isFocused,
+}: MovieTrailerProps): React.JSX.Element {
   return (
     <div className="flex flex-col gap-3">
       <h2 className="text-lg font-semibold text-gray-900 dark:text-white">
@@ -72,7 +85,12 @@ export function MovieTrailer({
       {isPlaying ? (
         <TrailerEmbed videoKey={trailer.key} />
       ) : (
-        <TrailerThumbnail trailer={trailer} onPlay={handlePlay} />
+        <TrailerThumbnail
+          trailer={trailer}
+          onPlay={onPlay}
+          navId={navId}
+          isFocused={isFocused}
+        />
       )}
     </div>
   );
