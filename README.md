@@ -120,3 +120,31 @@ npm run lint       # ESLint
 | **Error resilience** | Error boundary, 404 handling, rate limit feedback, localStorage validation, image fallbacks |
 | **Code quality** | Strict TypeScript, ESLint, clear separation of concerns, no `any` types, explicit return types on hooks |
 | **Developer experience** | Path aliases, barrel exports, co-located files, CLAUDE.md conventions doc |
+
+---
+
+## Demo
+
+### Keyboard Navigation
+Arrow-key navigation through the movie grid, tab switching with auto-focus, and zone transitions.
+<!-- Add video -->
+
+### Movie Grid
+Browse movies with Load More pagination and scroll-to-top.
+<!-- Add video -->
+
+### Search & Movie Details
+Real-time debounced search with full movie details page — backdrop, cast, trailer, and recommendations.
+<!-- Add video -->
+
+### Favorite a Movie
+Add a movie to favorites with a confetti burst.
+<!-- Add video -->
+
+### Unfavorite a Movie
+Remove a movie from favorites.
+<!-- Add video -->
+
+### Theme Toggle
+Switch between dark and light mode.
+<!-- Add video -->
