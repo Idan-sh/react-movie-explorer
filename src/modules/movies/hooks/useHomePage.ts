@@ -207,7 +207,10 @@ export function useHomePage(): UseHomePageReturn {
   }, [focusedTabIndex, setFocusedTabIndex]);
 
   const focusedIndex = focusedSectionIndex === 0 ? focusedItemIndex : -1;
-  focusedIndexRef.current = focusedIndex;
+
+  useEffect(() => {
+    focusedIndexRef.current = focusedIndex;
+  }, [focusedIndex]);
 
   return {
     isSearchActive,
