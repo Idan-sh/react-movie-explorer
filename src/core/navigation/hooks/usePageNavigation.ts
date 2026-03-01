@@ -34,12 +34,14 @@ export interface UsePageNavigationOptions<T> {
   onFooterActivate?: (sectionIndex: number) => void;
   /** Which zone to start in on mount (default: tabs) */
   initialZone?: NavZone;
+  /** Initial content item index when starting in content zone */
+  initialItemIndex?: number;
+  /** Scroll behavior for the initial focus on mount (default: 'smooth') */
+  initialScrollBehavior?: ScrollBehavior;
   /** Index of the currently active (displayed) tab — also used as initial focus on mount */
   activeTabIndex?: number;
   /** Disable all keyboard handling (e.g. when a modal is open) */
   enabled?: boolean;
-  /** When provided, Up/Down in content zone scroll this element instead of navigating */
-  scrollContainerRef?: React.RefObject<HTMLElement | null>;
   /** Tabs below this index also enter content zone on Enter (category tabs) */
   enterContentTabCount?: number;
   /** Per-section column overrides (falls back to `columns` if not provided) */
@@ -61,9 +63,10 @@ export function usePageNavigation<T>({
   sectionHasFooter,
   onFooterActivate,
   initialZone,
+  initialItemIndex,
+  initialScrollBehavior,
   activeTabIndex,
   enabled = true,
-  scrollContainerRef,
   enterContentTabCount,
   sectionColumns,
 }: UsePageNavigationOptions<T>): UseKeyboardNavReturn {
@@ -96,9 +99,10 @@ export function usePageNavigation<T>({
     onEscape,
     onFooterActivate,
     initialZone,
+    initialItemIndex,
+    initialScrollBehavior,
     activeTabIndex,
     enabled,
-    scrollContainerRef,
     enterContentTabCount,
   });
 }

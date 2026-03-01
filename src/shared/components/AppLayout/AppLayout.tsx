@@ -88,10 +88,8 @@ export function AppLayout(): React.JSX.Element {
     activeView,
     handleTabClick: handleTabClickWithNav,
     setFocusedTabIndex,
-    isSearchFocused,
-    scrollRef,
     onHeaderActivate: handleHeaderActivate,
-    isSettingsOpen,
+    isNavDisabled: isSearchFocused || isSettingsOpen,
     enterContentRef,
   };
 

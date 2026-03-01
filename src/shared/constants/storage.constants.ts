@@ -13,4 +13,7 @@ export const STORAGE_KEY = {
   SETTINGS: {
     SCROLL_ENABLED: 'settings:scroll-enabled',
   },
+  NAV: {
+    FOCUSED_INDEX: 'nav:focused-index',
+  },
 } as const;

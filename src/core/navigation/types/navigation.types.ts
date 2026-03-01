@@ -42,16 +42,14 @@ export interface UseKeyboardNavOptions {
   onFooterActivate?: (sectionIndex: number) => void;
   /** Which zone to start in on mount (default: tabs) */
   initialZone?: NavZone;
+  /** Initial content item index when starting in content zone */
+  initialItemIndex?: number;
+  /** Scroll behavior for the initial focus on mount (default: 'smooth') */
+  initialScrollBehavior?: ScrollBehavior;
   /** Index of the currently active (displayed) tab — also used as initial focus on mount */
   activeTabIndex?: number;
   /** Whether keyboard navigation is enabled (default: true) */
   enabled?: boolean;
-  /**
-   * When provided, Up/Down in the CONTENT zone scroll this element instead of
-   * navigating the grid. Up falls through to normal nav once scrollTop reaches 0,
-   * allowing the user to exit back to the tabs zone naturally.
-   */
-  scrollContainerRef?: React.RefObject<HTMLElement | null>;
   /**
    * Tabs with index below this threshold also enter the CONTENT zone on Enter.
    * Tabs at or above this index only fire onTabActivate (e.g., search, theme, settings).

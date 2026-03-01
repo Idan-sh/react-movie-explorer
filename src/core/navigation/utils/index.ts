@@ -6,9 +6,8 @@ export {
   getLastRowTargetIndex,
   resolveNavigation,
   buildNavId,
-  createScrollController,
   getNavIdFromState,
 } from './navigation.utils';
-export type { ScrollController } from './navigation.utils';
 
 export { focusNavElement, resolveClickTarget } from './dom.utils';
+export type { FocusNavOptions } from './dom.utils';

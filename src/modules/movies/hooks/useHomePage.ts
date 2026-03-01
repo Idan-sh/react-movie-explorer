@@ -5,7 +5,7 @@
  * Returns props for the home content so the page component stays thin.
  */
 
-import { useEffect, useMemo, useCallback } from 'react';
+import { useState, useEffect, useMemo, useCallback, useRef } from 'react';
 import { useNavigate, useOutletContext } from 'react-router-dom';
 import type { LayoutContext } from '@/shared/components';
 import {
@@ -13,7 +13,9 @@ import {
   APP_VIEW_TABS,
   HEADER_NAV_COUNT,
   ROUTES,
+  STORAGE_KEY,
 } from '@/shared/constants';
+import { NAV_ZONE } from '@/core/navigation';
 import { useLoadMore } from '@/shared/hooks';
 import { useAppSelector, useAppDispatch } from '@/core/store';
 import {
@@ -54,9 +56,8 @@ export function useHomePage(): UseHomePageReturn {
     activeView,
     handleTabClick,
     setFocusedTabIndex,
-    isSearchFocused,
     onHeaderActivate,
-    isSettingsOpen,
+    isNavDisabled,
     enterContentRef,
   } = useOutletContext<LayoutContext>();
   const { activeList } = useMoviesInit(activeView);
@@ -64,8 +65,21 @@ export function useHomePage(): UseHomePageReturn {
 
   const searchGrid = useSearchGrid(0);
 
+  // Restore focused card position after returning from movie details
+  const [returnIndex] = useState(() => {
+    const stored = sessionStorage.getItem(STORAGE_KEY.NAV.FOCUSED_INDEX);
+    sessionStorage.removeItem(STORAGE_KEY.NAV.FOCUSED_INDEX);
+    return stored !== null ? parseInt(stored, 10) : -1;
+  });
+
+  const focusedIndexRef = useRef(-1);
+
   const handleSelectMovie = useCallback(
     (movie: TmdbMovie): void => {
+      sessionStorage.setItem(
+        STORAGE_KEY.NAV.FOCUSED_INDEX,
+        String(focusedIndexRef.current),
+      );
       navigate(ROUTES.movieDetails(movie.id), { viewTransition: true });
     },
     [navigate],
@@ -154,20 +168,27 @@ export function useHomePage(): UseHomePageReturn {
     [handleTabClick, onHeaderActivate],
   );
 
-  const { focusedTabIndex, focusedSectionIndex, focusedItemIndex, enterContent } =
-    usePageNavigation({
-      tabCount: HEADER_NAV_COUNT,
-      sectionItems,
-      columns: gridColumns,
-      contentKey: isSearchActive ? 'search' : activeView,
-      onTabActivate: handleTabActivate,
-      onItemActivate: handleSelectMovie,
-      sectionHasFooter,
-      onFooterActivate: handleFooterActivate,
-      activeTabIndex: APP_VIEW_TABS.indexOf(activeView),
-      enabled: !isSearchFocused && !isSettingsOpen,
-      enterContentTabCount: APP_VIEW_TABS.length,
-    });
+  const {
+    focusedTabIndex,
+    focusedSectionIndex,
+    focusedItemIndex,
+    enterContent,
+  } = usePageNavigation({
+    tabCount: HEADER_NAV_COUNT,
+    sectionItems,
+    columns: gridColumns,
+    contentKey: isSearchActive ? 'search' : activeView,
+    onTabActivate: handleTabActivate,
+    onItemActivate: handleSelectMovie,
+    sectionHasFooter,
+    onFooterActivate: handleFooterActivate,
+    activeTabIndex: APP_VIEW_TABS.indexOf(activeView),
+    enabled: !isNavDisabled,
+    enterContentTabCount: APP_VIEW_TABS.length,
+    initialZone: returnIndex >= 0 ? NAV_ZONE.CONTENT : undefined,
+    initialItemIndex: returnIndex >= 0 ? returnIndex : undefined,
+    initialScrollBehavior: returnIndex >= 0 ? 'instant' : undefined,
+  });
 
   useEffect(() => {
     enterContentRef.current = enterContent;
@@ -179,6 +200,7 @@ export function useHomePage(): UseHomePageReturn {
   }, [focusedTabIndex, setFocusedTabIndex]);
 
   const focusedIndex = focusedSectionIndex === 0 ? focusedItemIndex : -1;
+  focusedIndexRef.current = focusedIndex;
 
   return {
     isSearchActive,

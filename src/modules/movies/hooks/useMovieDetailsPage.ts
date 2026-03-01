@@ -138,8 +138,7 @@ export function useMovieDetailsPage(): UseMovieDetailsPageReturn {
     handleTabClick,
     setFocusedTabIndex,
     onHeaderActivate,
-    isSettingsOpen,
-    isSearchFocused,
+    isNavDisabled,
     enterContentRef,
   } = useOutletContext<LayoutContext>();
 
@@ -287,7 +286,7 @@ export function useMovieDetailsPage(): UseMovieDetailsPageReturn {
       onEscape: handleBack,
       activeTabIndex: APP_VIEW_TABS.indexOf(activeView),
       enterContentTabCount: APP_VIEW_TABS.length,
-      enabled: !isSearchFocused && !isSettingsOpen,
+      enabled: !isNavDisabled,
     });
 
   useEffect(() => {
