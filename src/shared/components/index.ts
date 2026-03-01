@@ -2,6 +2,7 @@ export { AppHeader } from './AppHeader';
 export { AppFooter } from './AppFooter';
 export { AppLayout } from './AppLayout';
 export type { LayoutContext } from './AppLayout';
+export { RouteErrorFallback } from './ErrorBoundary';
 
 export { FilmPlaceholder } from './FilmPlaceholder';
 export { ImageWithFallback } from './ImageWithFallback';
