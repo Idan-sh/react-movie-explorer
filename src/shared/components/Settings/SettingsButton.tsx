@@ -2,14 +2,14 @@
  * SettingsButton Component
  *
  * Gear icon that opens a dropdown popover with app settings.
- * Click outside or Escape closes the dropdown.
  */
 
-import { useState, useRef, useEffect, useCallback } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { Cog6ToothIcon } from "@heroicons/react/24/outline";
 import { Z_LAYER } from "@/shared/constants";
 import { ToggleSwitch } from "./ToggleSwitch";
+import { useDropdown } from "@/shared/hooks";
+import { DROPDOWN_CLOSED, DROPDOWN_OPEN, DROPDOWN_TRANSITION } from "./settingsDropdown.constants";
 
 interface SettingsButtonProps {
   isScrollEnabled: boolean;
@@ -20,33 +20,7 @@ export function SettingsButton({
   isScrollEnabled,
   onToggleScroll
 }: SettingsButtonProps): React.JSX.Element {
-  const [isOpen, setIsOpen] = useState(false);
-  const containerRef = useRef<HTMLDivElement>(null);
-
-  const handleToggle = useCallback((): void => {
-    setIsOpen((prev) => !prev);
-  }, []);
-
-  useEffect(() => {
-    if (!isOpen) return;
-
-    const handleClickOutside = (e: MouseEvent): void => {
-      if (containerRef.current && !containerRef.current.contains(e.target as Node)) {
-        setIsOpen(false);
-      }
-    };
-
-    const handleEscape = (e: KeyboardEvent): void => {
-      if (e.key === "Escape") setIsOpen(false);
-    };
-
-    document.addEventListener("mousedown", handleClickOutside);
-    document.addEventListener("keydown", handleEscape);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-      document.removeEventListener("keydown", handleEscape);
-    };
-  }, [isOpen]);
+  const { isOpen, containerRef, handleToggle } = useDropdown();
 
   return (
     <div ref={containerRef} className="relative">
@@ -63,10 +37,10 @@ export function SettingsButton({
       <AnimatePresence>
         {isOpen && (
           <motion.div
-            initial={{ opacity: 0, scale: 0.95, y: -4 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.95, y: -4 }}
-            transition={{ duration: 0.15, ease: "easeOut" }}
+            initial={DROPDOWN_CLOSED}
+            animate={DROPDOWN_OPEN}
+            exit={DROPDOWN_CLOSED}
+            transition={DROPDOWN_TRANSITION}
             style={{ zIndex: Z_LAYER.DROPDOWN }}
             className="absolute right-0 top-full mt-2 w-48 origin-top-right rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-3 shadow-lg"
           >
