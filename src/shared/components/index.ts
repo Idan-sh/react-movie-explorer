@@ -6,6 +6,7 @@ export { RouteErrorFallback } from './ErrorBoundary';
 
 export { FilmPlaceholder } from './FilmPlaceholder';
 export { ImageWithFallback } from './ImageWithFallback';
+export { PageSpinner } from './PageSpinner';
 export { ScrollRow } from './ScrollRow';
 
 export { CategoryTabs } from './CategoryTabs';

@@ -26,8 +26,8 @@ export interface UsePageNavigationOptions<T> {
   onTabActivate: (tabIndex: number) => void;
   /** Called when a content item is activated via Enter (receives the item) */
   onItemActivate: (item: T) => void;
-  /** Called when Escape is pressed */
-  onEscape: () => void;
+  /** Called when Escape is pressed (no-op if omitted) */
+  onEscape?: () => void;
   /** Whether each section has a footer element (e.g., Load More button) */
   sectionHasFooter?: boolean[];
   /** Called when Enter is pressed on a section footer */

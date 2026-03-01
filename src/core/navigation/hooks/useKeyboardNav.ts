@@ -51,7 +51,7 @@ const INITIAL_STATE: NavState = {
 interface NavCallbacks {
   onTabActivate: (tabIndex: number) => void;
   onItemActivate: (sectionIndex: number, itemIndex: number) => void;
-  onEscape: () => void;
+  onEscape?: () => void;
   onFooterActivate?: (sectionIndex: number) => void;
 }
 
@@ -221,9 +221,8 @@ export function useKeyboardNav({
         if (consumed) return;
       }
 
-      // Escape → trigger callback before state reset
       if (key === NAV_KEY.ESCAPE) {
-        callbacksRef.current.onEscape();
+        callbacksRef.current.onEscape?.();
       }
 
       // Arrow keys + Escape → pure state transition

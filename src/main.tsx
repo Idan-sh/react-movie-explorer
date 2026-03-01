@@ -15,7 +15,7 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import { store } from '@/core/store';
 import { ROUTES } from '@/shared/constants';
-import { AppLayout, RouteErrorFallback } from '@/shared/components';
+import { AppLayout, PageSpinner, RouteErrorFallback } from '@/shared/components';
 import './index.css';
 
 const HomePage = lazy(() => import('./pages/HomePage'));
@@ -29,7 +29,7 @@ const router = createBrowserRouter([
       {
         path: ROUTES.HOME,
         element: (
-          <Suspense fallback={null}>
+          <Suspense fallback={<PageSpinner />}>
             <HomePage />
           </Suspense>
         ),
@@ -37,7 +37,7 @@ const router = createBrowserRouter([
       {
         path: ROUTES.MOVIE_DETAILS,
         element: (
-          <Suspense fallback={null}>
+          <Suspense fallback={<PageSpinner />}>
             <MovieDetailsPage />
           </Suspense>
         ),

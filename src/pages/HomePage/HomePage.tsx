@@ -9,7 +9,7 @@
 import { AnimatePresence, motion } from 'framer-motion';
 import { MovieGrid, MovieGridLayout, useHomePage } from '@/modules/movies';
 import { FavoritesGrid } from '@/modules/favorites';
-import { APP_VIEW } from '@/shared/constants';
+import { APP_VIEW, APP_VIEW_CONFIG, VIEW_CROSSFADE } from '@/shared/constants';
 
 export function HomePage(): React.JSX.Element {
   const {
@@ -23,8 +23,6 @@ export function HomePage(): React.JSX.Element {
     activeList,
     favorites,
     focusedIndex,
-    VIEW_CROSSFADE,
-    APP_VIEW_CONFIG,
   } = useHomePage();
 
   const searchEmptyNode = (

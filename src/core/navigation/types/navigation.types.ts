@@ -36,8 +36,8 @@ export interface UseKeyboardNavOptions {
   onTabActivate: (tabIndex: number) => void;
   /** Called when Enter is pressed on a content item */
   onItemActivate: (sectionIndex: number, itemIndex: number) => void;
-  /** Called when Escape is pressed */
-  onEscape: () => void;
+  /** Called when Escape is pressed (no-op if omitted) */
+  onEscape?: () => void;
   /** Called when Enter is pressed on a section footer (e.g., Load More button) */
   onFooterActivate?: (sectionIndex: number) => void;
   /** Which zone to start in on mount (default: tabs) */

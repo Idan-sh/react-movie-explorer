@@ -97,14 +97,24 @@ export function useMovieDetailsPage() {
 
   const sectionItems = useMemo(() => [['back']], []);
 
+  const handleTabActivate = useCallback(
+    (index: number): void => { handleTabClick(APP_VIEW_TABS[index]); },
+    [handleTabClick]
+  );
+
+  const handleItemActivate = useCallback(
+    (): void => { handleBack(); },
+    [handleBack]
+  );
+
   const { focusedTabIndex, focusedSectionIndex, focusedItemIndex } =
     usePageNavigation<string>({
       tabCount: APP_VIEW_TABS.length,
       sectionItems,
       columns: 1,
       contentKey: 'details',
-      onTabActivate: (index) => handleTabClick(APP_VIEW_TABS[index]),
-      onItemActivate: () => handleBack(),
+      onTabActivate: handleTabActivate,
+      onItemActivate: handleItemActivate,
       onEscape: handleBack,
       activeTabIndex: APP_VIEW_TABS.indexOf(activeView),
       scrollContainerRef: scrollRef,

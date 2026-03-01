@@ -65,7 +65,7 @@ function getErrorMessage(error: AxiosError): string {
     case 401:
       return 'Invalid API key.';
     case 404:
-      return 'Resource not found.';
+      return 'Page not found.';
     case 429:
       return 'Too many requests. Please wait a moment.';
     case 500:

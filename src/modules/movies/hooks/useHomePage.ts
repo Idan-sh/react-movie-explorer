@@ -10,9 +10,7 @@ import { useNavigate, useOutletContext } from 'react-router-dom';
 import type { LayoutContext } from '@/shared/components';
 import {
   APP_VIEW,
-  APP_VIEW_CONFIG,
   APP_VIEW_TABS,
-  VIEW_CROSSFADE,
   ROUTES,
 } from '@/shared/constants';
 import { useLoadMore } from '@/shared/hooks';
@@ -124,15 +122,19 @@ export function useHomePage() {
 
   const gridColumns = useGridColumns();
 
+  const handleTabActivate = useCallback(
+    (index: number): void => { handleTabClick(APP_VIEW_TABS[index]); },
+    [handleTabClick]
+  );
+
   const { focusedTabIndex, focusedSectionIndex, focusedItemIndex } =
     usePageNavigation({
       tabCount: APP_VIEW_TABS.length,
       sectionItems,
       columns: gridColumns,
       contentKey: isSearchActive ? 'search' : activeView,
-      onTabActivate: (index) => handleTabClick(APP_VIEW_TABS[index]),
+      onTabActivate: handleTabActivate,
       onItemActivate: handleSelectMovie,
-      onEscape: () => {},
       sectionHasFooter,
       onFooterActivate: handleFooterActivate,
       activeTabIndex: APP_VIEW_TABS.indexOf(activeView),
@@ -157,8 +159,5 @@ export function useHomePage() {
     activeList,
     favorites,
     focusedIndex,
-    VIEW_CROSSFADE,
-    APP_VIEW,
-    APP_VIEW_CONFIG,
   };
 }
