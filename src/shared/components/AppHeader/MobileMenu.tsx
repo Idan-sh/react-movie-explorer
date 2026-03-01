@@ -9,9 +9,9 @@
 
 import { AnimatePresence, motion } from "framer-motion";
 import type { AppView } from "@/shared/types";
-import { APP_VIEW_TABS, APP_VIEW_CONFIG, Z_LAYER } from "@/shared/constants";
-import { buildNavId, NAV_ID_PREFIX } from "@/core/navigation";
+import { APP_VIEW_TABS, Z_LAYER } from "@/shared/constants";
 import { MENU_CLOSED, MENU_OPEN, MENU_TRANSITION } from "./mobileMenu.constants";
+import { MobileMenuItem } from "./MobileMenuItem";
 
 export interface MobileMenuProps {
   isOpen: boolean;
@@ -45,27 +45,14 @@ export function MobileMenu({
         >
           <div className="mx-auto flex max-w-7xl flex-col gap-1 px-4 py-2">
             {APP_VIEW_TABS.map((view, index) => (
-              <button
+              <MobileMenuItem
                 key={view}
-                type="button"
-                tabIndex={-1}
-                data-nav-id={buildNavId(NAV_ID_PREFIX.TAB, index)}
-                onClick={() => onTabClick(view)}
-                className={`
-                    w-full text-left rounded-lg px-4 py-3
-                    text-sm font-medium
-                    transition-colors duration-200
-                    outline-none
-                    ${index === focusedMenuIndex ? "ring-2 ring-primary rounded-lg" : ""}
-                    ${
-                      activeView === view
-                        ? "bg-primary/10 text-primary dark:bg-primary/20 dark:text-primary-light"
-                        : "text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800/60"
-                    }
-                  `}
-              >
-                {APP_VIEW_CONFIG[view].label}
-              </button>
+                view={view}
+                index={index}
+                isActive={activeView === view}
+                isFocused={index === focusedMenuIndex}
+                onTabClick={onTabClick}
+              />
             ))}
           </div>
         </motion.nav>
