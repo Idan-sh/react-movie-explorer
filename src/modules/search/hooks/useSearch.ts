@@ -12,7 +12,7 @@ import { setSearchQuery, clearSearch, selectSearchQuery } from '../store';
 
 export interface UseSearchReturn {
   query: string;
-  handleChange: (value: string) => void;
+  handleInputChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   handleClear: () => void;
 }
 
@@ -20,7 +20,8 @@ export function useSearch(): UseSearchReturn {
   const dispatch = useAppDispatch();
   const query = useAppSelector(selectSearchQuery);
 
-  const handleChange = useCallback((value: string): void => {
+  const handleInputChange = useCallback((e: React.ChangeEvent<HTMLInputElement>): void => {
+    const value = e.target.value;
     if (value === '') {
       dispatch(clearSearch());
     } else {
@@ -32,5 +33,5 @@ export function useSearch(): UseSearchReturn {
     dispatch(clearSearch());
   }, [dispatch]);
 
-  return { query, handleChange, handleClear };
+  return { query, handleInputChange, handleClear };
 }

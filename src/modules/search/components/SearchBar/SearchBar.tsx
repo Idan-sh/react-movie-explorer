@@ -3,24 +3,20 @@
  *
  * Search input for the app header.
  * Expands on focus via CSS transition.
- * Receives onFocus/onBlur from the layout to pause keyboard nav while typing.
+ * Purely presentational — all state and handlers received via props.
  */
 
 import { MagnifyingGlassIcon, XMarkIcon } from "@heroicons/react/24/outline";
-import { useSearch } from "../../hooks";
 
 export interface SearchBarProps {
+  query: string;
+  onInputChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onClear: () => void;
   onFocus?: () => void;
   onBlur?: () => void;
 }
 
-export function SearchBar({ onFocus, onBlur }: SearchBarProps): React.JSX.Element {
-  const { query, handleChange, handleClear } = useSearch();
-
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
-    handleChange(e.target.value);
-  };
-
+export function SearchBar({ query, onInputChange, onClear, onFocus, onBlur }: SearchBarProps): React.JSX.Element {
   return (
     <div className="relative flex items-center">
       <MagnifyingGlassIcon
@@ -31,7 +27,7 @@ export function SearchBar({ onFocus, onBlur }: SearchBarProps): React.JSX.Elemen
       <input
         type="search"
         value={query}
-        onChange={handleInputChange}
+        onChange={onInputChange}
         onFocus={onFocus}
         onBlur={onBlur}
         placeholder="Search movies..."
@@ -51,7 +47,7 @@ export function SearchBar({ onFocus, onBlur }: SearchBarProps): React.JSX.Elemen
       {query && (
         <button
           type="button"
-          onClick={handleClear}
+          onClick={onClear}
           aria-label="Clear search"
           className="absolute right-2.5 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
         >

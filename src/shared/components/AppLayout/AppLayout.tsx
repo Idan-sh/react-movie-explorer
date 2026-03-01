@@ -16,7 +16,7 @@ import { useState, useCallback } from "react";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import { useCategoryTabs } from "@/shared/hooks";
 import { ROUTES, Z_LAYER } from "@/shared/constants";
-import { SearchBar } from "@/modules/search";
+import { SearchBar, useSearch } from "@/modules/search";
 import { AppHeader } from "../AppHeader";
 import { AppFooter } from "../AppFooter";
 import { ScrollToTopButton } from "../ScrollToTopButton";
@@ -30,6 +30,7 @@ export function AppLayout(): React.JSX.Element {
   const { activeView, handleTabClick, handleTabFocus, handleTabBlur } = useCategoryTabs();
   const [focusedTabIndex, setFocusedTabIndex] = useState(-1);
   const [isSearchFocused, setIsSearchFocused] = useState(false);
+  const { query, handleInputChange, handleClear } = useSearch();
   const { isDark, toggleTheme } = useTheme();
   const { isScrollEnabled, toggleScroll } = useSettings();
   const { scrollRef, isVisible: isScrollTopVisible, scrollToTop } = useScrollToTop();
@@ -62,7 +63,15 @@ export function AppLayout(): React.JSX.Element {
     scrollRef
   };
 
-  const searchSlot = <SearchBar onFocus={handleSearchFocus} onBlur={handleSearchBlur} />;
+  const searchSlot = (
+    <SearchBar
+      query={query}
+      onInputChange={handleInputChange}
+      onClear={handleClear}
+      onFocus={handleSearchFocus}
+      onBlur={handleSearchBlur}
+    />
+  );
 
   const actionsSlot = (
     <>
