@@ -10,7 +10,7 @@
 
 import type { TmdbMovie, MovieGridState } from '../../types';
 import { buildNavId, NAV_ID_PREFIX } from '@/core/navigation';
-import { MovieCard } from '../MovieCard';
+import { MovieCard } from '../MovieCard/MovieCard';
 import { MovieGridSkeleton } from './MovieGridSkeleton';
 import { MovieGridEmpty } from './MovieGridEmpty';
 import { MovieGridError } from './MovieGridError';

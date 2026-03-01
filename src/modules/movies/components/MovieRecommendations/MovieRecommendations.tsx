@@ -6,7 +6,7 @@
  */
 
 import type { TmdbMovie } from '../../types';
-import { MovieCard } from '../MovieCard';
+import { MovieCard } from '../MovieCard/MovieCard';
 import { ScrollRow } from '@/shared/components';
 import { buildNavId, NAV_ID_PREFIX } from '@/core/navigation';
 import { useMovieRecommendations } from './useMovieRecommendations';

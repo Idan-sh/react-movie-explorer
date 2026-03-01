@@ -12,7 +12,7 @@
 
 import { AnimatePresence, motion } from 'framer-motion';
 import type { TmdbMovie } from '@/modules/movies';
-import { MovieCard } from '@/modules/movies';
+import { MovieCard } from '@/modules/movies/components/MovieCard/MovieCard';
 import { buildNavId, NAV_ID_PREFIX } from '@/core/navigation';
 import { FavoritesEmpty } from './FavoritesEmpty';
 
