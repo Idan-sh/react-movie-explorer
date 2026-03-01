@@ -21,47 +21,31 @@ import { env } from '../config';
 // Create axios instance with TMDB base config
 export const tmdbClient = axios.create({
   baseURL: env.tmdb.baseUrl,
-  timeout: 10_000, // 10 seconds timeout
+  timeout: 10_000,
   headers: {
-    'Content-Type': 'application/json',
+    Authorization: `Bearer ${env.tmdb.apiReadAccessToken}`,
   },
 });
 
-/**
- * Request interceptor
- * - Adds API key to every request
- * - Logs requests in development
- */
-tmdbClient.interceptors.request.use(
-  (config: InternalAxiosRequestConfig) => {
-    config.params = {
-      ...config.params,
-      api_key: env.tmdb.apiKey,
-    };
-
-    if (env.isDev) {
-      console.log(`[API] ${config.method?.toUpperCase()} ${config.url}`);
-    }
-
-    return config;
+tmdbClient.interceptors.request.use((config: InternalAxiosRequestConfig) => {
+  if (env.isDev) {
+    console.log(`[API] ${config.method?.toUpperCase()} ${config.url}`);
   }
-);
+  return config;
+});
 
 /**
  * Response interceptor
  * - On success: returns the full response (call sites use response.data).
  * - On error: rejects with an Error so sagas can use error.message for user-facing text.
  */
-tmdbClient.interceptors.response.use(
-  undefined,
-  (error: AxiosError) => {
-    if (env.isDev) {
-      console.error('[API Error]', error.message);
-    }
-    const message = getErrorMessage(error);
-    return Promise.reject(new Error(message));
+tmdbClient.interceptors.response.use(undefined, (error: AxiosError) => {
+  if (env.isDev) {
+    console.error('[API Error]', error.message);
   }
-);
+  const message = getErrorMessage(error);
+  return Promise.reject(new Error(message));
+});
 
 /**
  * Extract user-friendly error message

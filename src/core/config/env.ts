@@ -10,7 +10,11 @@
  */
 
 // Validate required env vars exist at startup
-const requiredVars = ['VITE_TMDB_API_KEY', 'VITE_TMDB_BASE_URL'] as const;
+const requiredVars = [
+  'VITE_TMDB_API_KEY',
+  'VITE_TMDB_API_READ_ACCESS_TOKEN',
+  'VITE_TMDB_BASE_URL',
+] as const;
 
 for (const key of requiredVars) {
   if (!import.meta.env[key]) {
@@ -25,6 +29,7 @@ for (const key of requiredVars) {
 export const env = {
   tmdb: {
     apiKey: import.meta.env.VITE_TMDB_API_KEY,
+    apiReadAccessToken: import.meta.env.VITE_TMDB_API_READ_ACCESS_TOKEN,
     baseUrl: import.meta.env.VITE_TMDB_BASE_URL,
   },
   isDev: import.meta.env.DEV,
