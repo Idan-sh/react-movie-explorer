@@ -7,6 +7,8 @@
  * STATES: Loading → skeleton; Error → message + back; Success → full details layout.
  */
 
+import { useCallback } from 'react';
+import { useNavigate } from 'react-router-dom';
 import {
   useMovieDetailsPage,
   getBackdropUrl,
@@ -23,7 +25,8 @@ import {
   FavoriteToggleButton,
 } from '@/modules/movies';
 import { buildNavId, NAV_ID_PREFIX } from '@/core/navigation';
-import { BackButton } from '@/shared/components/BackButton';
+import { BackButton, NotFoundView } from '@/shared/components';
+import { ROUTES } from '@/shared/constants';
 
 export function MovieDetailsPage(): React.JSX.Element {
   const {
@@ -37,14 +40,20 @@ export function MovieDetailsPage(): React.JSX.Element {
     focusedItemIndex = -1,
   } = useMovieDetailsPage();
 
+  const navigate = useNavigate();
+  const handleGoHome = useCallback((): void => {
+    navigate(ROUTES.HOME, { viewTransition: true });
+  }, [navigate]);
+
   if (error) {
     return (
-      <div className="mx-auto max-w-3xl px-4 pt-6 pb-16">
-        <div className="flex flex-col items-center gap-4 py-16 text-center">
-          <p className="text-gray-500 dark:text-gray-400">{error}</p>
-          <BackButton onClick={onBack} />
-        </div>
-      </div>
+      <NotFoundView
+        title="Movie not found"
+        message={error}
+        ctaLabel="Go to Home"
+        onCta={handleGoHome}
+        onGoBack={onBack}
+      />
     );
   }
 
