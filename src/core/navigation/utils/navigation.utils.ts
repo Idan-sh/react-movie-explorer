@@ -5,8 +5,8 @@
  * DOM-touching helpers live in dom.utils.ts.
  */
 
-import { NAV_KEY, NAV_ZONE, NAV_ID_PREFIX } from "../constants";
-import type { ContentSection, NavState, NavConfig } from "../types";
+import { NAV_KEY, NAV_ZONE, NAV_ID_PREFIX } from '../constants';
+import type { ContentSection, NavState, NavConfig } from '../types';
 
 /**
  * Set of all navigation key values for fast lookup.
@@ -24,7 +24,11 @@ export function isNavKey(key: string): boolean {
  * Calculates the next tab index for horizontal navigation.
  * Wraps around at both ends (left from first → last, right from last → first).
  */
-export function getNextTabIndex(current: number, key: string, total: number): number {
+export function getNextTabIndex(
+  current: number,
+  key: string,
+  total: number,
+): number {
   if (key === NAV_KEY.ARROW_RIGHT) return (current + 1) % total;
   if (key === NAV_KEY.ARROW_LEFT) return (current - 1 + total) % total;
   return current;
@@ -42,7 +46,11 @@ export function getNextTabIndex(current: number, key: string, total: number): nu
  * - -1: navigation should exit the section UPWARD
  * - Infinity: navigation should exit the section DOWNWARD
  */
-export function getNextGridIndex(current: number, key: string, section: ContentSection): number {
+export function getNextGridIndex(
+  current: number,
+  key: string,
+  section: ContentSection,
+): number {
   const { itemCount, columns } = section;
   const row = Math.floor(current / columns);
   const col = current % columns;
@@ -77,7 +85,7 @@ export function getNextGridIndex(current: number, key: string, section: ContentS
  * @example buildNavId('nav-item', 0, 3) → 'nav-item-0-3'
  */
 export function buildNavId(prefix: string, ...indices: number[]): string {
-  return `${prefix}-${indices.join("-")}`;
+  return `${prefix}-${indices.join('-')}`;
 }
 
 // ── Section transition helpers ─────────────────────────────────
@@ -87,7 +95,10 @@ export function buildNavId(prefix: string, ...indices: number[]): string {
  * land on the same column in the first row.
  * Clamps to last item if the section is shorter than the column.
  */
-export function getFirstRowTargetIndex(currentCol: number, targetSection: ContentSection): number {
+export function getFirstRowTargetIndex(
+  currentCol: number,
+  targetSection: ContentSection,
+): number {
   return Math.min(currentCol, targetSection.itemCount - 1);
 }
 
@@ -96,7 +107,10 @@ export function getFirstRowTargetIndex(currentCol: number, targetSection: Conten
  * land on the same column in the last row.
  * Clamps to last item if the last row is shorter than the column.
  */
-export function getLastRowTargetIndex(currentCol: number, targetSection: ContentSection): number {
+export function getLastRowTargetIndex(
+  currentCol: number,
+  targetSection: ContentSection,
+): number {
   const { itemCount, columns } = targetSection;
   const lastRowStart = Math.floor((itemCount - 1) / columns) * columns;
   return Math.min(lastRowStart + currentCol, itemCount - 1);
@@ -111,7 +125,11 @@ export function getLastRowTargetIndex(currentCol: number, targetSection: Content
  * Up → last grid item. Down → next section or no-op.
  * Left/Right → no-op (footer is a single element).
  */
-function resolveFooterNavigation(state: NavState, key: string, config: NavConfig): NavState {
+function resolveFooterNavigation(
+  state: NavState,
+  key: string,
+  config: NavConfig,
+): NavState {
   const section = config.sections[state.sectionIndex];
 
   if (key === NAV_KEY.ARROW_UP) {
@@ -119,9 +137,16 @@ function resolveFooterNavigation(state: NavState, key: string, config: NavConfig
     return { ...state, itemIndex: section.itemCount - 1 };
   }
 
-  if (key === NAV_KEY.ARROW_DOWN && state.sectionIndex < config.sections.length - 1) {
+  if (
+    key === NAV_KEY.ARROW_DOWN &&
+    state.sectionIndex < config.sections.length - 1
+  ) {
     const nextSection = config.sections[state.sectionIndex + 1];
-    return { ...state, sectionIndex: state.sectionIndex + 1, itemIndex: getFirstRowTargetIndex(0, nextSection) };
+    return {
+      ...state,
+      sectionIndex: state.sectionIndex + 1,
+      itemIndex: getFirstRowTargetIndex(0, nextSection),
+    };
   }
 
   return state;
@@ -172,7 +197,7 @@ export function createScrollController(): ScrollController {
         cancelAnimationFrame(rafId);
         rafId = null;
       }
-    }
+    },
   };
 }
 
@@ -194,15 +219,27 @@ export function getNavIdFromState(state: NavState): string {
  * Resolves tabs-zone navigation.
  * Left/Right wraps between tabs. Down enters content zone.
  */
-function resolveTabsNavigation(state: NavState, key: string, config: NavConfig): NavState {
+function resolveTabsNavigation(
+  state: NavState,
+  key: string,
+  config: NavConfig,
+): NavState {
   if (key === NAV_KEY.ARROW_LEFT || key === NAV_KEY.ARROW_RIGHT) {
-    return { ...state, tabIndex: getNextTabIndex(state.tabIndex, key, config.tabCount) };
+    return {
+      ...state,
+      tabIndex: getNextTabIndex(state.tabIndex, key, config.tabCount),
+    };
   }
 
   if (key === NAV_KEY.ARROW_DOWN) {
     const firstSection = config.sections[0];
     if (firstSection && firstSection.itemCount > 0) {
-      return { ...state, activeZone: NAV_ZONE.CONTENT, sectionIndex: 0, itemIndex: 0 };
+      return {
+        ...state,
+        activeZone: NAV_ZONE.CONTENT,
+        sectionIndex: 0,
+        itemIndex: 0,
+      };
     }
   }
 
@@ -215,7 +252,11 @@ function resolveTabsNavigation(state: NavState, key: string, config: NavConfig):
  * Moves within the grid, transitions between sections,
  * or exits to tabs zone when navigating above the first section.
  */
-function resolveContentNavigation(state: NavState, key: string, config: NavConfig): NavState {
+function resolveContentNavigation(
+  state: NavState,
+  key: string,
+  config: NavConfig,
+): NavState {
   const section = config.sections[state.sectionIndex];
   if (!section) return state;
 
@@ -238,12 +279,16 @@ function resolveContentNavigation(state: NavState, key: string, config: NavConfi
       const prevSection = config.sections[state.sectionIndex - 1];
       // Land on previous section's footer if it has one
       if (prevSection.hasFooter) {
-        return { ...state, sectionIndex: state.sectionIndex - 1, itemIndex: prevSection.itemCount };
+        return {
+          ...state,
+          sectionIndex: state.sectionIndex - 1,
+          itemIndex: prevSection.itemCount,
+        };
       }
       return {
         ...state,
         sectionIndex: state.sectionIndex - 1,
-        itemIndex: getLastRowTargetIndex(col, prevSection)
+        itemIndex: getLastRowTargetIndex(col, prevSection),
       };
     }
     return { ...state, activeZone: NAV_ZONE.TABS };
@@ -259,7 +304,7 @@ function resolveContentNavigation(state: NavState, key: string, config: NavConfi
     return {
       ...state,
       sectionIndex: state.sectionIndex + 1,
-      itemIndex: getFirstRowTargetIndex(col, nextSection)
+      itemIndex: getFirstRowTargetIndex(col, nextSection),
     };
   }
 
@@ -274,10 +319,20 @@ function resolveContentNavigation(state: NavState, key: string, config: NavConfi
  * Handles: Escape (snap back to active tab), arrow keys in both zones.
  * Does NOT handle: Enter (side effect), Tab (preventDefault only).
  */
-export function resolveNavigation(state: NavState, key: string, config: NavConfig): NavState {
+export function resolveNavigation(
+  state: NavState,
+  key: string,
+  config: NavConfig,
+): NavState {
   if (key === NAV_KEY.ESCAPE) {
     const tabIndex = config.activeTabIndex ?? state.tabIndex;
-    return { ...state, activeZone: NAV_ZONE.TABS, tabIndex, sectionIndex: 0, itemIndex: 0 };
+    return {
+      ...state,
+      activeZone: NAV_ZONE.TABS,
+      tabIndex,
+      sectionIndex: 0,
+      itemIndex: 0,
+    };
   }
 
   if (state.activeZone === NAV_ZONE.TABS) {

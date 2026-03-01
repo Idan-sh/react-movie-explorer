@@ -49,15 +49,20 @@ function* fetchPageFromApi(list: MovieList, pageNumber: number): Generator {
 /**
  * Fetches movies from TMDB API — triggered by component dispatch
  */
-function* fetchMoviesSaga(action: PayloadAction<FetchMoviesPayload>): Generator {
+function* fetchMoviesSaga(
+  action: PayloadAction<FetchMoviesPayload>,
+): Generator {
   try {
     const { list, pageNumber } = action.payload;
     const page = yield* fetchPageFromApi(list, pageNumber);
 
     yield put(fetchMoviesSuccess({ list, page: page as MoviesPage }));
   } catch (error) {
-    const message = error instanceof Error ? error.message : 'Failed to fetch movies';
-    yield put(fetchMoviesFailure({ list: action.payload.list, error: message }));
+    const message =
+      error instanceof Error ? error.message : 'Failed to fetch movies';
+    yield put(
+      fetchMoviesFailure({ list: action.payload.list, error: message }),
+    );
   }
 }
 
@@ -68,10 +73,14 @@ function* fetchMoviesSaga(action: PayloadAction<FetchMoviesPayload>): Generator 
 function* prefetchNextPageSaga(list: MovieList): Generator {
   try {
     const selectors = getListSelectors(list);
-    const hasMorePages = (yield select(selectors.selectHasMorePages)) as boolean;
+    const hasMorePages = (yield select(
+      selectors.selectHasMorePages,
+    )) as boolean;
     if (!hasMorePages) return;
 
-    const currentPageNumber = (yield select(selectors.selectPageNumber)) as number;
+    const currentPageNumber = (yield select(
+      selectors.selectPageNumber,
+    )) as number;
     const page = yield* fetchPageFromApi(list, currentPageNumber + 1);
 
     yield put(prefetchSuccess({ list, page: page as MoviesPage }));
@@ -83,14 +92,18 @@ function* prefetchNextPageSaga(list: MovieList): Generator {
 /**
  * After successful fetch → prefetch next page
  */
-function* onFetchSuccessSaga(action: PayloadAction<FetchMoviesSuccessPayload>): Generator {
+function* onFetchSuccessSaga(
+  action: PayloadAction<FetchMoviesSuccessPayload>,
+): Generator {
   yield* prefetchNextPageSaga(action.payload.list);
 }
 
 /**
  * After showNextPage → prefetch the next-next page
  */
-function* onShowNextPageSaga(action: PayloadAction<ShowNextPagePayload>): Generator {
+function* onShowNextPageSaga(
+  action: PayloadAction<ShowNextPagePayload>,
+): Generator {
   yield* prefetchNextPageSaga(action.payload.list);
 }
 

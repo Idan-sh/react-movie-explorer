@@ -6,7 +6,7 @@
  * or the image fails to load.
  */
 
-import { FilmPlaceholder, ImageWithFallback } from "@/shared/components";
+import { FilmPlaceholder, ImageWithFallback } from '@/shared/components';
 
 interface MovieDetailsBackdropProps {
   url: string | null;
@@ -22,7 +22,9 @@ function BackdropPlaceholder(): React.JSX.Element {
 
 const backdropFallback = <BackdropPlaceholder />;
 
-export function MovieDetailsBackdrop({ url }: MovieDetailsBackdropProps): React.JSX.Element {
+export function MovieDetailsBackdrop({
+  url,
+}: MovieDetailsBackdropProps): React.JSX.Element {
   return (
     <div className="relative mb-6 h-48 sm:h-64 overflow-hidden rounded-lg">
       <ImageWithFallback

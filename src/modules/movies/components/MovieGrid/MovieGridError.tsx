@@ -8,7 +8,9 @@ export interface MovieGridErrorProps {
   message: string | null;
 }
 
-export function MovieGridError({ message }: MovieGridErrorProps): React.JSX.Element {
+export function MovieGridError({
+  message,
+}: MovieGridErrorProps): React.JSX.Element {
   return (
     <div className="col-span-full flex flex-col items-center justify-center py-16 text-error">
       <span className="text-4xl mb-4">⚠️</span>

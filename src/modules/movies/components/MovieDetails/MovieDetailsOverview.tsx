@@ -10,7 +10,9 @@ interface MovieDetailsOverviewProps {
   details: TmdbMovieDetails;
 }
 
-export function MovieDetailsOverview({ details }: MovieDetailsOverviewProps): React.JSX.Element | null {
+export function MovieDetailsOverview({
+  details,
+}: MovieDetailsOverviewProps): React.JSX.Element | null {
   if (!details.overview && !details.tagline) return null;
 
   return (

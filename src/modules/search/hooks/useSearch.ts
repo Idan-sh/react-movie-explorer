@@ -20,14 +20,17 @@ export function useSearch(): UseSearchReturn {
   const dispatch = useAppDispatch();
   const query = useAppSelector(selectSearchQuery);
 
-  const handleInputChange = useCallback((e: React.ChangeEvent<HTMLInputElement>): void => {
-    const value = e.target.value;
-    if (value === '') {
-      dispatch(clearSearch());
-    } else {
-      dispatch(setSearchQuery(value));
-    }
-  }, [dispatch]);
+  const handleInputChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>): void => {
+      const value = e.target.value;
+      if (value === '') {
+        dispatch(clearSearch());
+      } else {
+        dispatch(setSearchQuery(value));
+      }
+    },
+    [dispatch],
+  );
 
   const handleClear = useCallback((): void => {
     dispatch(clearSearch());

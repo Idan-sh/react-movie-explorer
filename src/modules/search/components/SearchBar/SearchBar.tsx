@@ -6,7 +6,7 @@
  * Purely presentational — all state and handlers received via props.
  */
 
-import { MagnifyingGlassIcon, XMarkIcon } from "@heroicons/react/24/outline";
+import { MagnifyingGlassIcon, XMarkIcon } from '@heroicons/react/24/outline';
 
 export interface SearchBarProps {
   query: string;
@@ -16,7 +16,13 @@ export interface SearchBarProps {
   onBlur?: () => void;
 }
 
-export function SearchBar({ query, onInputChange, onClear, onFocus, onBlur }: SearchBarProps): React.JSX.Element {
+export function SearchBar({
+  query,
+  onInputChange,
+  onClear,
+  onFocus,
+  onBlur,
+}: SearchBarProps): React.JSX.Element {
   return (
     <div className="relative flex items-center">
       <MagnifyingGlassIcon

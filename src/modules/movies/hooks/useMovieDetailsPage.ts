@@ -15,8 +15,20 @@ import {
   selectDetailsIsLoading,
   selectDetailsError,
 } from '../store';
-import type { MovieDetailsDisplay, MovieDetailsMetaDisplay, MovieDetailsCastDisplay } from '../types';
-import { formatRating, getReleaseYear, formatRuntime, formatMoney, getDirector, getProfileUrl, fireFavoriteConfetti } from '../utils';
+import type {
+  MovieDetailsDisplay,
+  MovieDetailsMetaDisplay,
+  MovieDetailsCastDisplay,
+} from '../types';
+import {
+  formatRating,
+  getReleaseYear,
+  formatRuntime,
+  formatMoney,
+  getDirector,
+  getProfileUrl,
+  fireFavoriteConfetti,
+} from '../utils';
 import { CAST } from '../constants';
 import { useFavoriteToggle, selectFavorites } from '@/modules/favorites';
 import { usePageNavigation } from '@/core/navigation';
@@ -74,25 +86,29 @@ export function useMovieDetailsPage() {
     navigate(-1);
   }, [navigate]);
 
-  const handleToggleFavorite = useCallback((e: React.MouseEvent<HTMLButtonElement>): void => {
-    if (!details) return;
-    fireFavoriteConfetti(e.currentTarget, !isFavorited);
-    toggleFavorite(details);
-  }, [details, toggleFavorite, isFavorited]);
+  const handleToggleFavorite = useCallback(
+    (e: React.MouseEvent<HTMLButtonElement>): void => {
+      if (!details) return;
+      fireFavoriteConfetti(e.currentTarget, !isFavorited);
+      toggleFavorite(details);
+    },
+    [details, toggleFavorite, isFavorited],
+  );
 
   const sectionItems = useMemo(() => [['back']], []);
 
-  const { focusedTabIndex, focusedSectionIndex, focusedItemIndex } = usePageNavigation<string>({
-    tabCount: APP_VIEW_TABS.length,
-    sectionItems,
-    columns: 1,
-    contentKey: 'details',
-    onTabActivate: (index) => handleTabClick(APP_VIEW_TABS[index]),
-    onItemActivate: () => handleBack(),
-    onEscape: handleBack,
-    activeTabIndex: APP_VIEW_TABS.indexOf(activeView),
-    scrollContainerRef: scrollRef,
-  });
+  const { focusedTabIndex, focusedSectionIndex, focusedItemIndex } =
+    usePageNavigation<string>({
+      tabCount: APP_VIEW_TABS.length,
+      sectionItems,
+      columns: 1,
+      contentKey: 'details',
+      onTabActivate: (index) => handleTabClick(APP_VIEW_TABS[index]),
+      onItemActivate: () => handleBack(),
+      onEscape: handleBack,
+      activeTabIndex: APP_VIEW_TABS.indexOf(activeView),
+      scrollContainerRef: scrollRef,
+    });
 
   useEffect(() => {
     setFocusedTabIndex(focusedTabIndex);

@@ -21,9 +21,9 @@ import {
   MovieRecommendations,
   MovieDetailsSkeleton,
   FavoriteToggleButton,
-} from "@/modules/movies";
-import { buildNavId, NAV_ID_PREFIX } from "@/core/navigation";
-import { BackButton } from "@/shared/components/BackButton";
+} from '@/modules/movies';
+import { buildNavId, NAV_ID_PREFIX } from '@/core/navigation';
+import { BackButton } from '@/shared/components/BackButton';
 
 export function MovieDetailsPage(): React.JSX.Element {
   const {
@@ -76,7 +76,10 @@ export function MovieDetailsPage(): React.JSX.Element {
       <MovieDetailsBackdrop url={getBackdropUrl(details.backdrop_path)} />
 
       <div className="flex items-start gap-6">
-        <MovieDetailsPoster url={getPosterUrl(details.poster_path)} title={details.title} />
+        <MovieDetailsPoster
+          url={getPosterUrl(details.poster_path)}
+          title={details.title}
+        />
         <div className="flex min-w-0 flex-1 flex-col gap-3">
           <h1 className="text-2xl font-bold leading-snug text-gray-900 dark:text-white">
             {details.title}
@@ -85,7 +88,10 @@ export function MovieDetailsPage(): React.JSX.Element {
             <MovieDetailsMeta
               {...display.meta}
               actionSlot={
-                <FavoriteToggleButton isFavorited={isFavorited} onClick={onToggleFavorite} />
+                <FavoriteToggleButton
+                  isFavorited={isFavorited}
+                  onClick={onToggleFavorite}
+                />
               }
             />
           )}
@@ -96,7 +102,10 @@ export function MovieDetailsPage(): React.JSX.Element {
 
       {display?.cast && (
         <div className="mt-8">
-          <MovieDetailsCast director={display.cast.director} cast={display.cast.cast} />
+          <MovieDetailsCast
+            director={display.cast.director}
+            cast={display.cast.cast}
+          />
         </div>
       )}
 
@@ -106,11 +115,12 @@ export function MovieDetailsPage(): React.JSX.Element {
         </div>
       )}
 
-      {details.recommendations && details.recommendations.results.length > 0 && (
-        <div className="mt-8">
-          <MovieRecommendations movies={details.recommendations.results} />
-        </div>
-      )}
+      {details.recommendations &&
+        details.recommendations.results.length > 0 && (
+          <div className="mt-8">
+            <MovieRecommendations movies={details.recommendations.results} />
+          </div>
+        )}
     </div>
   );
 }

@@ -20,9 +20,9 @@ export function LoadMoreButton({
   hasError,
   isFocused,
   navId,
-  onClick
+  onClick,
 }: LoadMoreButtonProps): React.JSX.Element {
-  const label = hasError ? "Retry" : "Load More";
+  const label = hasError ? 'Retry' : 'Load More';
 
   return (
     <div className="flex flex-col items-center gap-5 pt-8 pb-4">
@@ -43,8 +43,8 @@ export function LoadMoreButton({
           hover:bg-primary hover:border-primary hover:text-white dark:hover:bg-primary dark:hover:border-primary dark:hover:text-white
           ${
             isFocused
-              ? "border-primary text-primary bg-primary/10 dark:border-primary-light dark:text-primary-light dark:bg-primary/15"
-              : "focus-visible:border-primary focus-visible:text-primary focus-visible:bg-primary/10"
+              ? 'border-primary text-primary bg-primary/10 dark:border-primary-light dark:text-primary-light dark:bg-primary/15'
+              : 'focus-visible:border-primary focus-visible:text-primary focus-visible:bg-primary/10'
           }
         `}
       >

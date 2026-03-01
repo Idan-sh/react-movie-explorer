@@ -16,7 +16,8 @@ import { MovieGridEmpty } from './MovieGridEmpty';
 import { MovieGridError } from './MovieGridError';
 import { LoadMoreButton } from './LoadMoreButton';
 
-const GRID_CLASS = 'grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:gap-6';
+const GRID_CLASS =
+  'grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:gap-6';
 
 export interface MovieGridLayoutProps extends MovieGridState {
   onSelectMovie?: (movie: TmdbMovie) => void;
@@ -54,7 +55,8 @@ export function MovieGridLayout({
     );
   }
 
-  if (hasError && movies.length === 0) return <MovieGridError message={error} />;
+  if (hasError && movies.length === 0)
+    return <MovieGridError message={error} />;
   if (isEmpty) return <>{emptyNode ?? <MovieGridEmpty />}</>;
 
   return (

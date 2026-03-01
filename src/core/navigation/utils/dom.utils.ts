@@ -1,5 +1,5 @@
-import { NAV_ZONE, NAV_ID_PREFIX } from "../constants";
-import type { NavState } from "../types";
+import { NAV_ZONE, NAV_ID_PREFIX } from '../constants';
+import type { NavState } from '../types';
 
 /**
  * Moves DOM focus to the element matching a data-nav-id.
@@ -10,7 +10,7 @@ export function focusNavElement(navId: string): boolean {
   if (element instanceof HTMLElement) {
     element.focus({ preventScroll: true });
     if (document.activeElement === element) {
-      element.scrollIntoView({ block: "nearest", behavior: "smooth" });
+      element.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
       return true;
     }
   }
@@ -25,23 +25,36 @@ export function focusNavElement(navId: string): boolean {
  * elements (e.g., clicking a poster image inside a MovieCard).
  */
 export function resolveClickTarget(event: MouseEvent): NavState | null {
-  const target = (event.target as HTMLElement)?.closest("[data-nav-id]");
+  const target = (event.target as HTMLElement)?.closest('[data-nav-id]');
   if (!target) return null;
 
-  const navId = target.getAttribute("data-nav-id");
+  const navId = target.getAttribute('data-nav-id');
   if (!navId) return null;
 
-  if (navId.startsWith(NAV_ID_PREFIX.TAB + "-")) {
+  if (navId.startsWith(NAV_ID_PREFIX.TAB + '-')) {
     const tabIndex = parseInt(navId.slice(NAV_ID_PREFIX.TAB.length + 1), 10);
     if (!isNaN(tabIndex)) {
-      return { activeZone: NAV_ZONE.TABS, tabIndex, sectionIndex: 0, itemIndex: 0 };
+      return {
+        activeZone: NAV_ZONE.TABS,
+        tabIndex,
+        sectionIndex: 0,
+        itemIndex: 0,
+      };
     }
   }
 
-  if (navId.startsWith(NAV_ID_PREFIX.ITEM + "-")) {
-    const parts = navId.slice(NAV_ID_PREFIX.ITEM.length + 1).split("-").map(Number);
+  if (navId.startsWith(NAV_ID_PREFIX.ITEM + '-')) {
+    const parts = navId
+      .slice(NAV_ID_PREFIX.ITEM.length + 1)
+      .split('-')
+      .map(Number);
     if (parts.length === 2 && parts.every((n) => !isNaN(n))) {
-      return { activeZone: NAV_ZONE.CONTENT, tabIndex: 0, sectionIndex: parts[0], itemIndex: parts[1] };
+      return {
+        activeZone: NAV_ZONE.CONTENT,
+        tabIndex: 0,
+        sectionIndex: parts[0],
+        itemIndex: parts[1],
+      };
     }
   }
 

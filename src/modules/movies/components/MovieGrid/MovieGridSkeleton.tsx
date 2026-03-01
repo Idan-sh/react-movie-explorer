@@ -25,7 +25,9 @@ function SkeletonCard(): React.JSX.Element {
   );
 }
 
-export function MovieGridSkeleton({ count = PAGINATION.ITEMS_PER_PAGE }: MovieGridSkeletonProps): React.JSX.Element {
+export function MovieGridSkeleton({
+  count = PAGINATION.ITEMS_PER_PAGE,
+}: MovieGridSkeletonProps): React.JSX.Element {
   return (
     <>
       {Array.from({ length: count }).map((_, index) => (

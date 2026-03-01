@@ -1,6 +1,9 @@
-import { useState, useEffect, useRef, useCallback } from "react";
-import { CIRCULAR_RATING } from "./circularMovieRating.constants";
-import { getRatingColor, getRatingTrackColor } from "./circularMovieRating.utils";
+import { useState, useEffect, useRef, useCallback } from 'react';
+import { CIRCULAR_RATING } from './circularMovieRating.constants';
+import {
+  getRatingColor,
+  getRatingTrackColor,
+} from './circularMovieRating.utils';
 
 interface UseCircularMovieRatingReturn {
   containerRef: React.RefObject<HTMLDivElement | null>;
@@ -10,7 +13,9 @@ interface UseCircularMovieRatingReturn {
   trackColor: string;
 }
 
-export function useCircularMovieRating(rating: number): UseCircularMovieRatingReturn {
+export function useCircularMovieRating(
+  rating: number,
+): UseCircularMovieRatingReturn {
   const [animatedValue, setAnimatedValue] = useState(0);
   const containerRef = useRef<HTMLDivElement>(null);
   const hasAnimated = useRef(false);
@@ -20,7 +25,10 @@ export function useCircularMovieRating(rating: number): UseCircularMovieRatingRe
 
     function tick(now: number): void {
       const elapsed = now - start;
-      const progress = Math.min(elapsed / CIRCULAR_RATING.ANIMATION_DURATION_MS, 1);
+      const progress = Math.min(
+        elapsed / CIRCULAR_RATING.ANIMATION_DURATION_MS,
+        1,
+      );
       const eased = 1 - Math.pow(1 - progress, 3);
 
       setAnimatedValue(Math.round(eased * rating));
@@ -45,7 +53,7 @@ export function useCircularMovieRating(rating: number): UseCircularMovieRatingRe
           observer.disconnect();
         }
       },
-      { threshold: 0.5 }
+      { threshold: 0.5 },
     );
 
     observer.observe(el);
@@ -54,7 +62,9 @@ export function useCircularMovieRating(rating: number): UseCircularMovieRatingRe
     };
   }, [animate]);
 
-  const offset = CIRCULAR_RATING.CIRCUMFERENCE - (animatedValue / 100) * CIRCULAR_RATING.CIRCUMFERENCE;
+  const offset =
+    CIRCULAR_RATING.CIRCUMFERENCE -
+    (animatedValue / 100) * CIRCULAR_RATING.CIRCUMFERENCE;
 
   return {
     containerRef,

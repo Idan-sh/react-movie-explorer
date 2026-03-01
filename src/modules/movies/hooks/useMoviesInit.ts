@@ -28,15 +28,17 @@ export function useMoviesInit(activeView: AppView): UseMoviesInitReturn {
   const activeList = getViewList(activeView);
 
   const isIdle = useAppSelector(
-    activeList ? getListSelectors(activeList).selectIsIdle : selectNeverIdle
+    activeList ? getListSelectors(activeList).selectIsIdle : selectNeverIdle,
   );
 
   useEffect(() => {
     if (activeList && isIdle) {
-      dispatch(fetchMovies({
-        list: activeList,
-        pageNumber: PAGINATION.DEFAULT_PAGE,
-      }));
+      dispatch(
+        fetchMovies({
+          list: activeList,
+          pageNumber: PAGINATION.DEFAULT_PAGE,
+        }),
+      );
     }
   }, [dispatch, activeList, isIdle]);
 

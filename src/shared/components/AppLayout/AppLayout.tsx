@@ -12,28 +12,33 @@
  * to child pages (to pause keyboard nav while the user is typing).
  */
 
-import { useState, useCallback } from "react";
-import { Outlet, useLocation, useNavigate } from "react-router-dom";
-import { useCategoryTabs } from "@/shared/hooks";
-import { ROUTES, Z_LAYER } from "@/shared/constants";
-import { SearchBar, useSearch } from "@/modules/search";
-import { AppHeader } from "../AppHeader";
-import { AppFooter } from "../AppFooter";
-import { ScrollToTopButton } from "../ScrollToTopButton";
-import { useScrollToTop } from "../ScrollToTopButton";
-import { ThemeToggle, useTheme } from "../Theme";
-import { SettingsButton, useSettings } from "../Settings";
-import type { AppView } from "@/shared/types";
-import type { LayoutContext } from "./layout.types";
+import { useState, useCallback } from 'react';
+import { Outlet, useLocation, useNavigate } from 'react-router-dom';
+import { useCategoryTabs } from '@/shared/hooks';
+import { ROUTES, Z_LAYER } from '@/shared/constants';
+import { SearchBar, useSearch } from '@/modules/search';
+import { AppHeader } from '../AppHeader';
+import { AppFooter } from '../AppFooter';
+import { ScrollToTopButton } from '../ScrollToTopButton';
+import { useScrollToTop } from '../ScrollToTopButton';
+import { ThemeToggle, useTheme } from '../Theme';
+import { SettingsButton, useSettings } from '../Settings';
+import type { AppView } from '@/shared/types';
+import type { LayoutContext } from './layout.types';
 
 export function AppLayout(): React.JSX.Element {
-  const { activeView, handleTabClick, handleTabFocus, handleTabBlur } = useCategoryTabs();
+  const { activeView, handleTabClick, handleTabFocus, handleTabBlur } =
+    useCategoryTabs();
   const [focusedTabIndex, setFocusedTabIndex] = useState(-1);
   const [isSearchFocused, setIsSearchFocused] = useState(false);
   const { query, handleInputChange, handleClear } = useSearch();
   const { isDark, toggleTheme } = useTheme();
   const { isScrollEnabled, toggleScroll } = useSettings();
-  const { scrollRef, isVisible: isScrollTopVisible, scrollToTop } = useScrollToTop();
+  const {
+    scrollRef,
+    isVisible: isScrollTopVisible,
+    scrollToTop,
+  } = useScrollToTop();
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -44,7 +49,7 @@ export function AppLayout(): React.JSX.Element {
         navigate(ROUTES.HOME, { viewTransition: true });
       }
     },
-    [handleTabClick, location.pathname, navigate]
+    [handleTabClick, location.pathname, navigate],
   );
 
   const handleSearchFocus = useCallback((): void => {
@@ -60,7 +65,7 @@ export function AppLayout(): React.JSX.Element {
     handleTabClick: handleTabClickWithNav,
     setFocusedTabIndex,
     isSearchFocused,
-    scrollRef
+    scrollRef,
   };
 
   const searchSlot = (
@@ -76,7 +81,10 @@ export function AppLayout(): React.JSX.Element {
   const actionsSlot = (
     <>
       <ThemeToggle isDark={isDark} onToggle={toggleTheme} />
-      <SettingsButton isScrollEnabled={isScrollEnabled} onToggleScroll={toggleScroll} />
+      <SettingsButton
+        isScrollEnabled={isScrollEnabled}
+        onToggleScroll={toggleScroll}
+      />
     </>
   );
 
@@ -100,7 +108,7 @@ export function AppLayout(): React.JSX.Element {
       <main
         ref={scrollRef}
         style={{ zIndex: Z_LAYER.CONTENT }}
-        className={`relative flex-1 flex flex-col ${isScrollEnabled ? "overflow-y-auto" : "overflow-hidden"}`}
+        className={`relative flex-1 flex flex-col ${isScrollEnabled ? 'overflow-y-auto' : 'overflow-hidden'}`}
       >
         <div className="grow shrink-0 bg-gray-100 dark:bg-gray-900">
           <Outlet context={layoutContext} />
@@ -109,7 +117,10 @@ export function AppLayout(): React.JSX.Element {
       </main>
 
       {location.pathname === ROUTES.HOME && (
-        <ScrollToTopButton isVisible={isScrollTopVisible} onClick={scrollToTop} />
+        <ScrollToTopButton
+          isVisible={isScrollTopVisible}
+          onClick={scrollToTop}
+        />
       )}
     </div>
   );

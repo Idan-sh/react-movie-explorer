@@ -5,11 +5,11 @@
  * Wraps in try/catch to handle private browsing or storage full errors.
  */
 
-import { STORAGE_KEY } from "@/shared/constants";
+import { STORAGE_KEY } from '@/shared/constants';
 
 export function loadScrollEnabled(): boolean {
   try {
-    return localStorage.getItem(STORAGE_KEY.SETTINGS.SCROLL_ENABLED) === "true";
+    return localStorage.getItem(STORAGE_KEY.SETTINGS.SCROLL_ENABLED) === 'true';
   } catch {
     return false;
   }

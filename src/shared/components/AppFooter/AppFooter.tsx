@@ -5,8 +5,8 @@
  */
 
 const CURRENT_YEAR = new Date().getFullYear();
-const GITHUB_URL = "https://github.com/idansh";
-const TMDB_URL = "https://www.themoviedb.org";
+const GITHUB_URL = 'https://github.com/idansh';
+const TMDB_URL = 'https://www.themoviedb.org';
 
 export function AppFooter(): React.JSX.Element {
   return (
@@ -14,7 +14,7 @@ export function AppFooter(): React.JSX.Element {
       <div className="mx-auto flex max-w-7xl flex-col items-center gap-4 px-6 py-6 sm:flex-row sm:justify-between sm:gap-0">
         {/* Creator credit */}
         <p className="text-sm text-gray-500 dark:text-gray-400">
-          &copy; {CURRENT_YEAR} Built by{" "}
+          &copy; {CURRENT_YEAR} Built by{' '}
           <a
             href={GITHUB_URL}
             target="_blank"

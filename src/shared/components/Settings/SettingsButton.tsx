@@ -4,12 +4,16 @@
  * Gear icon that opens a dropdown popover with app settings.
  */
 
-import { AnimatePresence, motion } from "framer-motion";
-import { Cog6ToothIcon } from "@heroicons/react/24/outline";
-import { Z_LAYER } from "@/shared/constants";
-import { ToggleSwitch } from "./ToggleSwitch";
-import { useDropdown } from "@/shared/hooks";
-import { DROPDOWN_CLOSED, DROPDOWN_OPEN, DROPDOWN_TRANSITION } from "./settingsDropdown.constants";
+import { AnimatePresence, motion } from 'framer-motion';
+import { Cog6ToothIcon } from '@heroicons/react/24/outline';
+import { Z_LAYER } from '@/shared/constants';
+import { ToggleSwitch } from './ToggleSwitch';
+import { useDropdown } from '@/shared/hooks';
+import {
+  DROPDOWN_CLOSED,
+  DROPDOWN_OPEN,
+  DROPDOWN_TRANSITION,
+} from './settingsDropdown.constants';
 
 interface SettingsButtonProps {
   isScrollEnabled: boolean;
@@ -18,7 +22,7 @@ interface SettingsButtonProps {
 
 export function SettingsButton({
   isScrollEnabled,
-  onToggleScroll
+  onToggleScroll,
 }: SettingsButtonProps): React.JSX.Element {
   const { isOpen, containerRef, handleToggle } = useDropdown();
 

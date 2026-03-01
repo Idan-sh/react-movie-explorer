@@ -1,1 +1,5 @@
-export type { SearchState, SearchSuccessPayload, SearchFailurePayload } from './search.types';
+export type {
+  SearchState,
+  SearchSuccessPayload,
+  SearchFailurePayload,
+} from './search.types';

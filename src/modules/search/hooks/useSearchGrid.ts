@@ -34,14 +34,14 @@ export interface UseSearchGridReturn extends MovieGridState {
 export function useSearchGrid(sectionIndex = 0): UseSearchGridReturn {
   const dispatch = useAppDispatch();
 
-  const results   = useAppSelector(selectSearchResults);
+  const results = useAppSelector(selectSearchResults);
   const isLoading = useAppSelector(selectSearchIsLoading);
-  const isIdle    = useAppSelector(selectSearchIsIdle);
-  const isActive  = useAppSelector(selectSearchIsActive);
-  const hasError  = useAppSelector(selectSearchHasError);
-  const error        = useAppSelector(selectSearchError);
+  const isIdle = useAppSelector(selectSearchIsIdle);
+  const isActive = useAppSelector(selectSearchIsActive);
+  const hasError = useAppSelector(selectSearchHasError);
+  const error = useAppSelector(selectSearchError);
   const hasMorePages = useAppSelector(selectSearchHasMorePages);
-  const query        = useAppSelector(selectSearchQuery);
+  const query = useAppSelector(selectSearchQuery);
 
   // Treat IDLE+active as loading: debounce is in progress, results will arrive soon
   const effectiveIsLoading = isLoading || (isActive && isIdle);
@@ -52,7 +52,7 @@ export function useSearchGrid(sectionIndex = 0): UseSearchGridReturn {
 
   const handleLoadMore = useLoadMore({
     itemCountSelector: selectSearchResultCount,
-    canLoadSelector:   selectSearchCanLoad,
+    canLoadSelector: selectSearchCanLoad,
     onLoad,
     sectionIndex,
   });

@@ -12,7 +12,9 @@ interface FilmPlaceholderProps {
   iconSize?: string;
 }
 
-export function FilmPlaceholder({ iconSize = 'h-12 w-12' }: FilmPlaceholderProps): React.JSX.Element {
+export function FilmPlaceholder({
+  iconSize = 'h-12 w-12',
+}: FilmPlaceholderProps): React.JSX.Element {
   const patternId = useId();
 
   return (
@@ -30,7 +32,16 @@ export function FilmPlaceholder({ iconSize = 'h-12 w-12' }: FilmPlaceholderProps
             patternUnits="userSpaceOnUse"
             patternTransform="rotate(-30)"
           >
-            <rect x="4" y="4" width="32" height="20" rx="2" stroke="currentColor" strokeWidth="1.5" fill="none" />
+            <rect
+              x="4"
+              y="4"
+              width="32"
+              height="20"
+              rx="2"
+              stroke="currentColor"
+              strokeWidth="1.5"
+              fill="none"
+            />
             <circle cx="4" cy="14" r="2" fill="currentColor" />
             <circle cx="36" cy="14" r="2" fill="currentColor" />
           </pattern>

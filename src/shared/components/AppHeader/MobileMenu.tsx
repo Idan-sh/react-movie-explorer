@@ -7,11 +7,15 @@
  * Hidden on desktop (md+).
  */
 
-import { AnimatePresence, motion } from "framer-motion";
-import type { AppView } from "@/shared/types";
-import { APP_VIEW_TABS, Z_LAYER } from "@/shared/constants";
-import { MENU_CLOSED, MENU_OPEN, MENU_TRANSITION } from "./mobileMenu.constants";
-import { MobileMenuItem } from "./MobileMenuItem";
+import { AnimatePresence, motion } from 'framer-motion';
+import type { AppView } from '@/shared/types';
+import { APP_VIEW_TABS, Z_LAYER } from '@/shared/constants';
+import {
+  MENU_CLOSED,
+  MENU_OPEN,
+  MENU_TRANSITION,
+} from './mobileMenu.constants';
+import { MobileMenuItem } from './MobileMenuItem';
 
 export interface MobileMenuProps {
   isOpen: boolean;
@@ -24,7 +28,7 @@ export function MobileMenu({
   isOpen,
   activeView,
   focusedMenuIndex,
-  onTabClick
+  onTabClick,
 }: MobileMenuProps): React.JSX.Element {
   return (
     <AnimatePresence initial={false}>

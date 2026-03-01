@@ -10,19 +10,21 @@ interface UseMovieRecommendationsReturn {
   handleSelect: (movie: TmdbMovie) => void;
 }
 
-export function useMovieRecommendations(movies: TmdbMovie[]): UseMovieRecommendationsReturn {
+export function useMovieRecommendations(
+  movies: TmdbMovie[],
+): UseMovieRecommendationsReturn {
   const navigate = useNavigate();
 
   const handleSelect = useCallback(
     (movie: TmdbMovie): void => {
       navigate(ROUTES.movieDetails(movie.id), { viewTransition: true });
     },
-    [navigate]
+    [navigate],
   );
 
   const displayMovies = useMemo(
     () => movies.slice(0, MAX_RECOMMENDATIONS),
-    [movies]
+    [movies],
   );
 
   return { displayMovies, handleSelect };

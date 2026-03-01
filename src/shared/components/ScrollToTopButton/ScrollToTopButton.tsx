@@ -6,13 +6,13 @@
  * Uses glassmorphism styling to float above content.
  */
 
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, motion } from 'framer-motion';
 import { ChevronUpIcon } from '@heroicons/react/24/outline';
-import { Z_LAYER } from "@/shared/constants";
+import { Z_LAYER } from '@/shared/constants';
 
 const VISIBLE = { opacity: 1, y: 0 };
 const HIDDEN = { opacity: 0, y: -8 };
-const TRANSITION = { duration: 0.25, ease: "easeOut" } as const;
+const TRANSITION = { duration: 0.25, ease: 'easeOut' } as const;
 
 export interface ScrollToTopButtonProps {
   isVisible: boolean;
@@ -21,7 +21,7 @@ export interface ScrollToTopButtonProps {
 
 export function ScrollToTopButton({
   isVisible,
-  onClick
+  onClick,
 }: ScrollToTopButtonProps): React.JSX.Element {
   return (
     <AnimatePresence>

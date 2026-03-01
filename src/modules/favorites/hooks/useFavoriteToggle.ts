@@ -17,6 +17,6 @@ export function useFavoriteToggle(): (movie: TmdbMovie) => void {
     (movie: TmdbMovie): void => {
       dispatch(toggleFavorite(movie));
     },
-    [dispatch]
+    [dispatch],
   );
 }

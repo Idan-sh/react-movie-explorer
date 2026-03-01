@@ -10,6 +10,5 @@ const selectFavoritesState = (state: RootState) => state[SLICE_NAMES.FAVORITES];
 
 export const selectFavorites = createSelector(
   [selectFavoritesState],
-  (state) => state.movies
+  (state) => state.movies,
 );
-

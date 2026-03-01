@@ -35,7 +35,10 @@ export function MovieDetailsSkeleton(): React.JSX.Element {
         <div className="h-6 w-24 rounded bg-gray-200 dark:bg-gray-700" />
         <div className="flex gap-4">
           {Array.from({ length: 5 }).map((_, i) => (
-            <div key={i} className="flex w-24 shrink-0 flex-col items-center gap-1.5">
+            <div
+              key={i}
+              className="flex w-24 shrink-0 flex-col items-center gap-1.5"
+            >
               <div className="h-24 w-24 rounded-full bg-gray-200 dark:bg-gray-700" />
               <div className="h-3 w-16 rounded bg-gray-200 dark:bg-gray-700" />
               <div className="h-3 w-12 rounded bg-gray-200 dark:bg-gray-700" />

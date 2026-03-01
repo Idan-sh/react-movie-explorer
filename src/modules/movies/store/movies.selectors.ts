@@ -29,59 +29,59 @@ function buildListSelectors(list: MovieList) {
 
   const selectState = createSelector(
     [selectMoviesState],
-    (moviesState): MovieListState => moviesState[key]
+    (moviesState): MovieListState => moviesState[key],
   );
 
   const selectMovies = createSelector(
     [selectState],
-    (listState) => listState.page.movies
+    (listState) => listState.page.movies,
   );
 
   const selectPageNumber = createSelector(
     [selectState],
-    (listState) => listState.page.pageNumber
+    (listState) => listState.page.pageNumber,
   );
 
   const selectHasNextPage = createSelector(
     [selectState],
-    (listState) => listState.nextPage !== null
+    (listState) => listState.nextPage !== null,
   );
 
   const selectError = createSelector(
     [selectState],
-    (listState) => listState.error
+    (listState) => listState.error,
   );
 
   const selectIsIdle = createSelector(
     [selectState],
-    (listState) => listState.status === REQUEST_STATUS.IDLE
+    (listState) => listState.status === REQUEST_STATUS.IDLE,
   );
 
   const selectIsLoading = createSelector(
     [selectState],
-    (listState) => listState.status === REQUEST_STATUS.LOADING
+    (listState) => listState.status === REQUEST_STATUS.LOADING,
   );
 
   const selectHasError = createSelector(
     [selectState],
-    (listState) => listState.status === REQUEST_STATUS.ERROR
+    (listState) => listState.status === REQUEST_STATUS.ERROR,
   );
 
   const selectHasMorePages = createSelector(
     [selectState],
-    (listState) => listState.page.pageNumber < listState.page.numberOfPages
+    (listState) => listState.page.pageNumber < listState.page.numberOfPages,
   );
 
   /** Item count for use with shared useLoadMore */
   const selectMovieCount = createSelector(
     [selectMovies],
-    (movies) => movies.length
+    (movies) => movies.length,
   );
 
   /** True when a next page can be fetched (has buffer or more pages, not currently loading) */
   const selectCanLoad = createSelector(
     [selectHasNextPage, selectHasMorePages, selectIsLoading],
-    (hasNext, hasMore, isLoading) => hasNext || (hasMore && !isLoading)
+    (hasNext, hasMore, isLoading) => hasNext || (hasMore && !isLoading),
   );
 
   return {
@@ -106,7 +106,10 @@ function buildListSelectors(list: MovieList) {
 const popularSelectors = buildListSelectors(MOVIE_LIST.POPULAR);
 const nowPlayingSelectors = buildListSelectors(MOVIE_LIST.NOW_PLAYING);
 
-const selectorsByList: Record<MovieList, ReturnType<typeof buildListSelectors>> = {
+const selectorsByList: Record<
+  MovieList,
+  ReturnType<typeof buildListSelectors>
+> = {
   [MOVIE_LIST.POPULAR]: popularSelectors,
   [MOVIE_LIST.NOW_PLAYING]: nowPlayingSelectors,
 };
@@ -115,6 +118,8 @@ const selectorsByList: Record<MovieList, ReturnType<typeof buildListSelectors>> 
  * Get all selectors for a given list type.
  * Returns stable references - safe to use in useAppSelector.
  */
-export function getListSelectors(list: MovieList): ReturnType<typeof buildListSelectors> {
+export function getListSelectors(
+  list: MovieList,
+): ReturnType<typeof buildListSelectors> {
   return selectorsByList[list];
 }

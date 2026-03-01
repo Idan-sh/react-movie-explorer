@@ -10,7 +10,9 @@ interface MovieDetailsGenresProps {
   details: TmdbMovieDetails;
 }
 
-export function MovieDetailsGenres({ details }: MovieDetailsGenresProps): React.JSX.Element | null {
+export function MovieDetailsGenres({
+  details,
+}: MovieDetailsGenresProps): React.JSX.Element | null {
   if (!details.genres?.length) return null;
 
   return (

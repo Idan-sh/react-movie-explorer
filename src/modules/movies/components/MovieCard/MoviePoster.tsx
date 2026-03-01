@@ -5,7 +5,7 @@
  * Shows placeholder when no image available or when load fails.
  */
 
-import { FilmPlaceholder, ImageWithFallback } from "@/shared/components";
+import { FilmPlaceholder, ImageWithFallback } from '@/shared/components';
 
 export interface MoviePosterProps {
   url: string | null;
@@ -18,7 +18,10 @@ function PosterPlaceholder(): React.JSX.Element {
 
 const posterFallback = <PosterPlaceholder />;
 
-export function MoviePoster({ url, title }: MoviePosterProps): React.JSX.Element {
+export function MoviePoster({
+  url,
+  title,
+}: MoviePosterProps): React.JSX.Element {
   return (
     <div className="relative aspect-[2/3] w-full overflow-hidden bg-gray-200 dark:bg-gray-700">
       <ImageWithFallback

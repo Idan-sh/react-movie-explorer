@@ -7,8 +7,8 @@
  * https://developer.themoviedb.org/reference/movie-now-playing-list
  */
 
-import { MOVIE_LIST } from "../constants";
-import type { RequestStatus } from "@/shared/types";
+import { MOVIE_LIST } from '../constants';
+import type { RequestStatus } from '@/shared/types';
 
 /**
  * Movie object from TMDB API list endpoints (popular, now_playing)

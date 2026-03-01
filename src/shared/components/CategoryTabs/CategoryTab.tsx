@@ -9,7 +9,11 @@
 import { motion } from 'framer-motion';
 import type { AppView } from '@/shared/types';
 
-const TAB_INDICATOR_TRANSITION = { type: 'spring', stiffness: 500, damping: 35 } as const;
+const TAB_INDICATOR_TRANSITION = {
+  type: 'spring',
+  stiffness: 500,
+  damping: 35,
+} as const;
 
 export interface CategoryTabProps {
   view: AppView;
@@ -48,15 +52,13 @@ export function CategoryTab({
         relative flex items-center px-4 text-base font-medium
         transition-colors duration-200
         outline-none
-        ${isFocused
-          ? 'bg-primary/10 dark:bg-primary/15 text-primary'
-          : ''
-        }
-        ${isActive
-          ? 'text-primary'
-          : isFocused
-            ? ''
-            : 'text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white'
+        ${isFocused ? 'bg-primary/10 dark:bg-primary/15 text-primary' : ''}
+        ${
+          isActive
+            ? 'text-primary'
+            : isFocused
+              ? ''
+              : 'text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white'
         }
       `}
     >

@@ -21,10 +21,15 @@
  * focus/blur events, connecting to existing handlers (e.g., 2s tab auto-switch).
  */
 
-import { useState, useEffect, useLayoutEffect, useRef } from "react";
-import { NAV_KEY, NAV_ZONE, NAV_SCROLL_STEP } from "../constants";
-import type { NavState, ContentSection, UseKeyboardNavOptions, UseKeyboardNavReturn } from "../types";
-import type { ScrollController } from "../utils";
+import { useState, useEffect, useLayoutEffect, useRef } from 'react';
+import { NAV_KEY, NAV_ZONE, NAV_SCROLL_STEP } from '../constants';
+import type {
+  NavState,
+  ContentSection,
+  UseKeyboardNavOptions,
+  UseKeyboardNavReturn,
+} from '../types';
+import type { ScrollController } from '../utils';
 import {
   isNavKey,
   resolveNavigation,
@@ -32,13 +37,13 @@ import {
   focusNavElement,
   createScrollController,
   getNavIdFromState,
-} from "../utils";
+} from '../utils';
 
 const INITIAL_STATE: NavState = {
   activeZone: NAV_ZONE.TABS,
   tabIndex: 0,
   sectionIndex: 0,
-  itemIndex: 0
+  itemIndex: 0,
 };
 
 // ── Module-level callback type ────────────────────────────────────
@@ -60,7 +65,7 @@ interface NavCallbacks {
 function activateEnterKey(
   state: NavState,
   sections: ContentSection[],
-  callbacks: NavCallbacks
+  callbacks: NavCallbacks,
 ): void {
   const { activeZone, tabIndex, sectionIndex, itemIndex } = state;
   if (activeZone === NAV_ZONE.TABS) {
@@ -88,11 +93,14 @@ function handleScrollKey(
   key: string,
   scrollEl: HTMLElement,
   controller: ScrollController,
-  step: number
+  step: number,
 ): boolean {
   if (key === NAV_KEY.ARROW_DOWN) {
     const maxScroll = scrollEl.scrollHeight - scrollEl.clientHeight;
-    controller.scrollTo(scrollEl, Math.min(scrollEl.scrollTop + step, maxScroll));
+    controller.scrollTo(
+      scrollEl,
+      Math.min(scrollEl.scrollTop + step, maxScroll),
+    );
     return true;
   }
   if (key === NAV_KEY.ARROW_UP) {
@@ -122,26 +130,46 @@ export function useKeyboardNav({
   initialZone = NAV_ZONE.TABS,
   activeTabIndex,
   enabled = true,
-  scrollContainerRef
+  scrollContainerRef,
 }: UseKeyboardNavOptions): UseKeyboardNavReturn {
   const [state, setState] = useState<NavState>({
     ...INITIAL_STATE,
     activeZone: initialZone,
-    tabIndex: activeTabIndex ?? 0
+    tabIndex: activeTabIndex ?? 0,
   });
 
   // Refs keep the event handler stable (registered once) while
   // always reading the latest values via .current.
   // Updated via useLayoutEffect (not during render) per React 19 requirements.
   const stateRef = useRef(state);
-  const configRef = useRef({ tabCount, sections, activeTabIndex, scrollContainerRef });
-  const callbacksRef = useRef({ onTabActivate, onItemActivate, onEscape, onFooterActivate });
+  const configRef = useRef({
+    tabCount,
+    sections,
+    activeTabIndex,
+    scrollContainerRef,
+  });
+  const callbacksRef = useRef({
+    onTabActivate,
+    onItemActivate,
+    onEscape,
+    onFooterActivate,
+  });
   const scrollController = useRef<ScrollController>(createScrollController());
 
   useLayoutEffect(() => {
     stateRef.current = state;
-    configRef.current = { tabCount, sections, activeTabIndex, scrollContainerRef };
-    callbacksRef.current = { onTabActivate, onItemActivate, onEscape, onFooterActivate };
+    configRef.current = {
+      tabCount,
+      sections,
+      activeTabIndex,
+      scrollContainerRef,
+    };
+    callbacksRef.current = {
+      onTabActivate,
+      onItemActivate,
+      onEscape,
+      onFooterActivate,
+    };
   });
 
   // Reset content focus when the view changes.
@@ -173,14 +201,23 @@ export function useKeyboardNav({
 
       // Enter → trigger activation callback (no state change)
       if (key === NAV_KEY.ENTER) {
-        activateEnterKey(stateRef.current, configRef.current.sections, callbacksRef.current);
+        activateEnterKey(
+          stateRef.current,
+          configRef.current.sections,
+          callbacksRef.current,
+        );
         return;
       }
 
       // Scroll mode: in CONTENT zone, Up/Down lerp-scroll the container.
       const scrollEl = configRef.current.scrollContainerRef?.current;
       if (scrollEl && stateRef.current.activeZone === NAV_ZONE.CONTENT) {
-        const consumed = handleScrollKey(key, scrollEl, scrollController.current, NAV_SCROLL_STEP);
+        const consumed = handleScrollKey(
+          key,
+          scrollEl,
+          scrollController.current,
+          NAV_SCROLL_STEP,
+        );
         if (consumed) return;
       }
 
@@ -199,11 +236,11 @@ export function useKeyboardNav({
       if (newState) setState(newState);
     }
 
-    document.addEventListener("keydown", handleKeyDown);
-    document.addEventListener("click", handleClick);
+    document.addEventListener('keydown', handleKeyDown);
+    document.addEventListener('click', handleClick);
     return () => {
-      document.removeEventListener("keydown", handleKeyDown);
-      document.removeEventListener("click", handleClick);
+      document.removeEventListener('keydown', handleKeyDown);
+      document.removeEventListener('click', handleClick);
       scrollController.current.cancel();
     };
   }, [enabled]);
@@ -224,7 +261,9 @@ export function useKeyboardNav({
 
   return {
     focusedTabIndex: state.activeZone === NAV_ZONE.TABS ? state.tabIndex : -1,
-    focusedSectionIndex: state.activeZone === NAV_ZONE.CONTENT ? state.sectionIndex : -1,
-    focusedItemIndex: state.activeZone === NAV_ZONE.CONTENT ? state.itemIndex : -1
+    focusedSectionIndex:
+      state.activeZone === NAV_ZONE.CONTENT ? state.sectionIndex : -1,
+    focusedItemIndex:
+      state.activeZone === NAV_ZONE.CONTENT ? state.itemIndex : -1,
   };
 }

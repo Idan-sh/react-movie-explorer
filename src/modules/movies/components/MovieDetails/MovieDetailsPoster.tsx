@@ -5,7 +5,7 @@
  * Hidden on small screens.
  */
 
-import { FilmPlaceholder, ImageWithFallback } from "@/shared/components";
+import { FilmPlaceholder, ImageWithFallback } from '@/shared/components';
 
 interface MovieDetailsPosterProps {
   url: string | null;
@@ -22,7 +22,10 @@ function PosterPlaceholder(): React.JSX.Element {
 
 const posterFallback = <PosterPlaceholder />;
 
-export function MovieDetailsPoster({ url, title }: MovieDetailsPosterProps): React.JSX.Element {
+export function MovieDetailsPoster({
+  url,
+  title,
+}: MovieDetailsPosterProps): React.JSX.Element {
   return (
     <ImageWithFallback
       src={url ?? undefined}

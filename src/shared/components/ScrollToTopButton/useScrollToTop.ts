@@ -9,8 +9,8 @@
  * Hides immediately when scrolling resumes.
  */
 
-import { useState, useEffect, useRef, useCallback } from "react";
-import { useLocation } from "react-router-dom";
+import { useState, useEffect, useRef, useCallback } from 'react';
+import { useLocation } from 'react-router-dom';
 
 const SCROLL_THRESHOLD_PX = 600;
 const IDLE_DELAY_MS = 800;
@@ -49,15 +49,18 @@ export function useScrollToTop(): UseScrollToTopReturn {
 
       // After user stops scrolling, check if past threshold
       idleTimerRef.current = setTimeout(() => {
-        if (scrollRef.current && scrollRef.current.scrollTop > SCROLL_THRESHOLD_PX) {
+        if (
+          scrollRef.current &&
+          scrollRef.current.scrollTop > SCROLL_THRESHOLD_PX
+        ) {
           setIsVisible(true);
         }
       }, IDLE_DELAY_MS);
     }
 
-    el.addEventListener("scroll", handleScroll, { passive: true });
+    el.addEventListener('scroll', handleScroll, { passive: true });
     return () => {
-      el.removeEventListener("scroll", handleScroll);
+      el.removeEventListener('scroll', handleScroll);
       if (idleTimerRef.current !== null) {
         clearTimeout(idleTimerRef.current);
       }
@@ -65,7 +68,7 @@ export function useScrollToTop(): UseScrollToTopReturn {
   }, []);
 
   const scrollToTop = useCallback((): void => {
-    scrollRef.current?.scrollTo({ top: 0, behavior: "smooth" });
+    scrollRef.current?.scrollTo({ top: 0, behavior: 'smooth' });
     setIsVisible(false);
   }, []);
 

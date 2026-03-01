@@ -5,14 +5,17 @@
  * that hints at scrollable content. The fade hides once the user scrolls.
  */
 
-import { useRef, useState, useCallback } from "react";
+import { useRef, useState, useCallback } from 'react';
 
 interface ScrollRowProps {
   children: React.ReactNode;
   className?: string;
 }
 
-export function ScrollRow({ children, className = "" }: ScrollRowProps): React.JSX.Element {
+export function ScrollRow({
+  children,
+  className = '',
+}: ScrollRowProps): React.JSX.Element {
   const scrollRef = useRef<HTMLDivElement>(null);
   const [isAtStart, setIsAtStart] = useState(true);
 
@@ -36,7 +39,7 @@ export function ScrollRow({ children, className = "" }: ScrollRowProps): React.J
           pointer-events-none absolute right-0 top-0 h-full w-16
           bg-gradient-to-l from-gray-100 dark:from-gray-900
           transition-opacity duration-500 ease-in-out
-          ${isAtStart ? "opacity-100" : "opacity-0"}
+          ${isAtStart ? 'opacity-100' : 'opacity-0'}
         `}
         aria-hidden="true"
       />

@@ -10,4 +10,5 @@ import { REQUEST_STATUS } from '../constants';
 /**
  * Status type for async requests
  */
-export type RequestStatus = (typeof REQUEST_STATUS)[keyof typeof REQUEST_STATUS];
+export type RequestStatus =
+  (typeof REQUEST_STATUS)[keyof typeof REQUEST_STATUS];

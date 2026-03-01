@@ -37,9 +37,13 @@ export function useMovieCard(
   const rating = formatRating(movie.vote_average);
   const ariaLabel = buildMovieAriaLabel(movie.title, releaseDate, rating);
 
-  const handleClick = (): void => { onSelect?.(movie); };
+  const handleClick = (): void => {
+    onSelect?.(movie);
+  };
 
-  const handleToggleFavorite = (e: React.MouseEvent<HTMLButtonElement>): void => {
+  const handleToggleFavorite = (
+    e: React.MouseEvent<HTMLButtonElement>,
+  ): void => {
     e.stopPropagation();
     fireFavoriteConfetti(e.currentTarget, !isFavorited);
     onToggleFavorite?.(movie);

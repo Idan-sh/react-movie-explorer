@@ -19,30 +19,35 @@ export {
   MovieTrailer,
   MovieRecommendations,
   FavoriteToggleButton,
-  MovieDetailsSkeleton
-} from "./components";
+  MovieDetailsSkeleton,
+} from './components';
 export type {
   MovieCardProps,
   MovieGridProps,
   MovieGridLayoutProps,
   MovieDetailsMetaProps,
-  MovieDetailsCastProps
-} from "./components";
+  MovieDetailsCastProps,
+} from './components';
 
 // Hooks: public hooks for pages
-export { useMoviesInit, useMovieDetailsPage, useHomePage } from "./hooks";
+export { useMoviesInit, useMovieDetailsPage, useHomePage } from './hooks';
 export type {
   UseMoviesInitReturn,
   MovieDetailsDisplay,
   MovieDetailsMetaDisplay,
-  MovieDetailsCastDisplay
-} from "./hooks";
+  MovieDetailsCastDisplay,
+} from './hooks';
 
 // Utils: public for pages (e.g. getBackdropUrl for MovieDetailsPage)
-export { getBackdropUrl, getPosterUrl } from "./utils";
+export { getBackdropUrl, getPosterUrl } from './utils';
 
 // Store: reducers and sagas for root store
-export { moviesReducer, moviesSaga, movieDetailsReducer, movieDetailsSaga } from "./store";
+export {
+  moviesReducer,
+  moviesSaga,
+  movieDetailsReducer,
+  movieDetailsSaga,
+} from './store';
 
 // Store: public actions
 export {
@@ -50,19 +55,24 @@ export {
   resetMovies,
   fetchMovieDetails,
   clearMovieDetails,
-  showNextPage
-} from "./store";
+  showNextPage,
+} from './store';
 
 // Store: public selectors
 export {
   getListSelectors,
   selectMovieDetails,
   selectDetailsIsLoading,
-  selectDetailsError
-} from "./store";
+  selectDetailsError,
+} from './store';
 
 // Types: public types for components
-export type { TmdbMovie, TmdbMovieDetails, MovieList, MovieGridState } from "./types";
+export type {
+  TmdbMovie,
+  TmdbMovieDetails,
+  MovieList,
+  MovieGridState,
+} from './types';
 
 // Constants: public constants for components
-export { MOVIE_LIST, TMDB_IMAGE, PAGINATION } from "./constants";
+export { MOVIE_LIST, TMDB_IMAGE, PAGINATION } from './constants';

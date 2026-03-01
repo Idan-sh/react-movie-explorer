@@ -33,9 +33,5 @@ import { searchSagaRoot } from '@/modules/search/store';
  * - all() waits for all forks to complete (they run forever, watching)
  */
 export function* rootSaga(): Generator {
-  yield all([
-    fork(moviesSaga),
-    fork(movieDetailsSaga),
-    fork(searchSagaRoot),
-  ]);
+  yield all([fork(moviesSaga), fork(movieDetailsSaga), fork(searchSagaRoot)]);
 }

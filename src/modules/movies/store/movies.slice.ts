@@ -78,7 +78,10 @@ const moviesSlice = createSlice({
      * Page 1: replaces page (fresh load), clears prefetch buffer.
      * Page > 1: appends movies to current page (fallback load more).
      */
-    fetchMoviesSuccess: (state, action: PayloadAction<FetchMoviesSuccessPayload>) => {
+    fetchMoviesSuccess: (
+      state,
+      action: PayloadAction<FetchMoviesSuccessPayload>,
+    ) => {
       const key = MOVIE_LIST_STATE_KEY[action.payload.list];
       const { page } = action.payload;
 
@@ -91,7 +94,10 @@ const moviesSlice = createSlice({
         const existingIds = new Set(state[key].page.movies.map((m) => m.id));
         state[key].page = {
           ...page,
-          movies: [...state[key].page.movies, ...page.movies.filter((m) => !existingIds.has(m.id))],
+          movies: [
+            ...state[key].page.movies,
+            ...page.movies.filter((m) => !existingIds.has(m.id)),
+          ],
         };
       }
     },
@@ -99,7 +105,10 @@ const moviesSlice = createSlice({
     /**
      * Called by saga on API error
      */
-    fetchMoviesFailure: (state, action: PayloadAction<FetchMoviesFailurePayload>) => {
+    fetchMoviesFailure: (
+      state,
+      action: PayloadAction<FetchMoviesFailurePayload>,
+    ) => {
       const key = MOVIE_LIST_STATE_KEY[action.payload.list];
       state[key].status = REQUEST_STATUS.ERROR;
       state[key].error = action.payload.error;
@@ -126,7 +135,10 @@ const moviesSlice = createSlice({
       const existingIds = new Set(state[key].page.movies.map((m) => m.id));
       state[key].page = {
         ...nextPage,
-        movies: [...state[key].page.movies, ...nextPage.movies.filter((m) => !existingIds.has(m.id))],
+        movies: [
+          ...state[key].page.movies,
+          ...nextPage.movies.filter((m) => !existingIds.has(m.id)),
+        ],
       };
       state[key].nextPage = null;
     },

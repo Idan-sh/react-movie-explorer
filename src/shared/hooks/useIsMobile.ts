@@ -13,7 +13,7 @@ const MOBILE_QUERY = `(max-width: ${BREAKPOINT.MD - 1}px)`;
 
 export function useIsMobile(): boolean {
   const [isMobile, setIsMobile] = useState(
-    () => window.matchMedia(MOBILE_QUERY).matches
+    () => window.matchMedia(MOBILE_QUERY).matches,
   );
 
   useEffect(() => {

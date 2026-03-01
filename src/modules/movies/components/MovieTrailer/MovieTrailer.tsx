@@ -6,10 +6,10 @@
  * Avoids loading YouTube's heavy JS until the user opts in.
  */
 
-import { PlayIcon } from "@heroicons/react/24/solid";
-import type { TmdbVideo } from "../../types";
-import { getYoutubeThumbnailUrl } from "../../utils";
-import { useMovieTrailer } from "./useMovieTrailer";
+import { PlayIcon } from '@heroicons/react/24/solid';
+import type { TmdbVideo } from '../../types';
+import { getYoutubeThumbnailUrl } from '../../utils';
+import { useMovieTrailer } from './useMovieTrailer';
 
 interface MovieTrailerProps {
   videos: TmdbVideo[];
@@ -17,7 +17,7 @@ interface MovieTrailerProps {
 
 function TrailerThumbnail({
   trailer,
-  onPlay
+  onPlay,
 }: {
   trailer: TmdbVideo;
   onPlay: () => void;
@@ -58,13 +58,17 @@ function TrailerEmbed({ videoKey }: { videoKey: string }): React.JSX.Element {
   );
 }
 
-export function MovieTrailer({ videos }: MovieTrailerProps): React.JSX.Element | null {
+export function MovieTrailer({
+  videos,
+}: MovieTrailerProps): React.JSX.Element | null {
   const { trailer, isPlaying, handlePlay } = useMovieTrailer(videos);
   if (!trailer) return null;
 
   return (
     <div className="flex flex-col gap-3">
-      <h2 className="text-lg font-semibold text-gray-900 dark:text-white">Trailer</h2>
+      <h2 className="text-lg font-semibold text-gray-900 dark:text-white">
+        Trailer
+      </h2>
       {isPlaying ? (
         <TrailerEmbed videoKey={trailer.key} />
       ) : (

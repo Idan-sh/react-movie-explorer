@@ -10,14 +10,14 @@
  * actionsSlot: icon buttons (theme toggle, settings) — always in the top row.
  */
 
-import { Link } from "react-router-dom";
+import { Link } from 'react-router-dom';
 
-import type { AppView } from "@/shared/types";
-import { useHamburgerMenu } from "@/shared/hooks";
-import { ROUTES, Z_LAYER } from "@/shared/constants";
-import { CategoryTabs } from "../CategoryTabs";
-import { HamburgerButton } from "./HamburgerButton";
-import { MobileMenu } from "./MobileMenu";
+import type { AppView } from '@/shared/types';
+import { useHamburgerMenu } from '@/shared/hooks';
+import { ROUTES, Z_LAYER } from '@/shared/constants';
+import { CategoryTabs } from '../CategoryTabs';
+import { HamburgerButton } from './HamburgerButton';
+import { MobileMenu } from './MobileMenu';
 
 export interface AppHeaderProps {
   activeView: AppView;
@@ -36,12 +36,10 @@ export function AppHeader({
   onTabFocus,
   onTabBlur,
   searchSlot,
-  actionsSlot
+  actionsSlot,
 }: AppHeaderProps): React.JSX.Element {
-  const { isMenuOpen, focusedMenuIndex, toggleMenu, handleMobileTabClick } = useHamburgerMenu(
-    onTabClick,
-    focusedTabIndex
-  );
+  const { isMenuOpen, focusedMenuIndex, toggleMenu, handleMobileTabClick } =
+    useHamburgerMenu(onTabClick, focusedTabIndex);
 
   return (
     <header
@@ -55,7 +53,11 @@ export function AppHeader({
             to={ROUTES.HOME}
             className="flex shrink-0 items-center gap-2 md:gap-3.5 cursor-pointer no-underline transition-transform duration-150 ease-in-out hover:scale-105"
           >
-            <svg className="h-8 w-8 md:h-9 md:w-9 shrink-0 text-primary" viewBox="0 0 24 24" fill="currentColor">
+            <svg
+              className="h-8 w-8 md:h-9 md:w-9 shrink-0 text-primary"
+              viewBox="0 0 24 24"
+              fill="currentColor"
+            >
               <path d="M18 4l2 4h-3l-2-4h-2l2 4h-3l-2-4H8l2 4H7L5 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V4h-4z" />
             </svg>
             <h1 className="font-heading text-lg sm:text-2xl md:text-3xl leading-none translate-y-px font-bold uppercase tracking-tight text-gray-900 dark:text-white">

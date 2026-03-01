@@ -7,15 +7,15 @@ export const CIRCULAR_RATING = {
   ANIMATION_DURATION_MS: 800,
   SIZE: {
     sm: {
-      container: "h-10 w-10",
-      text: "text-[12px]",
-      percent: "text-[6px]",
+      container: 'h-10 w-10',
+      text: 'text-[12px]',
+      percent: 'text-[6px]',
       strokeWidth: 1.5,
     },
     lg: {
-      container: "h-14 w-14",
-      text: "text-[16px]",
-      percent: "text-[7px]",
+      container: 'h-14 w-14',
+      text: 'text-[16px]',
+      percent: 'text-[7px]',
       strokeWidth: 2,
     },
   },

@@ -12,9 +12,17 @@
  * 6. User clears input → dispatch(clearSearch()) resets everything
  */
 
-import { createSlice, createAction, type PayloadAction } from '@reduxjs/toolkit';
+import {
+  createSlice,
+  createAction,
+  type PayloadAction,
+} from '@reduxjs/toolkit';
 import { REQUEST_STATUS, SLICE_NAMES } from '@/shared/constants';
-import type { SearchState, SearchSuccessPayload, SearchFailurePayload } from '../types';
+import type {
+  SearchState,
+  SearchSuccessPayload,
+  SearchFailurePayload,
+} from '../types';
 
 const initialState: SearchState = {
   query: '',
@@ -41,7 +49,10 @@ const searchSlice = createSlice({
     },
 
     /** Page 1: replaces results (new query). Page > 1: appends (load more). */
-    searchMoviesSuccess: (state, action: PayloadAction<SearchSuccessPayload>) => {
+    searchMoviesSuccess: (
+      state,
+      action: PayloadAction<SearchSuccessPayload>,
+    ) => {
       const { results, page, totalPages } = action.payload;
       state.status = REQUEST_STATUS.SUCCESS;
       state.page = page;
@@ -49,10 +60,16 @@ const searchSlice = createSlice({
 
       const existing = page === 1 ? [] : state.results;
       const existingIds = new Set(existing.map((m) => m.id));
-      state.results = [...existing, ...results.filter((m) => !existingIds.has(m.id))];
+      state.results = [
+        ...existing,
+        ...results.filter((m) => !existingIds.has(m.id)),
+      ];
     },
 
-    searchMoviesFailure: (state, action: PayloadAction<SearchFailurePayload>) => {
+    searchMoviesFailure: (
+      state,
+      action: PayloadAction<SearchFailurePayload>,
+    ) => {
       state.status = REQUEST_STATUS.ERROR;
       state.error = action.payload.error;
     },
@@ -63,7 +80,9 @@ const searchSlice = createSlice({
 });
 
 /** Saga-only trigger — fetches the next page of the current query */
-export const loadMoreSearchResults = createAction(`${SLICE_NAMES.SEARCH}/loadMore`);
+export const loadMoreSearchResults = createAction(
+  `${SLICE_NAMES.SEARCH}/loadMore`,
+);
 
 export const {
   setSearchQuery,

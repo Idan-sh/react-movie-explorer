@@ -20,11 +20,11 @@
  * fall through to the global nav which handles tab activation directly.
  */
 
-import { useState, useCallback, useEffect, useRef } from "react";
-import type { AppView } from "@/shared/types";
-import { APP_VIEW_TABS } from "@/shared/constants";
-import { buildNavId, focusNavElement, NAV_ID_PREFIX } from "@/core/navigation";
-import { useIsMobile } from "./useIsMobile";
+import { useState, useCallback, useEffect, useRef } from 'react';
+import type { AppView } from '@/shared/types';
+import { APP_VIEW_TABS } from '@/shared/constants';
+import { buildNavId, focusNavElement, NAV_ID_PREFIX } from '@/core/navigation';
+import { useIsMobile } from './useIsMobile';
 
 const TAB_COUNT = APP_VIEW_TABS.length;
 
@@ -37,7 +37,7 @@ export interface UseHamburgerMenuReturn {
 
 export function useHamburgerMenu(
   onTabClick: (view: AppView) => void,
-  focusedTabIndex: number
+  focusedTabIndex: number,
 ): UseHamburgerMenuReturn {
   const isMobile = useIsMobile();
   const [isMenuOpenRaw, setIsMenuOpenRaw] = useState(false);
@@ -72,7 +72,7 @@ export function useHamburgerMenu(
       setIsMenuOpenRaw(false);
       onTabClick(view);
     },
-    [onTabClick]
+    [onTabClick],
   );
 
   const handleMobileTabClickRef = useRef(handleMobileTabClick);
@@ -94,15 +94,15 @@ export function useHamburgerMenu(
     if (!isMobile || isMenuOpen || focusedTabIndex === -1) return;
 
     function handleKeyDown(e: KeyboardEvent): void {
-      if (e.key !== "Enter") return;
+      if (e.key !== 'Enter') return;
       e.preventDefault();
       e.stopImmediatePropagation();
       setFocusedMenuIndex(Math.max(0, focusedTabIndexRef.current));
       setIsMenuOpenRaw(true);
     }
 
-    document.addEventListener("keydown", handleKeyDown, true);
-    return () => document.removeEventListener("keydown", handleKeyDown, true);
+    document.addEventListener('keydown', handleKeyDown, true);
+    return () => document.removeEventListener('keydown', handleKeyDown, true);
   }, [isMobile, isMenuOpen, focusedTabIndex]);
 
   // ── Navigate within menu when it is OPEN (mobile only) ─────────────────────
@@ -111,37 +111,39 @@ export function useHamburgerMenu(
 
     function handleKeyDown(e: KeyboardEvent): void {
       switch (e.key) {
-        case "ArrowUp":
-        case "ArrowLeft":
+        case 'ArrowUp':
+        case 'ArrowLeft':
           e.preventDefault();
           e.stopImmediatePropagation();
           setFocusedMenuIndex((prev) => (prev - 1 + TAB_COUNT) % TAB_COUNT);
           break;
-        case "ArrowDown":
-        case "ArrowRight":
+        case 'ArrowDown':
+        case 'ArrowRight':
           e.preventDefault();
           e.stopImmediatePropagation();
           setFocusedMenuIndex((prev) => (prev + 1) % TAB_COUNT);
           break;
-        case "Enter":
+        case 'Enter':
           e.preventDefault();
           e.stopImmediatePropagation();
-          handleMobileTabClickRef.current(APP_VIEW_TABS[focusedMenuIndexRef.current]);
+          handleMobileTabClickRef.current(
+            APP_VIEW_TABS[focusedMenuIndexRef.current],
+          );
           break;
-        case "Escape":
+        case 'Escape':
           e.preventDefault();
           e.stopImmediatePropagation();
           setIsMenuOpenRaw(false);
           break;
-        case "Tab":
+        case 'Tab':
           e.preventDefault();
           e.stopImmediatePropagation();
           break;
       }
     }
 
-    document.addEventListener("keydown", handleKeyDown, true);
-    return () => document.removeEventListener("keydown", handleKeyDown, true);
+    document.addEventListener('keydown', handleKeyDown, true);
+    return () => document.removeEventListener('keydown', handleKeyDown, true);
   }, [isMenuOpen]);
 
   return { isMenuOpen, focusedMenuIndex, toggleMenu, handleMobileTabClick };

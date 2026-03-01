@@ -62,19 +62,24 @@ export function usePageNavigation<T>({
   scrollContainerRef,
 }: UsePageNavigationOptions<T>): UseKeyboardNavReturn {
   // Derive section definitions from item arrays
-  const sections = useMemo((): ContentSection[] =>
-    sectionItems.map((items, i) => ({
-      itemCount: items.length,
-      columns,
-      hasFooter: sectionHasFooter?.[i] ?? false,
-    })),
-  [sectionItems, columns, sectionHasFooter]);
+  const sections = useMemo(
+    (): ContentSection[] =>
+      sectionItems.map((items, i) => ({
+        itemCount: items.length,
+        columns,
+        hasFooter: sectionHasFooter?.[i] ?? false,
+      })),
+    [sectionItems, columns, sectionHasFooter],
+  );
 
   // Look up the item by section and index, then delegate to caller
-  const handleItemActivate = useCallback((sectionIdx: number, itemIdx: number): void => {
-    const item = sectionItems[sectionIdx]?.[itemIdx];
-    if (item !== undefined) onItemActivate(item);
-  }, [sectionItems, onItemActivate]);
+  const handleItemActivate = useCallback(
+    (sectionIdx: number, itemIdx: number): void => {
+      const item = sectionItems[sectionIdx]?.[itemIdx];
+      if (item !== undefined) onItemActivate(item);
+    },
+    [sectionItems, onItemActivate],
+  );
 
   return useKeyboardNav({
     tabCount,

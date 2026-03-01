@@ -5,7 +5,7 @@
  * Receives pre-formatted values only — no data transformation.
  */
 
-import { CircularMovieRating } from "../CircularMovieRating";
+import { CircularMovieRating } from '../CircularMovieRating';
 
 export interface MovieDetailsMetaProps {
   rating: number | null;
@@ -22,7 +22,7 @@ export function MovieDetailsMeta({
   runtime,
   budget,
   revenue,
-  actionSlot
+  actionSlot,
 }: MovieDetailsMetaProps): React.JSX.Element {
   return (
     <div className="flex flex-col gap-2">

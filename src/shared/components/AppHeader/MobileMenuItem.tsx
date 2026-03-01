@@ -1,6 +1,6 @@
-import type { AppView } from "@/shared/types";
-import { APP_VIEW_CONFIG } from "@/shared/constants";
-import { buildNavId, NAV_ID_PREFIX } from "@/core/navigation";
+import type { AppView } from '@/shared/types';
+import { APP_VIEW_CONFIG } from '@/shared/constants';
+import { buildNavId, NAV_ID_PREFIX } from '@/core/navigation';
 
 interface MobileMenuItemProps {
   view: AppView;
@@ -10,7 +10,13 @@ interface MobileMenuItemProps {
   onTabClick: (view: AppView) => void;
 }
 
-export function MobileMenuItem({ view, index, isActive, isFocused, onTabClick }: MobileMenuItemProps): React.JSX.Element {
+export function MobileMenuItem({
+  view,
+  index,
+  isActive,
+  isFocused,
+  onTabClick,
+}: MobileMenuItemProps): React.JSX.Element {
   const handleClick = (): void => {
     onTabClick(view);
   };
@@ -26,11 +32,11 @@ export function MobileMenuItem({ view, index, isActive, isFocused, onTabClick }:
         text-sm font-medium
         transition-colors duration-200
         outline-none
-        ${isFocused ? "ring-2 ring-primary rounded-lg" : ""}
+        ${isFocused ? 'ring-2 ring-primary rounded-lg' : ''}
         ${
           isActive
-            ? "bg-primary/10 text-primary dark:bg-primary/20 dark:text-primary-light"
-            : "text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800/60"
+            ? 'bg-primary/10 text-primary dark:bg-primary/20 dark:text-primary-light'
+            : 'text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800/60'
         }
       `}
     >

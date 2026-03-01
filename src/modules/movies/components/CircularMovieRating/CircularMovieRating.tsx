@@ -10,17 +10,17 @@
  *   - lg (56px) — details page inline
  */
 
-import { CIRCULAR_RATING } from "./circularMovieRating.constants";
-import { useCircularMovieRating } from "./useCircularMovieRating";
+import { CIRCULAR_RATING } from './circularMovieRating.constants';
+import { useCircularMovieRating } from './useCircularMovieRating';
 
 export interface CircularMovieRatingProps {
   rating: number;
-  size?: "sm" | "lg";
+  size?: 'sm' | 'lg';
 }
 
 export function CircularMovieRating({
   rating,
-  size = "sm",
+  size = 'sm',
 }: CircularMovieRatingProps): React.JSX.Element {
   const { containerRef, animatedValue, offset, color, trackColor } =
     useCircularMovieRating(rating);

@@ -15,7 +15,11 @@ export interface MovieDetailsCastProps {
   cast: CastMemberDisplay[];
 }
 
-function CastMemberCard({ member }: { member: CastMemberDisplay }): React.JSX.Element {
+function CastMemberCard({
+  member,
+}: {
+  member: CastMemberDisplay;
+}): React.JSX.Element {
   return (
     <div className="flex w-24 shrink-0 flex-col items-center gap-1.5 text-center">
       {member.profileUrl ? (
@@ -40,13 +44,18 @@ function CastMemberCard({ member }: { member: CastMemberDisplay }): React.JSX.El
   );
 }
 
-export function MovieDetailsCast({ director, cast }: MovieDetailsCastProps): React.JSX.Element | null {
+export function MovieDetailsCast({
+  director,
+  cast,
+}: MovieDetailsCastProps): React.JSX.Element | null {
   if (cast.length === 0) return null;
 
   return (
     <div className="flex flex-col gap-3">
       <div className="flex items-baseline gap-2">
-        <h2 className="text-lg font-semibold text-gray-900 dark:text-white">Cast</h2>
+        <h2 className="text-lg font-semibold text-gray-900 dark:text-white">
+          Cast
+        </h2>
         {director && (
           <span className="text-sm text-gray-500 dark:text-gray-400">
             Directed by {director}

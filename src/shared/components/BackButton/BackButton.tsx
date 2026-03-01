@@ -1,4 +1,4 @@
-import { ChevronLeftIcon } from "@heroicons/react/24/outline";
+import { ChevronLeftIcon } from '@heroicons/react/24/outline';
 
 interface BackButtonProps {
   onClick: () => void;
@@ -21,7 +21,7 @@ export function BackButton({
         flex items-center gap-1.5 text-sm font-medium outline-none
         text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white
         transition-colors rounded-sm
-        ${isFocused ? "ring-2 ring-primary" : ""}
+        ${isFocused ? 'ring-2 ring-primary' : ''}
       `}
     >
       <ChevronLeftIcon className="h-4 w-4" aria-hidden="true" />

@@ -5,8 +5,8 @@
  * Wraps in try/catch to handle private browsing or storage full errors.
  */
 
-import type { TmdbMovie } from "@/modules/movies";
-import { STORAGE_KEY } from "@/shared/constants";
+import type { TmdbMovie } from '@/modules/movies';
+import { STORAGE_KEY } from '@/shared/constants';
 
 export function loadFavorites(): TmdbMovie[] {
   try {

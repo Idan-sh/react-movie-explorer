@@ -47,22 +47,34 @@ export function useHomePage() {
     (movie: TmdbMovie): void => {
       navigate(ROUTES.movieDetails(movie.id), { viewTransition: true });
     },
-    [navigate]
+    [navigate],
   );
 
   const activeSelectors = activeList ? getListSelectors(activeList) : null;
-  const movies = useAppSelector(activeSelectors?.selectMovies ?? selectNoMovies);
-  const hasMorePages = useAppSelector(activeSelectors?.selectHasMorePages ?? selectFalse);
-  const hasNextPage = useAppSelector(activeSelectors?.selectHasNextPage ?? selectFalse);
-  const pageNumber = useAppSelector(activeSelectors?.selectPageNumber ?? selectZero);
+  const movies = useAppSelector(
+    activeSelectors?.selectMovies ?? selectNoMovies,
+  );
+  const hasMorePages = useAppSelector(
+    activeSelectors?.selectHasMorePages ?? selectFalse,
+  );
+  const hasNextPage = useAppSelector(
+    activeSelectors?.selectHasNextPage ?? selectFalse,
+  );
+  const pageNumber = useAppSelector(
+    activeSelectors?.selectPageNumber ?? selectZero,
+  );
 
   const favorites = useAppSelector(selectFavorites);
-  const favoriteIds = useMemo(() => new Set(favorites.map((m) => m.id)), [favorites]);
+  const favoriteIds = useMemo(
+    () => new Set(favorites.map((m) => m.id)),
+    [favorites],
+  );
 
   const onMovieLoad = useCallback((): void => {
     if (!activeList) return;
     if (hasNextPage) dispatch(showNextPage({ list: activeList }));
-    else dispatch(fetchMovies({ list: activeList, pageNumber: pageNumber + 1 }));
+    else
+      dispatch(fetchMovies({ list: activeList, pageNumber: pageNumber + 1 }));
   }, [dispatch, activeList, hasNextPage, pageNumber]);
 
   const movieLoadMore = useLoadMore({
@@ -89,7 +101,11 @@ export function useHomePage() {
     if (isSearchActive) {
       return searchMovies.length > 0 ? [searchMovies] : [];
     }
-    const active = activeList ? movies : activeView === APP_VIEW.FAVORITES ? favorites : [];
+    const active = activeList
+      ? movies
+      : activeView === APP_VIEW.FAVORITES
+        ? favorites
+        : [];
     return active.length > 0 ? [active] : [];
   }, [isSearchActive, searchMovies, activeList, movies, activeView, favorites]);
 
@@ -98,23 +114,30 @@ export function useHomePage() {
       return searchMovies.length > 0 ? [searchHasMorePages] : [];
     }
     return activeList ? [hasMorePages] : [];
-  }, [isSearchActive, searchMovies, searchHasMorePages, activeList, hasMorePages]);
+  }, [
+    isSearchActive,
+    searchMovies,
+    searchHasMorePages,
+    activeList,
+    hasMorePages,
+  ]);
 
   const gridColumns = useGridColumns();
 
-  const { focusedTabIndex, focusedSectionIndex, focusedItemIndex } = usePageNavigation({
-    tabCount: APP_VIEW_TABS.length,
-    sectionItems,
-    columns: gridColumns,
-    contentKey: isSearchActive ? 'search' : activeView,
-    onTabActivate: (index) => handleTabClick(APP_VIEW_TABS[index]),
-    onItemActivate: handleSelectMovie,
-    onEscape: () => {},
-    sectionHasFooter,
-    onFooterActivate: handleFooterActivate,
-    activeTabIndex: APP_VIEW_TABS.indexOf(activeView),
-    enabled: !isSearchFocused,
-  });
+  const { focusedTabIndex, focusedSectionIndex, focusedItemIndex } =
+    usePageNavigation({
+      tabCount: APP_VIEW_TABS.length,
+      sectionItems,
+      columns: gridColumns,
+      contentKey: isSearchActive ? 'search' : activeView,
+      onTabActivate: (index) => handleTabClick(APP_VIEW_TABS[index]),
+      onItemActivate: handleSelectMovie,
+      onEscape: () => {},
+      sectionHasFooter,
+      onFooterActivate: handleFooterActivate,
+      activeTabIndex: APP_VIEW_TABS.indexOf(activeView),
+      enabled: !isSearchFocused,
+    });
 
   useEffect(() => {
     setFocusedTabIndex(focusedTabIndex);

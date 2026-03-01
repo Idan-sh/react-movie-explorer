@@ -5,8 +5,8 @@
  * Currently supports: mouse scroll enable/disable.
  */
 
-import { useState, useCallback } from "react";
-import { loadScrollEnabled, saveScrollEnabled } from "./settings.storage";
+import { useState, useCallback } from 'react';
+import { loadScrollEnabled, saveScrollEnabled } from './settings.storage';
 
 export interface UseSettingsReturn {
   isScrollEnabled: boolean;

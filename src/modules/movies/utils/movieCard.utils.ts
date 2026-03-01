@@ -37,7 +37,11 @@ export function formatReleaseDate(releaseDate: string): string {
   const [year, month, day] = releaseDate.split('-');
   if (!year || !month || !day) return 'N/A';
   const date = new Date(Number(year), Number(month) - 1, Number(day));
-  return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+  return date.toLocaleDateString('en-US', {
+    month: 'short',
+    day: 'numeric',
+    year: 'numeric',
+  });
 }
 
 /**
@@ -84,8 +88,9 @@ export function formatRuntime(minutes: number | null): string | null {
 export function buildMovieAriaLabel(
   title: string,
   releaseYear: string,
-  rating: number | null
+  rating: number | null,
 ): string {
-  const ratingText = rating !== null ? `Rating: ${rating}%` : 'No rating available';
+  const ratingText =
+    rating !== null ? `Rating: ${rating}%` : 'No rating available';
   return `${title}, ${releaseYear}, ${ratingText}`;
 }

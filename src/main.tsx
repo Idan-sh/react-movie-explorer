@@ -9,17 +9,17 @@
  * Both pages are lazy-loaded so each route only downloads its code on demand.
  */
 
-import { StrictMode, lazy, Suspense } from "react";
-import { createRoot } from "react-dom/client";
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import { Provider } from "react-redux";
-import { store } from "@/core/store";
-import { ROUTES } from "@/shared/constants";
-import { AppLayout } from "@/shared/components";
-import "./index.css";
+import { StrictMode, lazy, Suspense } from 'react';
+import { createRoot } from 'react-dom/client';
+import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import { Provider } from 'react-redux';
+import { store } from '@/core/store';
+import { ROUTES } from '@/shared/constants';
+import { AppLayout } from '@/shared/components';
+import './index.css';
 
-const HomePage = lazy(() => import("./pages/HomePage"));
-const MovieDetailsPage = lazy(() => import("./pages/MovieDetailsPage"));
+const HomePage = lazy(() => import('./pages/HomePage'));
+const MovieDetailsPage = lazy(() => import('./pages/MovieDetailsPage'));
 
 const router = createBrowserRouter([
   {
@@ -31,7 +31,7 @@ const router = createBrowserRouter([
           <Suspense fallback={null}>
             <HomePage />
           </Suspense>
-        )
+        ),
       },
       {
         path: ROUTES.MOVIE_DETAILS,
@@ -39,16 +39,16 @@ const router = createBrowserRouter([
           <Suspense fallback={null}>
             <MovieDetailsPage />
           </Suspense>
-        )
-      }
-    ]
-  }
+        ),
+      },
+    ],
+  },
 ]);
 
-createRoot(document.getElementById("root")!).render(
+createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <Provider store={store}>
       <RouterProvider router={router} />
     </Provider>
-  </StrictMode>
+  </StrictMode>,
 );

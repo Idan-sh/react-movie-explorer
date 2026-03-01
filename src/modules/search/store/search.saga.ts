@@ -8,7 +8,13 @@
  * - Handles pagination via loadMoreSearchResults action
  */
 
-import { call, put, select, takeLatest, debounce as sagaDebounce } from 'redux-saga/effects';
+import {
+  call,
+  put,
+  select,
+  takeLatest,
+  debounce as sagaDebounce,
+} from 'redux-saga/effects';
 import type { PayloadAction } from '@reduxjs/toolkit';
 import type { AxiosResponse } from 'axios';
 import { tmdbClient, TMDB_ENDPOINTS } from '@/core/api';
@@ -28,14 +34,27 @@ import {
   selectSearchHasMorePages,
 } from './search.selectors';
 
-const rateLimiter = createRateLimiter(SEARCH.RATE_LIMIT_MAX, SEARCH.RATE_LIMIT_WINDOW_MS);
+const rateLimiter = createRateLimiter(
+  SEARCH.RATE_LIMIT_MAX,
+  SEARCH.RATE_LIMIT_WINDOW_MS,
+);
 
 function* fetchPage(query: string, page: number): Generator {
-  const response = yield call(tmdbClient.get<TmdbMovieListResponse>, TMDB_ENDPOINTS.SEARCH.MOVIES, {
-    params: { query, page },
-  });
-  const { results, page: resultPage, total_pages } = (response as AxiosResponse<TmdbMovieListResponse>).data;
-  yield put(searchMoviesSuccess({ results, page: resultPage, totalPages: total_pages }));
+  const response = yield call(
+    tmdbClient.get<TmdbMovieListResponse>,
+    TMDB_ENDPOINTS.SEARCH.MOVIES,
+    {
+      params: { query, page },
+    },
+  );
+  const {
+    results,
+    page: resultPage,
+    total_pages,
+  } = (response as AxiosResponse<TmdbMovieListResponse>).data;
+  yield put(
+    searchMoviesSuccess({ results, page: resultPage, totalPages: total_pages }),
+  );
 }
 
 const RATE_LIMIT_MESSAGE = 'Too many searches. Please wait a moment.';

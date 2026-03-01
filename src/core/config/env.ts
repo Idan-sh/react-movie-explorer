@@ -16,7 +16,7 @@ for (const key of requiredVars) {
   if (!import.meta.env[key]) {
     throw new Error(
       `Missing required environment variable: ${key}\n` +
-        'Make sure you have a .env file with all required variables.'
+        'Make sure you have a .env file with all required variables.',
     );
   }
 }

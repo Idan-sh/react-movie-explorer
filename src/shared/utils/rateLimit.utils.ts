@@ -11,7 +11,10 @@ export interface RateLimiter {
   record(): void;
 }
 
-export function createRateLimiter(maxRequests: number, windowMs: number): RateLimiter {
+export function createRateLimiter(
+  maxRequests: number,
+  windowMs: number,
+): RateLimiter {
   const timestamps: number[] = [];
 
   return {
