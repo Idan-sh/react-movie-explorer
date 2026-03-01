@@ -10,7 +10,7 @@ export function focusNavElement(navId: string): boolean {
   if (element instanceof HTMLElement) {
     element.focus({ preventScroll: true });
     if (document.activeElement === element) {
-      element.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+      element.scrollIntoView({ block: 'center', behavior: 'smooth' });
       return true;
     }
   }
