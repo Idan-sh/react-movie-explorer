@@ -11,7 +11,9 @@ import { STORAGE_KEY } from "@/shared/constants";
 export function loadFavorites(): TmdbMovie[] {
   try {
     const raw = localStorage.getItem(STORAGE_KEY.MOVIES.FAVORITES);
-    return raw ? (JSON.parse(raw) as TmdbMovie[]) : [];
+    if (!raw) return [];
+    const parsed: unknown = JSON.parse(raw);
+    return Array.isArray(parsed) ? (parsed as TmdbMovie[]) : [];
   } catch {
     return [];
   }

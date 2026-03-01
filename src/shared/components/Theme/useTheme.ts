@@ -12,8 +12,12 @@ import { THEME, THEME_DEFAULT, THEME_CSS_CLASS } from './theme.constants';
 import type { Theme } from './theme.types';
 
 function getInitialTheme(): Theme {
-  const stored = localStorage.getItem(STORAGE_KEY.THEME);
-  if (stored === THEME.LIGHT || stored === THEME.DARK) return stored;
+  try {
+    const stored = localStorage.getItem(STORAGE_KEY.THEME);
+    if (stored === THEME.LIGHT || stored === THEME.DARK) return stored;
+  } catch {
+    // localStorage unavailable (private browsing, quota exceeded)
+  }
   return THEME_DEFAULT;
 }
 
@@ -23,7 +27,11 @@ function applyTheme(theme: Theme): void {
   } else {
     document.documentElement.classList.remove(THEME_CSS_CLASS);
   }
-  localStorage.setItem(STORAGE_KEY.THEME, theme);
+  try {
+    localStorage.setItem(STORAGE_KEY.THEME, theme);
+  } catch {
+    // Silent fail
+  }
 }
 
 export interface UseThemeReturn {
