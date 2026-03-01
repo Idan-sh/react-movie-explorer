@@ -13,6 +13,8 @@ export const BREAKPOINT = {
   '2XL': 1536,
 } as const;
 
+export const MOBILE_QUERY = `(max-width: ${BREAKPOINT.MD - 1}px)`;
+
 /**
  * Z-Index Layers
  *

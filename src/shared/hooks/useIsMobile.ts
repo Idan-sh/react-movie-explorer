@@ -7,9 +7,7 @@
  */
 
 import { useState, useEffect } from 'react';
-import { BREAKPOINT } from '@/shared/constants';
-
-const MOBILE_QUERY = `(max-width: ${BREAKPOINT.MD - 1}px)`;
+import { MOBILE_QUERY } from '@/shared/constants';
 
 export function useIsMobile(): boolean {
   const [isMobile, setIsMobile] = useState(
