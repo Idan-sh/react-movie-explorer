@@ -15,5 +15,6 @@ export const STORAGE_KEY = {
   },
   NAV: {
     FOCUSED_INDEX: 'nav:focused-index',
+    ACTIVE_VIEW: 'nav:active-view',
   },
 } as const;

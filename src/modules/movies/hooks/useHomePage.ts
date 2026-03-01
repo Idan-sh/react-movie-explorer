@@ -15,6 +15,11 @@ import {
   ROUTES,
   STORAGE_KEY,
 } from '@/shared/constants';
+import {
+  getSessionItem,
+  setSessionItem,
+  removeSessionItem,
+} from '@/shared/utils';
 import { NAV_ZONE } from '@/core/navigation';
 import { useLoadMore } from '@/shared/hooks';
 import { useAppSelector, useAppDispatch } from '@/core/store';
@@ -25,7 +30,11 @@ import {
   showNextPage,
 } from '@/modules/movies';
 import type { TmdbMovie, MovieList } from '@/modules/movies';
-import { useFavoriteToggle, selectFavorites, selectFavoriteIds } from '@/modules/favorites';
+import {
+  useFavoriteToggle,
+  selectFavorites,
+  selectFavoriteIds,
+} from '@/modules/favorites';
 import { usePageNavigation, useGridColumns } from '@/core/navigation';
 import { useSearchGrid } from '@/modules/search';
 import type { UseSearchGridReturn } from '@/modules/search';
@@ -67,8 +76,8 @@ export function useHomePage(): UseHomePageReturn {
 
   // Restore focused card position after returning from movie details
   const [returnIndex] = useState(() => {
-    const stored = sessionStorage.getItem(STORAGE_KEY.NAV.FOCUSED_INDEX);
-    sessionStorage.removeItem(STORAGE_KEY.NAV.FOCUSED_INDEX);
+    const stored = getSessionItem(STORAGE_KEY.NAV.FOCUSED_INDEX);
+    removeSessionItem(STORAGE_KEY.NAV.FOCUSED_INDEX);
     return stored !== null ? parseInt(stored, 10) : -1;
   });
 
@@ -76,7 +85,7 @@ export function useHomePage(): UseHomePageReturn {
 
   const handleSelectMovie = useCallback(
     (movie: TmdbMovie): void => {
-      sessionStorage.setItem(
+      setSessionItem(
         STORAGE_KEY.NAV.FOCUSED_INDEX,
         String(focusedIndexRef.current),
       );
@@ -101,10 +110,7 @@ export function useHomePage(): UseHomePageReturn {
 
   const favorites = useAppSelector(selectFavorites);
   const favoriteIdList = useAppSelector(selectFavoriteIds);
-  const favoriteIds = useMemo(
-    () => new Set(favoriteIdList),
-    [favoriteIdList],
-  );
+  const favoriteIds = useMemo(() => new Set(favoriteIdList), [favoriteIdList]);
 
   const onMovieLoad = useCallback((): void => {
     if (!activeList) return;
