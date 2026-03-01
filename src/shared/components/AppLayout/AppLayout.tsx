@@ -89,7 +89,7 @@ export function AppLayout(): React.JSX.Element {
   );
 
   return (
-    <div className="flex h-screen flex-col">
+    <div className="flex h-full flex-col">
       <AppHeader
         activeView={activeView}
         focusedTabIndex={focusedTabIndex}
