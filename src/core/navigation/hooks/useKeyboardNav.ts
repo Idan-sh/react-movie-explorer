@@ -21,7 +21,13 @@
  * focus/blur events, connecting to existing handlers (e.g., 2s tab auto-switch).
  */
 
-import { useState, useEffect, useLayoutEffect, useRef, useCallback } from 'react';
+import {
+  useState,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useCallback,
+} from 'react';
 import { NAV_KEY, NAV_ZONE, NAV_SCROLL_STEP } from '../constants';
 import type {
   NavState,
@@ -77,15 +83,12 @@ function resolveEnterKey(
       config.enterContentTabCount !== undefined &&
       tabIndex < config.enterContentTabCount
     ) {
-      const firstSection = config.sections[0];
-      if (firstSection && firstSection.itemCount > 0) {
-        return {
-          ...state,
-          activeZone: NAV_ZONE.CONTENT,
-          sectionIndex: 0,
-          itemIndex: 0,
-        };
-      }
+      return {
+        ...state,
+        activeZone: NAV_ZONE.CONTENT,
+        sectionIndex: 0,
+        itemIndex: 0,
+      };
     }
     return null;
   }
@@ -213,6 +216,16 @@ export function useKeyboardNav({
     setState((prev) => ({ ...prev, sectionIndex: 0, itemIndex: 0 }));
   }
 
+  // If in content zone but nothing to focus, snap back to tabs.
+  // Same "set state during render" pattern — React discards the current
+  // render and re-renders with the corrected zone.
+  if (
+    state.activeZone === NAV_ZONE.CONTENT &&
+    !sections.some((s) => s.itemCount > 0)
+  ) {
+    setState((prev) => ({ ...prev, activeZone: NAV_ZONE.TABS }));
+  }
+
   // ── Global keydown listener (registered once) ────────────────
   useEffect(() => {
     if (!enabled) return;
@@ -292,9 +305,6 @@ export function useKeyboardNav({
 
     const focused = focusNavElement(getNavIdFromState(state));
 
-    // If focus couldn't move (e.g. target is display:none on mobile),
-    // explicitly blur the stale element so it doesn't retain a visible ring
-    // or intercept keyboard events.
     if (!focused) {
       (document.activeElement as HTMLElement)?.blur();
     }
