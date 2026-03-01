@@ -88,6 +88,7 @@ export interface UseMovieDetailsPageReturn {
   onPlayTrailer: () => void;
   recommendations: TmdbMovie[];
   castSectionIndex: number;
+  trailerSectionIndex: number;
   recsSectionIndex: number;
 }
 
@@ -328,6 +329,7 @@ export function useMovieDetailsPage(): UseMovieDetailsPageReturn {
     onPlayTrailer: handleToggleTrailer,
     recommendations,
     castSectionIndex,
+    trailerSectionIndex,
     recsSectionIndex,
   };
 }

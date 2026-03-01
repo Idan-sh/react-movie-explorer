@@ -5,7 +5,6 @@
  * Purely presentational — all state managed by useDropdown hook.
  */
 
-import { useCallback } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { Cog6ToothIcon } from '@heroicons/react/24/outline';
 import { Z_LAYER } from '@/shared/constants';
@@ -32,16 +31,9 @@ export function SettingsButton({
   isFocused = false,
   onOpenChange,
 }: SettingsButtonProps): React.JSX.Element {
-  const handleItemActivate = useCallback(
-    (index: number): void => {
-      if (index === 0) onToggleScroll();
-    },
-    [onToggleScroll],
-  );
-
   const { isOpen, containerRef, handleToggle, focusedIndex } = useDropdown({
     itemCount: 1,
-    onItemActivate: handleItemActivate,
+    onItemActivate: onToggleScroll,
     onOpenChange,
   });
 

@@ -43,6 +43,7 @@ export function MovieDetailsPage(): React.JSX.Element {
     onPlayTrailer,
     recommendations,
     castSectionIndex,
+    trailerSectionIndex,
     recsSectionIndex,
   } = useMovieDetailsPage();
 
@@ -77,13 +78,6 @@ export function MovieDetailsPage(): React.JSX.Element {
       </div>
     );
   }
-
-  const trailerSectionIndex = (() => {
-    if (!trailer) return -1;
-    let idx = 1;
-    if (display?.cast && display.cast.cast.length > 0) idx++;
-    return idx;
-  })();
 
   return (
     <div className="mx-auto max-w-3xl px-4 pt-6 pb-16">
