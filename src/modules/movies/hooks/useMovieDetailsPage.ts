@@ -39,7 +39,11 @@ import {
 } from '../utils';
 import { CAST, RECOMMENDATIONS } from '../constants';
 import { useFavoriteToggle, selectFavoriteIds } from '@/modules/favorites';
-import { usePageNavigation, buildNavId, NAV_ID_PREFIX } from '@/core/navigation';
+import {
+  usePageNavigation,
+  buildNavId,
+  NAV_ID_PREFIX,
+} from '@/core/navigation';
 import type { LayoutContext } from '@/shared/components';
 import { APP_VIEW_TABS, HEADER_NAV_COUNT, ROUTES } from '@/shared/constants';
 
@@ -157,7 +161,9 @@ export function useMovieDetailsPage(): UseMovieDetailsPageReturn {
 
   // ── Recommendations ─────────────────────────────────────────────
   const recommendations = useMemo(
-    () => details?.recommendations?.results.slice(0, RECOMMENDATIONS.MAX_DISPLAY) ?? [],
+    () =>
+      details?.recommendations?.results.slice(0, RECOMMENDATIONS.MAX_DISPLAY) ??
+      [],
     [details],
   );
 
@@ -185,9 +191,7 @@ export function useMovieDetailsPage(): UseMovieDetailsPageReturn {
       : [NAV_BACK];
     const sections: DetailsNavItem[][] = [controls];
     if (castMembers.length > 0) {
-      sections.push(
-        castMembers.map((member) => ({ kind: 'cast', member })),
-      );
+      sections.push(castMembers.map((member) => ({ kind: 'cast', member })));
     }
     if (showTrailerNav) sections.push([NAV_TRAILER]);
     if (recommendations.length > 0) {
@@ -273,20 +277,24 @@ export function useMovieDetailsPage(): UseMovieDetailsPageReturn {
     ],
   );
 
-  const { focusedTabIndex, focusedSectionIndex, focusedItemIndex, enterContent } =
-    usePageNavigation<DetailsNavItem>({
-      tabCount: HEADER_NAV_COUNT,
-      sectionItems,
-      columns: 1,
-      sectionColumns,
-      contentKey: 'details',
-      onTabActivate: handleTabActivate,
-      onItemActivate: handleItemActivate,
-      onEscape: handleBack,
-      activeTabIndex: APP_VIEW_TABS.indexOf(activeView),
-      enterContentTabCount: APP_VIEW_TABS.length,
-      enabled: !isNavDisabled,
-    });
+  const {
+    focusedTabIndex,
+    focusedSectionIndex,
+    focusedItemIndex,
+    enterContent,
+  } = usePageNavigation<DetailsNavItem>({
+    tabCount: HEADER_NAV_COUNT,
+    sectionItems,
+    columns: 1,
+    sectionColumns,
+    contentKey: 'details',
+    onTabActivate: handleTabActivate,
+    onItemActivate: handleItemActivate,
+    onEscape: handleBack,
+    activeTabIndex: APP_VIEW_TABS.indexOf(activeView),
+    enterContentTabCount: APP_VIEW_TABS.length,
+    enabled: !isNavDisabled,
+  });
 
   useEffect(() => {
     enterContentRef.current = enterContent;
@@ -313,7 +321,13 @@ export function useMovieDetailsPage(): UseMovieDetailsPageReturn {
       return { ...UNFOCUSED, recsFocusedIndex: focusedItemIndex };
     }
     return UNFOCUSED;
-  }, [focusedSectionIndex, focusedItemIndex, castSectionIndex, trailerSectionIndex, recsSectionIndex]);
+  }, [
+    focusedSectionIndex,
+    focusedItemIndex,
+    castSectionIndex,
+    trailerSectionIndex,
+    recsSectionIndex,
+  ]);
 
   return {
     details,

@@ -31,7 +31,11 @@ export type {
 
 // Hooks: public hooks for pages
 export { useMoviesInit, useMovieDetailsPage, useHomePage } from './hooks';
-export type { UseMoviesInitReturn, UseMovieDetailsPageReturn, UseHomePageReturn } from './hooks';
+export type {
+  UseMoviesInitReturn,
+  UseMovieDetailsPageReturn,
+  UseHomePageReturn,
+} from './hooks';
 
 export type {
   MovieDetailsDisplay,

@@ -33,7 +33,10 @@ function* hydrateFavorites(): Generator {
 
 function* fetchSafe(id: number): Generator {
   try {
-    const response = (yield call(fetchMovieById, id)) as AxiosResponse<TmdbMovie>;
+    const response = (yield call(
+      fetchMovieById,
+      id,
+    )) as AxiosResponse<TmdbMovie>;
     return response.data;
   } catch {
     return null;

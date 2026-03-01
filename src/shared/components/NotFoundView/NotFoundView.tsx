@@ -14,11 +14,19 @@ interface NotFoundViewProps {
   onGoBack?: () => void;
 }
 
-export function NotFoundView({ title, message, ctaLabel, onCta, onGoBack }: NotFoundViewProps): React.JSX.Element {
+export function NotFoundView({
+  title,
+  message,
+  ctaLabel,
+  onCta,
+  onGoBack,
+}: NotFoundViewProps): React.JSX.Element {
   return (
     <div className="flex flex-1 flex-col items-center justify-center gap-4 px-4 py-32 text-center">
       <FilmIcon className="h-16 w-16 text-gray-300 dark:text-gray-600" />
-      <h1 className="text-2xl font-bold text-gray-900 dark:text-white">{title}</h1>
+      <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
+        {title}
+      </h1>
       <p className="text-gray-500 dark:text-gray-400">{message}</p>
       <div className="flex gap-3">
         {onGoBack && (

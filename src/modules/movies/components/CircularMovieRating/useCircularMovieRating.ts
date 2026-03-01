@@ -1,6 +1,9 @@
 import { useEffect, useRef, useCallback } from 'react';
 import { CIRCULAR_RATING } from './circularMovieRating.constants';
-import { getRatingColor, getRatingTrackColor } from './circularMovieRating.utils';
+import {
+  getRatingColor,
+  getRatingTrackColor,
+} from './circularMovieRating.utils';
 
 interface UseCircularMovieRatingReturn {
   containerRef: React.RefObject<HTMLDivElement | null>;
@@ -10,7 +13,9 @@ interface UseCircularMovieRatingReturn {
   trackColor: string;
 }
 
-export function useCircularMovieRating(rating: number): UseCircularMovieRatingReturn {
+export function useCircularMovieRating(
+  rating: number,
+): UseCircularMovieRatingReturn {
   const containerRef = useRef<HTMLDivElement>(null);
   const numberRef = useRef<HTMLSpanElement>(null);
   const arcRef = useRef<SVGCircleElement>(null);
@@ -21,7 +26,10 @@ export function useCircularMovieRating(rating: number): UseCircularMovieRatingRe
 
     function tick(now: number): void {
       const elapsed = now - start;
-      const progress = Math.min(elapsed / CIRCULAR_RATING.ANIMATION_DURATION_MS, 1);
+      const progress = Math.min(
+        elapsed / CIRCULAR_RATING.ANIMATION_DURATION_MS,
+        1,
+      );
       const eased = 1 - Math.pow(1 - progress, 3);
       const value = Math.round(eased * rating);
 
@@ -29,7 +37,9 @@ export function useCircularMovieRating(rating: number): UseCircularMovieRatingRe
         numberRef.current.textContent = String(value);
       }
       if (arcRef.current) {
-        const offset = CIRCULAR_RATING.CIRCUMFERENCE - (value / 100) * CIRCULAR_RATING.CIRCUMFERENCE;
+        const offset =
+          CIRCULAR_RATING.CIRCUMFERENCE -
+          (value / 100) * CIRCULAR_RATING.CIRCUMFERENCE;
         arcRef.current.setAttribute('stroke-dashoffset', String(offset));
       }
 

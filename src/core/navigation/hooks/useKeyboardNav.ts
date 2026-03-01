@@ -21,7 +21,13 @@
  * focus/blur events, connecting to existing handlers (e.g., 2s tab auto-switch).
  */
 
-import { useState, useEffect, useLayoutEffect, useRef, useCallback } from 'react';
+import {
+  useState,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useCallback,
+} from 'react';
 import { NAV_KEY, NAV_ZONE } from '../constants';
 import type {
   NavState,
@@ -131,8 +137,18 @@ export function useKeyboardNav({
 
   useLayoutEffect(() => {
     stateRef.current = state;
-    configRef.current = { tabCount, sections, activeTabIndex, enterContentTabCount };
-    callbacksRef.current = { onTabActivate, onItemActivate, onEscape, onFooterActivate };
+    configRef.current = {
+      tabCount,
+      sections,
+      activeTabIndex,
+      enterContentTabCount,
+    };
+    callbacksRef.current = {
+      onTabActivate,
+      onItemActivate,
+      onEscape,
+      onFooterActivate,
+    };
   });
 
   // Reset content focus when the view changes.
@@ -212,7 +228,9 @@ export function useKeyboardNav({
     }
 
     // Defer flag flip so both React strict-mode invocations use the same value
-    const id = setTimeout(() => { isFirstFocus.current = false; }, 0);
+    const id = setTimeout(() => {
+      isFirstFocus.current = false;
+    }, 0);
     return () => clearTimeout(id);
   }, [enabled, state]); // eslint-disable-line react-hooks/exhaustive-deps
 

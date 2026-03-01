@@ -98,7 +98,11 @@ export function MovieTrailer({
         Trailer
       </h2>
       {isPlaying ? (
-        <TrailerEmbed videoKey={trailer.key} navId={navId} isFocused={isFocused} />
+        <TrailerEmbed
+          videoKey={trailer.key}
+          navId={navId}
+          isFocused={isFocused}
+        />
       ) : (
         <TrailerThumbnail
           trailer={trailer}

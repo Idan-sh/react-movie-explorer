@@ -11,7 +11,11 @@
  */
 
 import { useState, useCallback, useRef } from 'react';
-import { APP_VIEW_DEFAULT, APP_VIEW_TABS, STORAGE_KEY } from '@/shared/constants';
+import {
+  APP_VIEW_DEFAULT,
+  APP_VIEW_TABS,
+  STORAGE_KEY,
+} from '@/shared/constants';
 import { getSessionItem, setSessionItem } from '@/shared/utils';
 import type { AppView } from '@/shared/types';
 
@@ -51,7 +55,10 @@ export function useCategoryTabs(
       const isSameView = view === activeView;
       setActiveView(view);
       setSessionItem(STORAGE_KEY.NAV.ACTIVE_VIEW, view);
-      scrollRef.current?.scrollTo({ top: 0, behavior: isSameView ? 'smooth' : 'instant' });
+      scrollRef.current?.scrollTo({
+        top: 0,
+        behavior: isSameView ? 'smooth' : 'instant',
+      });
     },
     [activeView, scrollRef],
   );

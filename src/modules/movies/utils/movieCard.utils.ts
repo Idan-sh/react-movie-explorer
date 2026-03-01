@@ -27,7 +27,10 @@ export function formatReleaseDate(releaseDate: string): string {
   });
 }
 
-export function formatRating(voteAverage: number, voteCount: number): number | null {
+export function formatRating(
+  voteAverage: number,
+  voteCount: number,
+): number | null {
   if (voteAverage <= 0 || voteCount < RATING.MIN_VOTE_COUNT) return null;
   return Math.round(voteAverage * 10);
 }
