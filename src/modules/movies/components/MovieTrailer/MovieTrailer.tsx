@@ -56,9 +56,24 @@ function TrailerThumbnail({
   );
 }
 
-function TrailerEmbed({ videoKey }: { videoKey: string }): React.JSX.Element {
+function TrailerEmbed({
+  videoKey,
+  navId,
+  isFocused = false,
+}: {
+  videoKey: string;
+  navId?: string;
+  isFocused?: boolean;
+}): React.JSX.Element {
   return (
-    <div className="aspect-video w-full overflow-hidden rounded-lg">
+    <div
+      tabIndex={-1}
+      data-nav-id={navId}
+      className={`
+        aspect-video w-full overflow-hidden rounded-lg outline-none
+        ${isFocused ? 'ring-2 ring-primary' : ''}
+      `}
+    >
       <iframe
         src={`https://www.youtube.com/embed/${videoKey}?autoplay=1&rel=0`}
         title="Movie trailer"
@@ -83,7 +98,7 @@ export function MovieTrailer({
         Trailer
       </h2>
       {isPlaying ? (
-        <TrailerEmbed videoKey={trailer.key} />
+        <TrailerEmbed videoKey={trailer.key} navId={navId} isFocused={isFocused} />
       ) : (
         <TrailerThumbnail
           trailer={trailer}

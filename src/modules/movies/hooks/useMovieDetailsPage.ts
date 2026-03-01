@@ -153,8 +153,8 @@ export function useMovieDetailsPage(): UseMovieDetailsPageReturn {
     [details],
   );
   const [isTrailerPlaying, setIsTrailerPlaying] = useState(false);
-  const handlePlayTrailer = useCallback((): void => {
-    setIsTrailerPlaying(true);
+  const handleToggleTrailer = useCallback((): void => {
+    setIsTrailerPlaying((prev) => !prev);
   }, []);
 
   // ── Recommendations ─────────────────────────────────────────────
@@ -178,7 +178,7 @@ export function useMovieDetailsPage(): UseMovieDetailsPageReturn {
   );
 
   // ── Build navigable sections dynamically ────────────────────────
-  const showTrailerNav = trailer !== null && !isTrailerPlaying;
+  const showTrailerNav = trailer !== null;
   const castMembers = display?.cast?.cast ?? [];
 
   const sectionItems = useMemo((): DetailsNavItem[][] => {
@@ -256,7 +256,7 @@ export function useMovieDetailsPage(): UseMovieDetailsPageReturn {
         case 'cast':
           break;
         case 'trailer':
-          handlePlayTrailer();
+          handleToggleTrailer();
           break;
         case 'recommendation':
           navigate(ROUTES.movieDetails(item.movie.id), {
@@ -270,7 +270,7 @@ export function useMovieDetailsPage(): UseMovieDetailsPageReturn {
       details,
       toggleFavorite,
       isFavorited,
-      handlePlayTrailer,
+      handleToggleTrailer,
       navigate,
     ],
   );
@@ -281,7 +281,7 @@ export function useMovieDetailsPage(): UseMovieDetailsPageReturn {
       sectionItems,
       columns: 1,
       sectionColumns,
-      contentKey: isTrailerPlaying ? 'details-playing' : 'details',
+      contentKey: 'details',
       onTabActivate: handleTabActivate,
       onItemActivate: handleItemActivate,
       onEscape: handleBack,
@@ -328,7 +328,7 @@ export function useMovieDetailsPage(): UseMovieDetailsPageReturn {
     focus,
     trailer,
     isTrailerPlaying,
-    onPlayTrailer: handlePlayTrailer,
+    onPlayTrailer: handleToggleTrailer,
     recommendations,
     castSectionIndex,
     recsSectionIndex,

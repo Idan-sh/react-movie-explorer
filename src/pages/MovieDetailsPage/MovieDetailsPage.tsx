@@ -79,7 +79,7 @@ export function MovieDetailsPage(): React.JSX.Element {
   }
 
   const trailerSectionIndex = (() => {
-    if (!trailer || isTrailerPlaying) return -1;
+    if (!trailer) return -1;
     let idx = 1;
     if (display?.cast && display.cast.cast.length > 0) idx++;
     return idx;
