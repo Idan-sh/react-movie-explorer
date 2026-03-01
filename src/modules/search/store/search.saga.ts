@@ -38,16 +38,22 @@ function* fetchPage(query: string, page: number): Generator {
   yield put(searchMoviesSuccess({ results, page: resultPage, totalPages: total_pages }));
 }
 
+const RATE_LIMIT_MESSAGE = 'Too many searches. Please wait a moment.';
+
 function* searchSaga(action: PayloadAction<string>): Generator {
   const query = action.payload.trim();
   if (query.length < SEARCH.MIN_QUERY_LENGTH) return;
-  if (!rateLimiter.canRequest()) return;
 
-  rateLimiter.record();
+  if (!rateLimiter.canRequest()) {
+    yield put(searchMoviesFailure({ error: RATE_LIMIT_MESSAGE }));
+    return;
+  }
+
   yield put(searchMoviesStart());
 
   try {
     yield* fetchPage(query, 1);
+    rateLimiter.record();
   } catch (error) {
     const message = error instanceof Error ? error.message : 'Search failed';
     yield put(searchMoviesFailure({ error: message }));
@@ -60,13 +66,17 @@ function* loadMoreSaga(): Generator {
   const hasMorePages = (yield select(selectSearchHasMorePages)) as boolean;
 
   if (!hasMorePages || query.trim().length < SEARCH.MIN_QUERY_LENGTH) return;
-  if (!rateLimiter.canRequest()) return;
 
-  rateLimiter.record();
+  if (!rateLimiter.canRequest()) {
+    yield put(searchMoviesFailure({ error: RATE_LIMIT_MESSAGE }));
+    return;
+  }
+
   yield put(searchMoviesStart());
 
   try {
     yield* fetchPage(query, page + 1);
+    rateLimiter.record();
   } catch (error) {
     const message = error instanceof Error ? error.message : 'Search failed';
     yield put(searchMoviesFailure({ error: message }));
