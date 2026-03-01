@@ -27,8 +27,6 @@ import type { AppView } from '@/shared/types';
 import type { LayoutContext } from './layout.types';
 
 export function AppLayout(): React.JSX.Element {
-  const { activeView, handleTabClick, handleTabFocus, handleTabBlur } =
-    useCategoryTabs();
   const [focusedTabIndex, setFocusedTabIndex] = useState(-1);
   const [isSearchFocused, setIsSearchFocused] = useState(false);
   const { query, handleInputChange, handleClear } = useSearch();
@@ -39,6 +37,8 @@ export function AppLayout(): React.JSX.Element {
     isVisible: isScrollTopVisible,
     scrollToTop,
   } = useScrollToTop();
+  const { activeView, handleTabClick, handleTabFocus, handleTabBlur } =
+    useCategoryTabs(scrollRef);
   const location = useLocation();
   const navigate = useNavigate();
 

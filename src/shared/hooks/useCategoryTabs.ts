@@ -22,10 +22,9 @@ export interface UseCategoryTabsReturn {
   handleTabBlur: () => void;
 }
 
-/**
- * Hook that manages category tab navigation.
- */
-export function useCategoryTabs(): UseCategoryTabsReturn {
+export function useCategoryTabs(
+  scrollRef: React.RefObject<HTMLElement | null>,
+): UseCategoryTabsReturn {
   const [activeView, setActiveView] = useState<AppView>(APP_VIEW_DEFAULT);
   const focusTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
@@ -36,18 +35,14 @@ export function useCategoryTabs(): UseCategoryTabsReturn {
     }
   };
 
-  // Click → switch view immediately + scroll content to top
-  // Same tab: smooth scroll back to top. Different tab: instant reset.
   const handleTabClick = useCallback(
     (view: AppView): void => {
       clearFocusTimer();
       const isSameView = view === activeView;
       setActiveView(view);
-      document
-        .querySelector('main')
-        ?.scrollTo({ top: 0, behavior: isSameView ? 'smooth' : 'instant' });
+      scrollRef.current?.scrollTo({ top: 0, behavior: isSameView ? 'smooth' : 'instant' });
     },
-    [activeView],
+    [activeView, scrollRef],
   );
 
   // Focus → switch view after delay
