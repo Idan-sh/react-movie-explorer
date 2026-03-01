@@ -4,7 +4,7 @@
  * Animated dropdown menu for mobile navigation.
  * Renders category tabs in a vertical list with slide-down/up animation.
  * Positioned absolutely to overlay content without layout shift.
- * Hidden on desktop (md+).
+ * Hidden on desktop (lg+).
  */
 
 import { AnimatePresence, motion } from 'framer-motion';
@@ -43,7 +43,7 @@ export function MobileMenu({
           transition={MENU_TRANSITION}
           style={{ zIndex: Z_LAYER.MOBILE_MENU }}
           className="
-            absolute left-0 right-0 md:hidden overflow-hidden
+            absolute left-0 right-0 lg:hidden overflow-hidden
             border-b border-gray-200/60 dark:border-gray-700/60
             bg-white/95 dark:bg-gray-900/95 backdrop-blur-lg shadow-lg
           "

@@ -1,9 +1,9 @@
 /**
  * useIsMobile Hook
  *
- * Reactively tracks whether the viewport is below the md breakpoint (768px).
+ * Reactively tracks whether the viewport is below the lg breakpoint (1024px).
  * Uses matchMedia for efficiency — fires only when the boundary is crossed,
- * staying perfectly in sync with Tailwind's md: responsive variants.
+ * staying perfectly in sync with the header's lg: responsive variants.
  */
 
 import { useState, useEffect } from 'react';

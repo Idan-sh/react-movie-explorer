@@ -2,7 +2,7 @@
  * useHamburgerMenu Hook
  *
  * Manages mobile hamburger menu open/close state and keyboard navigation.
- * Only active on mobile viewports (below md breakpoint) via useIsMobile.
+ * Only active on mobile viewports (below lg breakpoint) via useIsMobile.
  *
  * KEYBOARD BEHAVIOR (mobile, menu closed, TABS zone active):
  * - Enter: open the menu, pre-focused on the current tab index

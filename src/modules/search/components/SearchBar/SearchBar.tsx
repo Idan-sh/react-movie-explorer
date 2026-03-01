@@ -53,13 +53,13 @@ export function SearchBar({
         placeholder="Search movies..."
         aria-label="Search movies"
         className="
-          h-9 w-full md:w-56 rounded-lg
+          h-9 w-full lg:w-56 rounded-lg
           bg-white/10 dark:bg-white/5
           border border-gray-300/40 dark:border-gray-600/40
           pl-9 pr-8
-          text-base md:text-sm text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500
+          text-base lg:text-sm text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500
           outline-none focus:ring-2 focus:ring-primary focus:border-transparent
-          md:transition-[width] md:duration-200 md:focus:w-72
+          lg:transition-[width] lg:duration-200 lg:focus:w-72
           [&::-webkit-search-cancel-button]:hidden
         "
       />
