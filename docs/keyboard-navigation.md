@@ -32,19 +32,19 @@ The app requires all navigation to happen via **Arrow keys**, **Enter**, and **E
 The navigation system models the UI as two zones:
 
 ```
-┌─────────────────────────────────────────────────────┐
-│  TABS ZONE (header)                                 │
+┌────────────────────────────────────────────────────────┐
+│  TABS ZONE (header)                                    │
 │  [Popular] [Airing Now] [Favorites] [🔍] [🌙] [⚙] [☰] │
-├─────────────────────────────────────────────────────┤
-│  CONTENT ZONE (page body)                           │
-│  ┌────┐ ┌────┐ ┌────┐ ┌────┐                       │
-│  │ 0  │ │ 1  │ │ 2  │ │ 3  │  ← section 0, row 0  │
-│  └────┘ └────┘ └────┘ └────┘                       │
-│  ┌────┐ ┌────┐ ┌────┐ ┌────┐                       │
-│  │ 4  │ │ 5  │ │ 6  │ │ 7  │  ← section 0, row 1  │
-│  └────┘ └────┘ └────┘ └────┘                       │
-│          [ Load More ]          ← section 0 footer  │
-└─────────────────────────────────────────────────────┘
+├────────────────────────────────────────────────────────┤
+│  CONTENT ZONE (page body)                              │
+│  ┌────┐ ┌────┐ ┌────┐ ┌────┐                           │
+│  │ 0  │ │ 1  │ │ 2  │ │ 3  │  ← section 0, row 0       │
+│  └────┘ └────┘ └────┘ └────┘                           │
+│  ┌────┐ ┌────┐ ┌────┐ ┌────┐                           │
+│  │ 4  │ │ 5  │ │ 6  │ │ 7  │  ← section 0, row 1       │
+│  └────┘ └────┘ └────┘ └────┘                           │
+│          [ Load More ]          ← section 0 footer     │
+└────────────────────────────────────────────────────────┘
 ```
 
 **Zone transitions:**
@@ -60,20 +60,20 @@ The navigation system models the UI as two zones:
 The system is split into four layers, each with a single responsibility:
 
 ```
-┌─────────────────────────────────────────────────────────────┐
+┌──────────────────────────────────────────────────────────────┐
 │  Page hooks (useHomePage / useMovieDetailsPage)              │
 │  Build section data, provide callbacks, consume focus state  │
-├─────────────────────────────────────────────────────────────┤
+├──────────────────────────────────────────────────────────────┤
 │  usePageNavigation  (convenience wrapper)                    │
 │  Derives ContentSection[] from T[][], maps item activation   │
-├─────────────────────────────────────────────────────────────┤
+├──────────────────────────────────────────────────────────────┤
 │  useKeyboardNav  (core hook)                                 │
 │  Event listener + useState + DOM focus sync effect           │
-├──────────────────────────┬──────────────────────────────────┤
+├──────────────────────────┬───────────────────────────────────┤
 │  navigation.utils.ts     │  dom.utils.ts                     │
 │  Pure state transitions  │  Focus, visibility, click resolve │
 │  (no DOM, no React)      │  (DOM queries, focus calls)       │
-└──────────────────────────┴──────────────────────────────────┘
+└──────────────────────────┴───────────────────────────────────┘
 ```
 
 **Why this separation matters:**
