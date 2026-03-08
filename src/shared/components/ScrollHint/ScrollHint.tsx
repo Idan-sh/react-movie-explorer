@@ -36,8 +36,10 @@ export function ScrollHint({
           style={{ zIndex: Z_LAYER.SCROLL_HINT }}
           className="
             pointer-events-none fixed left-1/2 top-28 -translate-x-1/2
-            max-w-lg rounded-xl border border-gray-200/60 px-5 py-3
-            text-center text-sm text-gray-600 shadow-lg
+            w-[calc(100vw-2rem)] max-w-lg rounded-xl border
+            border-gray-200/60 px-4 py-3
+            text-center text-xs text-gray-600 shadow-lg
+            sm:px-5 sm:text-sm
             backdrop-blur-md
             bg-white/90 dark:border-gray-600/60 dark:bg-gray-800/90
             dark:text-gray-300

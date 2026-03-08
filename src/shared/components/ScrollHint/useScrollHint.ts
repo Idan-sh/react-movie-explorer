@@ -9,7 +9,7 @@
 import { useState, useEffect, useRef } from 'react';
 
 const DISPLAY_DURATION_MS = 4000;
-const COOLDOWN_MS = 30000;
+const COOLDOWN_MS = 5000;
 
 export interface UseScrollHintReturn {
   isHintVisible: boolean;
