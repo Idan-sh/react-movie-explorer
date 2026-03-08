@@ -22,6 +22,7 @@ import { AppHeader } from '../AppHeader';
 import { AppFooter } from '../AppFooter';
 import { ScrollToTopButton } from '../ScrollToTopButton';
 import { useScrollToTop } from '../ScrollToTopButton';
+import { ScrollHint, useScrollHint } from '../ScrollHint';
 import { ThemeToggle, useTheme } from '../Theme';
 import { SettingsButton, useSettings } from '../Settings';
 import type { AppView } from '@/shared/types';
@@ -41,6 +42,7 @@ export function AppLayout(): React.JSX.Element {
     isVisible: isScrollTopVisible,
     scrollToTop,
   } = useScrollToTop();
+  const { isHintVisible } = useScrollHint(scrollRef, isScrollEnabled);
   const { activeView, handleTabClick, handleTabFocus, handleTabBlur } =
     useCategoryTabs(scrollRef);
   const location = useLocation();
@@ -186,6 +188,8 @@ export function AppLayout(): React.JSX.Element {
           onClick={scrollToTop}
         />
       )}
+
+      <ScrollHint isVisible={isHintVisible} />
     </div>
   );
 }

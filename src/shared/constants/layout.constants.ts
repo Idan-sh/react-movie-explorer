@@ -27,6 +27,7 @@ export const MOBILE_QUERY = `(max-width: ${BREAKPOINT.LG - 1}px)`;
 export const Z_LAYER = {
   CONTENT: 0,
   SCROLL_TO_TOP: 15,
+  SCROLL_HINT: 16,
   HEADER: 20,
   MOBILE_MENU: 25,
   DROPDOWN: 28,

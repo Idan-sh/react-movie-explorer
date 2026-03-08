@@ -34,7 +34,7 @@ const router = createBrowserRouter([
       {
         path: ROUTES.HOME,
         element: (
-          <Suspense fallback={<PageSpinner />}>
+          <Suspense fallback={null}>
             <HomePage />
           </Suspense>
         ),
@@ -42,7 +42,7 @@ const router = createBrowserRouter([
       {
         path: ROUTES.MOVIE_DETAILS,
         element: (
-          <Suspense fallback={<PageSpinner />}>
+          <Suspense fallback={null}>
             <MovieDetailsPage />
           </Suspense>
         ),
